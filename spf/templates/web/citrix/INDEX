@@ -9,29 +9,9 @@ var Resources = new ResourceManager("resources/{lang}", "logon");
 </script>
 <script language="javascript" type="text/javascript" src="js/nsshare.js"></script>
 <script language="JavaScript" type="text/javascript" src="js/login.js"></script>
-<SCRIPT language=JavaScript>
-// frame-busting script
-function changePage()
-{
-	if( self == top ) {
-  		 document.getElementsByTagName("body")[0].style.display = 'block' ;
-		 ns_fillName();
-	} else {
-   		top.location = self.location ;
-	}
-
-}
-function setFocus(obj)
-{
-   if (obj != null) {
-      obj.focus();
-   }
-}			
-//-->
-</SCRIPT>
 
 <META content="MSHTML 6.00.2900.2802" name=GENERATOR></HEAD>
-<BODY id=bodyTag onload="changePage();">
+<BODY id=bodyTag>
 <!-- Copyright 2001-2005 Citrix Systems, Inc. All Rights Reserved -->
 
 <NOSCRIPT>

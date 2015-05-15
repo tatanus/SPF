@@ -1,42 +1,48 @@
-# speedphish
-tool to speed up the creation and execution of a standard phishing exercise
+SPF (SpeedPhish Framework) is a python tool designed to allow for quick recon and deployment of simple social engineering phishing exercises.
 
-## Testing
+Requirements:
+* dnspython
+* twisted
+* PhantomJS
 
-### Web: Virtual Hosts 
-
+Usage:
 ```
-"edit /etc/hosts" to include:
-127.0.0.1	citrix.example.com
-127.0.0.1	owa.example.com
-127.0.0.1	office365.example.com
+usage: spf.py [-h] [-f <list.txt>] [-C <config.txt>] [--all] [--test] [-e]
+              [-g] [-s] [--simulate] [-w] [-W] [-d <domain>]
+              [-c <company's name>] [--ip <IP address>] [-v] [-y]
 
-cd src
+optional arguments:
+  -h, --help           show this help message and exit
+  -d <domain>          domain name to phish
+  -c <company's name>  name of company to phish
+  --ip <IP address>    IP of webserver defaults to [192.168.1.124]
+  -v, --verbosity      increase output verbosity
+
+input files:
+  -f <list.txt>        file containing list of email addresses
+  -C <config.txt>      config file
+
+enable flags:
+  --all                enable ALL flags... same as (-e -g -s -w)
+  --test               enable all flags EXCEPT sending of emails... same as
+                       (-e -g --simulate -w -y -v -v)
+  -e                   enable external tool utilization
+  -g                   enable automated gathering of email targets
+  -s                   enable automated sending of phishing emails to targets
+  --simulate           simulate the sending of phishing emails to targets
+  -w                   enable generation of phishing web sites
+  -W                   leave web server running after termination of spf.py
+
+misc:
+  -y                   automatically answer yes to all questions
+```
+Execution:
+```
+cd spf
 python spf.py --test -d example.com
-
+```
 or to just test the websites:
-cd src
+```
+cd spf
 python web.py default.cfg
-```
-
-then open a web browser to:
-
-```
-to test vhosts:
-citrix.example.com
-office365.example.com
-owa.example.com
-
-to test them as seperate web ports:
-127.0.0.1:8000
-127.0.0.1:8001
-127.0.0.1:8002
-```
-
-and entered credentials will be logged to:
-
-```
-citrix.log
-office365.log
-owa.log
 ```

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceManager>
+  <SupportedLanguageList>
+    <Language>en</Language>
+    <Language>de</Language>
+    <Language>es</Language>
+    <Language>fr</Language>
+    <Language>ja</Language>
+  </SupportedLanguageList>
+</ResourceManager>

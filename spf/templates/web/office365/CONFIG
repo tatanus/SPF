@@ -1,0 +1,3 @@
+VHOST=office365
+LOGFILE=office365.log
+REDIRECTURL=error

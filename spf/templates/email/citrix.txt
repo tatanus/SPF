@@ -1,0 +1,5 @@
+TYPE="CITRIX"
+
+SUBJECT="Updated Citrix Server"
+
+BODY="Due to recent issues with the Citrix gateway and growing Internet based threats, we have deployed an updated access server.\n\n[[TARGET]]\n\nPlease verify that you can access the site.\n\n\nService Desk, Information Technology"

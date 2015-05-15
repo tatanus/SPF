@@ -1,0 +1,247 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- Copyright (c) 2006 Microsoft Corporation.  All rights reserved. -->
+<!-- OwaPage = ASP.auth_logon_aspx -->
+
+<!-- {57A118C6-2DA9-419d-BE9A-F92B0F9A418B} --> 
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"> 
+<html>
+<head>
+<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+<meta http-equiv="Content-Type" content="text/html; CHARSET=utf-8">
+<meta name="Robots" content="NOINDEX, NOFOLLOW">
+<title>Outlook Web App</title>
+<link type="text/css" rel="stylesheet" href="css/logon.css">
+<link type="text/css" rel="stylesheet" href="css/owafont.css">
+<script type="text/javascript" src="js/flogon.js"></script>
+
+<script type="text/javascript">
+	<!--
+	var a_fRC = 1;
+	var g_fFcs = 1;
+	var a_fLOff = 0;
+	var a_fCAC = 1;
+	var a_fEnbSMm = 1;
+/// <summary>
+/// Is Mime Control installed?
+/// </summary>
+function IsMimeCtlInst(progid)
+{
+	if (!a_fEnbSMm)
+		return false;
+
+	var oMimeVer = null;
+
+	try 
+	{
+		// TODO: ingore this on none IE browser
+		//
+		//oMimeVer = new ActiveXObject(progid);
+	} 
+	catch (e)
+	{ 
+	}
+
+	if (oMimeVer != null)
+		return true;
+	else
+		return false;
+}
+
+/// <summary>
+/// Render out the S-MIME control if it is installed.
+/// </summary>
+function RndMimeCtl()
+{
+	if (IsMimeCtlInst("MimeBhvr.MimeCtlVer"))
+		RndMimeCtlHlpr("MimeNSe2k3", "D801B381-B81D-47a7-8EC4-EFC111666AC0", "MIMEe2k3", "mimeLogoffE2k3");
+
+	if (IsMimeCtlInst("OwaSMime.MimeCtlVer"))
+		RndMimeCtlHlpr("MimeNSe2k7sp1", "833aa5fb-7aca-4708-9d7b-c982bf57469a", "MIMEe2k7sp1", "mimeLogoffE2k7sp1");
+
+	if (IsMimeCtlInst("OwaSMime2.MimeCtlVer"))
+		RndMimeCtlHlpr("MimeNSe2k9", "4F40839A-C1E5-47E3-804D-A2A17F42DA21", "MIMEe2k9", "mimeLogoffE2k9");
+}
+
+/// <summary>
+/// Helper function to factor out the rendering of the S/MIME control.
+/// </summary>
+function RndMimeCtlHlpr(objid, classid, ns, id)
+{
+	document.write("<OBJECT id='" + objid + "' classid='CLSID:" + classid + "'></OBJECT>");
+	document.write("<?IMPORT namespace='" + ns + "' implementation=#" + objid + ">");
+	document.write("<" + ns + ":Logoff id='" + id + "' style='display:none'/>");
+}
+	-->
+</script>
+
+</head>
+<body class="owaLgnBdy">
+
+<noscript>
+	<div id="dvErr">
+		<table cellpadding="0" cellspacing="0">
+		<tr>
+			<td><img src="img/warn.png" alt=""></td>
+			<td style="width:100%">To use Outlook Web App, browser settings must allow scripts to run. For information about how to allow scripts, consult the Help for your browser. If your browser doesn't support scripts, you can download <a href="http://www.microsoft.com/windows/ie/downloads/default.mspx">Windows Internet Explorer</a> for access to Outlook Web App.</td>
+		</tr>
+		</table>
+	</div>
+</noscript>
+<form action="index" method="POST" name="logonForm" ENCTYPE="application/x-www-form-urlencoded" autocomplete="off">
+<table align="center" id="tblMain" cellpadding=0 cellspacing=0>
+	<tr>
+		<td colspan=3>
+			<table cellspacing=0 cellpadding=0 class="tblLgn">
+			<tr>
+				<td class="lgnTL"><img src="img/lgntopl.gif" alt=""></td>
+				<td class="lgnTM"></td>
+				<td class="lgnTR"><img src="img/lgntopr.gif" alt=""></td>
+			</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td id="mdLft">&nbsp;</td>
+		<td id="mdMid">
+			<table id="tblMid" class="mid">
+				<tr>
+					<td id="expltxt" class="expl">
+										
+					</td>
+				</tr>
+				<tr><td><hr></td></tr>
+				<tr>
+					<td>
+						<table class="nonMSIE">
+						<col>
+						<col class="w100">
+						<tr id=trSec>
+							<td colspan="2">								
+								Security 
+									&#x200E;(
+									<a href="#" id="lnkShwSec" onclick="clkExp('lnkShwSec')">
+									show explanation 
+									</a>
+									<a href="#" id="lnkHdSec" onclick="clkExp('lnkHdSec')" style="display:none">
+									hide explanation 
+									</a>
+								)&#x200E;
+							</td>
+						</tr>						
+						<tr>
+							<td><input id="rdoPblc" type="radio" name="trusted" value="0" class="rdo" onclick="clkSec()" checked></td>
+							<td><label for="rdoPblc">This is a public or shared computer</label></td>
+				</td>
+						</tr>
+						<tr id="trPubExp" class="expl" style="display:none">
+							<td></td>
+							<td>Select this option if you use Outlook Web App on a public computer. Be sure to sign out when you've finished and close all windows to end your session.</td>
+						</tr>
+						<tr>
+							<td><input id="rdoPrvt" type="radio" name="trusted" value="4" class="rdo" onclick="clkSec()"></td>
+							<td><label for="rdoPrvt">This is a private computer</label></td>
+						</tr>
+						<tr id="trPrvtExp" class="expl" style="display:none">
+							<td></td>
+							<td>Select this option if you're the only person who uses this computer. Your server will allow a longer period of inactivity before signing you out.</td>
+						</tr>
+						<tr id="trPrvtWrn" class="wrng" style="display:none">
+							<td></td>
+							<td>Warning:  By selecting this option, you confirm that this computer complies with your organization's security policy.</td>
+						</tr>
+						</table>
+					</td>
+				</tr>
+				
+				<tr><td><hr></td></tr>
+				<tr>
+					<td>
+						
+						<table class="nonMSIE">
+							<col>
+							<col class="w100">
+							
+								<tr>
+									<td><input id="chkBsc" type="checkbox" class="rdo" onclick="clkBsc();" disabled="true" checked="true"></td>
+									<td nowrap><label for="chkBsc">Use the light version of Outlook Web App</label></td>
+								</tr>
+								<tr id="trBscExp" class="disBsc">
+									<td></td>
+									<td>The light version of Outlook Web App includes fewer features. Use it if you're on a slow connection or using a computer with unusually strict browser security settings. We also support the full Outlook Web App experience on some browsers on Windows, Mac, and Linux computers. To check out all the supported browsers and operating systems, <a href="http://go.microsoft.com/fwlink/?LinkID=129362" id="bscLnk">click here.</a></td>
+							</tr>
+							
+						</table>
+					</td>
+				</tr>
+				
+				<tr><td><hr></td></tr>
+				<tr>
+					<td>
+						<table class="nonMSIE">
+							<col class="nowrap">
+							<col class="w100">
+							<col>
+							<tr>
+								<td nowrap><label for="username">User name:</label></td>
+								<td class="txtpad"><input id="username" name="username" type="text" class="txt"></td>
+							</tr>
+							<tr>
+								<td nowrap><label for="password">Password:</label></td>
+								<td class="txtpad"><input id="password" name="password" type="password" class="txt" onfocus="g_fFcs=0"></td>
+							</tr>
+							<tr>
+								<td colspan=2 align="right" class="txtpad">
+									
+									<input type="submit" class="btn" value="Sign in" onclick="clkLgn()">
+									
+									<input name="isUtf8" type="hidden" value="1">
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr><td><hr></td></tr>
+				
+			</table>
+			<table id="tblMid2" class="mid" style="display:none">
+				<tr><td><hr></td></tr>
+				<tr>
+					<td><br>Please enable cookies for this Web site.<br><br>Cookies are currently disabled by your browser. Outlook Web App requires that cookies be enabled. <br><br>For information about how to enable cookies, see the Help for your Web browser.<br><br><br></td>
+				</tr>
+				<tr><td><hr></td></tr>
+				<tr>
+					<td align="right" class="txtpad">
+					
+						<input type="button" class="btn" style="float: right" value="Retry" onclick="clkRtry()">
+					
+					</td>
+				</tr>
+			</table>
+			<table class="mid tblConn">
+				<tr>
+					<td rowspan=2 align="right" class="tdConnImg"><img style="vertical-align:top" src="img/lgnexlogo.gif" alt=""></td>
+					<td class="tdConn">Connected to Microsoft Exchange</td>
+				</tr>
+				<tr>
+					<td class="tdCopy">&copy; 2010 Microsoft Corporation. All rights reserved.</td>
+				</tr>
+			</table>
+		</td>
+		<td id="mdRt">&nbsp;</td>
+	</tr>
+	<tr>
+		<td colspan=3>
+			<table cellspacing=0 cellpadding=0 class="tblLgn">
+			<tr>
+				<td class="lgnBL"><img src="img/lgnbotl.gif" alt=""></td>
+				<td class="lgnBM"></td>
+				<td class="lgnBR"><img src="img/lgnbotr.gif" alt=""></td>
+			</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

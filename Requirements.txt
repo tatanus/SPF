@@ -1,0 +1,10 @@
+PYTHON:
+dnspython
+twisted
+
+MISC:
+PhantomJS
+
+Optional:
+BeEF
+theHarvester

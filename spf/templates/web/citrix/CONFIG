@@ -1,0 +1,3 @@
+VHOST=citrix
+LOGFILE=citrix.log
+REDIRECTURL=error

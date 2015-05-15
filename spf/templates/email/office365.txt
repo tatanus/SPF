@@ -1,0 +1,5 @@
+TYPE="office365"
+
+SUBJECT="Webmail - Office 365"
+
+BODY="Hello,\n\nIn an effort to continue bringing you the best available technology, our team has implemented the newest version of Microsoft's Office 365 Webmail.\n\nYour existing emails, contacts. and calendar events will be seamlessly transfered to your new account.\n\nVisit [[TARGET]]\n\nand login with your current username and password to confirm your new account.\n\nThankyou,\nIT Support"

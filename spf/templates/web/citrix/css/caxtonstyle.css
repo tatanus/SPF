@@ -1,0 +1,1179 @@
+
+.CTXMSAM_ContentTitleHeader
+{
+	background-color:#BAC0CE; height:8; font-weight:bold;font-size: 9pt; color: black; font-family: Arial; 
+}
+
+.CTXMSAM_ContentArea
+{	
+	border-style:solid; border-color:Black; border-width:1pt;
+}
+
+.CTXMSAM_ContentFont
+{
+	font-size: 9pt; 
+	font-family: Arial;
+	color: Black;
+}
+
+.CTXMSAM_LogonFont
+{
+	font-size: 8pt; 
+	font-family: Arial;
+	color: Black;
+}
+
+.CTXMSAM_ErrorFont
+{
+	font-size: 9pt; font-family: Arial; color:Red;
+}
+
+Div.PopupBlockerMessage
+{
+	background:#ffd149; 
+	margin-bottom: 0px; 
+	margin-left:0px; 
+	margin-right:0px; 
+	margin-top:0px; 
+	font-size: 9pt; 
+	font-family: Arial;
+	border-style: solid;
+	border-color: #dfdfdf;
+	border-width: 2pt;
+	padding: 5pt;
+}
+ 
+/*
+for Caxton
+*/
+.full_width
+{
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+ 
+.full_width_height
+{
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.header_ctx
+{
+	width: 265px;
+	height: 62px;
+	background-image: url(../img/ctxHeader.gif);
+	background-repeat: no-repeat;
+}
+
+.header_left_for_tm
+{
+	width: 265px;
+	height: 62px;
+	background-image: url(../img/ctxHeader01ForTM.gif);
+	background-repeat: no-repeat;
+}
+
+.header_left
+{
+	width: 275px;
+	height: 62px;
+	background-image: url(../img/companyHeader01.gif);
+	background-repeat: no-repeat;
+}
+
+.header_middle
+{
+	height: 62px;
+	background-image: url(../img/companyHeader02.gif);
+	background-repeat: repeat-x;
+}
+
+.header_right
+{
+	height: 62px;
+	background-image: url(../img/companyHeader03.gif);
+	background-repeat: repeat-x;
+}
+
+.watermark
+{
+	width: 192px;
+	height: 62px;
+	background-position:bottom center;
+	background-repeat: no-repeat;
+}
+
+.header_text
+{
+	color: white;
+	font-size: 10pt;
+	font-family: Arial;
+	padding-right: 20px;
+}
+
+.align_right
+{
+	text-align: right;
+}
+
+ul
+{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul li
+{
+    margin: 0;
+    padding: 0;
+}
+
+.navBarDiv
+{
+  padding: 0;
+  background: #3D3D3D url(../img/NavBarLink.gif) repeat-x top left;
+  overflow:auto;
+  border-top: 1px solid black;
+  border-right: 1px solid black;
+  border-left: 1px solid black;
+  height: auto;
+}
+
+
+.navbar
+{
+	height: 26px;
+	background-image: url(../img/NavBarLink.gif);
+	background-repeat: repeat-x;	
+}
+
+.navBar li
+{
+    display: inline;
+}
+
+.navBar a
+{
+    float: left;
+    border-left:1px solid #646464;
+    border-right:1px solid black;
+    margin: 0;
+    padding: 6px 6px;
+	width:87px;
+    text-align:center;
+    color: #FFFFFF;
+	text-decoration: none;
+}
+
+.navBar #navEtchFiller
+{
+    float: left;
+    width: 0px;
+    border-left: 1px solid #646464;
+    margin: 0;
+    padding: 6px 0pt;
+}
+
+.navBar a:link,
+.navBar a:visited,
+{
+  color: #FFFFFF;
+  background: #3D3D3D url(../img/NavBarLink.gif) repeat-x top left;
+  text-decoration: none;
+}
+
+.navBar a:hover,
+.currentLink a:link,
+.currentLink a:visited,
+.currentLink a:hover
+{
+    color: #FFFFFF;
+    background: #52ACEE url(../img/NavCurrentBarLink.gif) top left repeat-x;
+    text-decoration: none;
+}
+
+.currentLink a:link,
+.currentLink a:visited,
+.currentLink a:hover
+{
+  font-weight: bold;
+}
+
+.logon_spacing
+{
+	height: 1.5em;
+}
+
+.CTX_ContentTitleHeader
+{
+    font-family: Segoe UI, Tahoma,Verdana, Helvetica, Arial, sans-serif;
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 0;
+    color: #000000
+}
+
+body
+{
+    color: white;
+    /*
+    background: black url(../img/MarginGradient.gif) repeat-x top left;
+	*/
+    background: white repeat-x top left;
+    margin: 0px;
+    padding: 0px;
+    font-family: Segoe UI, Tahoma,Verdana, Helvetica, Arial, sans-serif;
+    font-size: 70%;
+    text-align: center;
+    height: 100%;
+ }
+
+.mainPane
+{
+    margin: 0;
+    padding: 0;
+    color: #FFFFFF;
+    background: #003C96 url(../img/CenterBlueBkg.jpg) repeat top left;
+    left:0;
+    right:0;
+    border-top: 2px #999999 solid;
+    border-bottom: 2px #999999 solid;
+}
+
+.mainPanePadding
+{
+    padding: 20px;
+}
+
+#loadingMainPane {
+    margin: 0;
+    padding-top: 50px;
+    height: 100%;
+    background: transparent url(../img/ProgressWindow.gif) no-repeat top center;
+}
+#loadingMainPanePNG {
+    margin: 0;
+    padding-top: 50px;
+    height: 100%;
+    background: transparent url(../img/ProgressWindow.png) no-repeat top center;
+}
+
+#appMainPane
+{
+    padding: 7px 20px 40px 20px;
+}
+
+#commonMainPane
+{
+    padding: 20px;
+}
+
+div#commonBoxTop
+{
+    background: transparent url(../img/TitleHeaderCarbon.gif) repeat top left;
+    height: 5px;
+    border: solid 1px #999999;
+    border-top: none;
+}
+
+#commonBox
+{
+    border: solid 1px #999999;
+    background-color: #FFF;
+    color: black;
+    padding: 0;
+}
+
+#commonBox a,
+#commonBox a:link,
+#commonBox a:visited
+{
+    color: #3F3F3F;
+    text-decoration:underline;
+}
+
+#commonBox a:hover
+{
+    color: #3F3F3F;
+    text-decoration: underline;
+}
+
+.commonInnerBox
+{
+    padding: 0 10px 10px 20px;
+}
+
+div#commonBoxFoot
+{
+    border: solid 1px #999999;
+    background-color: white;
+    height: 5px;
+}
+
+.messagesScreen
+{
+     background-color: #FFF;
+     color: #000;
+     padding-left: 20px;
+     padding-right: 20px;
+	 padding-top: 20px;
+     padding-bottom:32px;
+}
+
+#messagesContent ul
+{
+     margin-bottom:10px;
+}
+
+.messagesScreen h2
+{
+     margin: 7px 0 12px 0;
+     padding: 3px 15px;
+     background: #F0F6FB url(../img/TrailBackground.gif) repeat-x bottom left;
+     border-top: solid 1px #BBC6D6;
+     font-size:100%;
+     font-weight: normal;
+}
+
+.messagesScreen h3
+{
+     padding:0 0 0 10px;
+     font-size:120%;
+     margin: 0;
+     background-repeat: no-repeat;
+     background-position: left center;
+     color: #012861;
+}
+
+.loginButtonText
+{
+	text-decoration: none;
+	color: White;
+}
+.loginButtonText a:link,
+.loginButtonText a:visited,
+.loginButtonText a:hover
+{
+    text-decoration: none;
+}
+
+.CTX_CaxtonButton
+{
+	height: 28px;
+	width: 75px;
+	font-family: Arial, Verdana, Helvetica, Sans-Serif;
+	font-size: 8pt;
+	color: White;
+	cursor: default;
+	border: 0px;
+	background-image: url("../img/LoginButtonGlow.gif");
+}
+
+.CTX_CaxtonButton_Hover
+{
+	height: 28px;
+	width: 75px;
+	font-family: Arial, Verdana, Helvetica, Sans-Serif;
+	font-size: 8pt;
+	color: White;
+	cursor: hand;
+	border: 0px;
+	background-image: url("../img/LoginButtonRolloverGlow.gif");
+}
+
+.CTX_BlackButton
+{
+	height: 22px;
+	width: 17ex;
+	font-family: Arial, Verdana, Helvetica, Sans-Serif;
+	font-size: 8pt;
+	color: White;
+	cursor: default;
+	border-bottom-style: solid;
+	border-width: 1px;
+	border-color: #5F5F5F;
+	border-collapse: collapse;
+	background-image: url("../img/BlackButton.gif");
+	background-repeat: repeat-x;
+}
+
+.CTX_BlackButton_Hover
+{
+	height: 22px;
+	width: 17ex;
+	font-family: Arial, Verdana, Helvetica, Sans-Serif;
+	font-size: 8pt;
+	color: White;
+	cursor: hand;
+	border-bottom-style: solid;
+	border-width: 1px;
+	border-color: #ACACAC;
+	border-collapse: collapse;
+	background-image: url("../img/BlackButtonRollover.gif");
+	background-repeat: repeat-x;
+}
+
+.CTX_CaxtonButtonLink
+{
+	height: 18px;
+	font-family: Verdana, Arial, Helvetica, Sans-Serif;
+	font-size: 11px;
+	color: black;
+	background-color: #d4d4d4; 
+	cursor: default;
+	border: 0px;
+}
+
+.CTX_CaxtonButtonLink_Hover
+{
+	height: 18px;
+	font-family: Verdana, Arial, Helvetica, Sans-Serif;
+	font-size: 11px;
+	color: black;
+	background-color: #d4d4d4;
+	cursor: hand;
+	border: 0px;
+	text-decoration:underline;
+}
+}
+
+/*
+from Caxton
+*/
+
+/*
+.mainPane
+{
+    color: white;
+    background-color: #000000;
+    border-bottom: none;
+    padding: 0;
+    overflow: auto;
+}
+*/
+
+#bottomPane
+{
+    background-color: ffffff;
+}
+
+.simpleMainPane
+{
+    border: none;
+}
+
+#usefulPane,
+#sysMessage
+{
+    margin: 0 auto;
+}
+
+.titleHead,
+.titleGradient,
+.titleTail
+{
+    background: none;
+    margin: 0;
+    padding: 0;
+    height:auto;
+    width:auto;
+}
+
+.messageTitle
+{
+    font-size: 12pt;
+    font-weight: bold;
+    color: #000000;
+}
+
+.welcomeText
+{
+    clear: left;
+    width: auto;
+    text-align: left;
+    padding: 5px 0 10px 0;
+    margin: 0;
+}
+
+.actionPane
+{
+    background: transparent url(../img/LoginIcon.gif) no-repeat 10px 8px;
+    margin:0;
+    padding:0;
+    padding-top:6px;
+    padding-left:100px;
+}
+
+.actionPanePng
+{
+    background: transparent url(../img/LoginIcon.png) no-repeat 10px 0;
+    margin:0;
+    padding:0;
+    padding-top:6px;
+    padding-left:100px;
+}
+
+.actionpane_min_height
+{
+    min-height: 80px;    
+    height: auto !important;
+    height: 80px;
+}
+
+.loginForm
+{
+    text-align: left;
+}
+.loginForm label
+{
+    text-align: right;
+}
+.loginForm input,
+.loginForm select
+{
+    margin-left: 0.5em;
+    text-align: left;
+}
+.loginTypeOptionEntries
+{
+    width: 28.75ex;
+}
+.loginEntries
+{
+    width: 28ex;
+}
+.loginTreeEntry
+{
+    color: #000000;
+    background-color: #A7A7A7;
+
+    width: 28ex;
+
+}
+
+.dockRight
+{
+    clear:both;
+    float:right;
+    margin:4px 0px;
+}
+#accountSS a:link,
+#accountSS a:visited,
+#accountSS a:hover
+{
+    text-decoration:underline;
+}
+
+.loginButtonPane
+{
+   position:relative;
+   text-align:right;
+   overflow:hidden;
+   margin: 0px;
+   padding:0px;
+   border: 0px;
+   height:5ex;
+
+   width: 42.5ex;
+}
+#accountSS {
+    height:auto;
+}
+.loginButtonPane a:link,
+.loginButtonPane a:visited,
+.loginButtonPane a:hover
+{
+    text-decoration:none;
+}
+
+#loginButtonBg
+{
+    vertical-align:top;
+    border:0px;
+    padding:0px;
+    margin:0px;
+    width: 15ex;
+    height: 5ex;
+    z-index: -1;
+    float: right;
+}
+
+#loginButtonWrapper
+{
+    text-align:center;
+    display:block;
+    margin:0px;
+    padding:0px;
+    border:0px;
+    line-height:5ex;
+    position: relative;
+    right: -15ex;
+    width: 15ex;
+    height: 5ex;
+    z-index: 1;
+    cursor:pointer;
+    float: right;
+}
+
+td.glowBoxLeft {
+  width:40px
+}
+td.glowBoxRight {
+  width:40px
+}
+td.glowBoxTop {
+  height:40px
+}
+td.glowBoxFooter {
+  height:40px
+}
+td.glowBoxMid {
+  padding: 7px 15px 15px 15px;
+  background-repeat: repeat-x;
+  background-image:url(../img/LoginPaneCenterMidGlow.gif);
+}
+td.glowBoxTopLeft {
+  background-position:bottom right;
+  background-repeat:no-repeat;
+  background-image:url(../img/LoginPaneTopLeftBorderGlow.gif);
+}
+td.glowBoxTopMid {
+  background-position:bottom center;
+  background-repeat:repeat-x;
+  background-image:url(../img/LoginPaneTopMidBorderGlow.gif);
+}
+td.glowBoxTopRight {
+  background-position:bottom left;
+  background-repeat:no-repeat;
+  background-image:url(../img/LoginPaneTopRightBorderGlow.gif);
+}
+td.glowBoxMidLeft {
+  background-position:center right;
+  background-repeat:repeat-y;
+  background-image:url(../img/LoginPaneCenterLeftBorderGlow.gif);
+}
+td.glowBoxMidRight {
+  background-position:center left;
+  background-repeat:repeat-y;
+  background-image:url(../img/LoginPaneCenterRightBorderGlow.gif);
+}
+td.glowBoxFooterLeft {
+  background-position:top right;
+  background-repeat:no-repeat;
+  background-image:url(../img/LoginPaneFooterLeftBorderGlow.gif);
+}
+td.glowBoxFooterMid {
+  background-position:top center;
+  background-repeat:repeat-x;
+  background-image:url(../img/LoginPaneFooterMidBorderGlow.gif);
+}
+td.glowBoxFooterRight {
+  background-position:top left;
+  background-repeat:no-repeat;
+  background-image:url(../img/LoginPaneFooterRightBorderGlow.gif);
+}
+
+td.glowBoxMidPng {
+  padding: 7px 15px 15px 15px;
+  background-repeat: repeat-x;
+  background-image:url(../img/LoginPaneCenterMidGlow.gif);
+}
+td.glowBoxTopLeftPng {
+  background-position:bottom right;
+  background-repeat:no-repeat;
+  background-image:url(../img/LoginPaneTopLeftBorderGlow.gif);
+}
+td.glowBoxTopMidPng {
+  background-position:bottom center;
+  background-repeat:repeat-x;
+  background-image:url(../img/LoginPaneTopMidBorderGlow.gif);
+}
+td.glowBoxTopRightPng {
+  background-position:bottom left;
+  background-repeat:no-repeat;
+  background-image:url(../img/LoginPaneTopRightBorderGlow.gif);
+}
+td.glowBoxMidLeftPng {
+  background-position:center right;
+  background-repeat:repeat-y;
+  background-image:url(../img/LoginPaneCenterLeftBorderGlow.gif);
+}
+td.glowBoxMidRightPng {
+  background-position:center left;
+  background-repeat:repeat-y;
+  background-image:url(../img/LoginPaneCenterRightBorderGlow.gif);
+}
+td.glowBoxFooterLeftPng {
+  background-position:top right;
+  background-repeat:no-repeat;
+  background-image:url(../img/LoginPaneFooterLeftBorderGlow.gif);
+}
+td.glowBoxFooterMidPng {
+  background-position:top center;
+  background-repeat:repeat-x;
+  background-image:url(../img/LoginPaneFooterMidBorderGlow.gif);
+}
+td.glowBoxFooterRightPng {
+  background-position:top left;
+  background-repeat:no-repeat;
+  background-image:url(../img/LoginPaneFooterRightBorderGlow.gif);
+}
+
+table.carbonBox {
+    left:0;
+    right:0;
+    width: 100%;
+}
+.carbonBoxTop {
+    padding-top: 30px;
+    background: white url(../img/LoginCarbonFiberBgTop.gif) no-repeat bottom center;
+}
+.carbonBoxBottom {
+    text-align:center;
+    padding-top: 10px;
+    padding-bottom: 14px;
+    background: white url(../img/LoginCarbonFiberBgFooter.gif) no-repeat bottom center;
+}
+
+.loginTableMidWidth
+{
+    width: 38em;
+}
+
+#feedbackArea
+{
+    margin:0;
+    left:0;
+    right:0;
+    text-align:center;
+}
+#feedbackArea.feedback
+{
+    display: inline;
+    width: 33.5em;
+}
+#feedbackArea.noFeedback
+{
+    display: none;
+}
+
+div.feedbackStyleSuccess, 
+div.feedbackStyleInfo, 
+div.feedbackStyleWarning, 
+div.feedbackStyleError
+{
+    margin:0;
+    left:0;
+    right:0;
+    max-width:none;
+    text-align:left;
+
+    width: 33.5em;
+}
+
+div.feedbackStyleSuccess,
+div.feedbackStyleInfo,
+div.feedbackStyleWarning,
+div.feedbackStyleError
+{
+    color: black;
+    padding-top: 8px;
+    padding-right: 11px;
+    padding-bottom: 8px;
+    padding-left: 64px;
+    font-size: 100%;
+    max-width: 600px;
+}
+
+
+div.feedbackStyleSuccess a,
+div.feedbackStyleInfo a,
+div.feedbackStyleWarning a,
+div.feedbackStyleError a,
+div.feedbackStyleSuccess a:link,
+div.feedbackStyleInfo a:link,
+div.feedbackStyleWarning a:link,
+div.feedbackStyleError a:link,
+div.feedbackStyleSuccess a:visited,
+div.feedbackStyleInfo a:visited,
+div.feedbackStyleWarning a:visited,
+div.feedbackStyleError a:visited,
+div.feedbackStyleSuccess a:hover,
+div.feedbackStyleInfo a:hover,
+div.feedbackStyleWarning a:hover,
+div.feedbackStyleError a:hover
+{
+    color: #1260D4;
+}
+
+
+div.feedbackStyleSuccess
+{
+    background: #121212 url(../img/Tick32.gif) no-repeat 21px 8px;
+    border: solid 1px #005707;
+    float: left;
+    color: #C5C5C5;
+}
+
+div.feedbackStyleInfo
+{
+    background: #121212 url(../img/Info32.gif) no-repeat 21px 8px;
+    border: solid 1px #579BE6;
+    float: left;
+    color: #C5C5C5;
+}
+
+div.feedbackStyleWarning
+{
+    background: #121212 url(../img/WarningAlert32.gif) no-repeat 21px 8px;
+    border: solid 1px #9C371A;
+    float: left;
+    color: #C5C5C5;
+}
+
+div.feedbackStyleError
+{
+    background: #121212 url(../img/Error32.gif) no-repeat 21px 8px;
+    border: solid 1px #820A0A;
+    float: left;
+    color: #C5C5C5;
+}
+
+.messageStyle
+{
+	display: block;
+	width: 33.5em;
+	min-height: 32px;
+	height: auto !important;
+	height: 32px;
+}
+
+#usefulPane
+{
+    width: 38em;
+}
+#sysMessage
+{
+    width: 35em;
+    padding: 10px 0 10px 0;
+}
+
+input.Apply_Cancel_OK
+{
+    width: 12ex;
+}
+
+input.Install_Skip
+{
+    width: 16ex;
+}
+
+.changePasswordNameColumn
+{
+	width: 24ex;
+}
+
+.changePasswordPane
+{
+  padding: 0;
+  background: url(../img/GreyGradient.gif) repeat-y;
+  background-position: 24ex 0;
+}
+
+.changePasswordButtonPaddingLeft
+{
+	padding-left: 24ex;
+}
+
+.buttonPaddingTop
+{
+	padding-top: 10px;
+}
+
+.topSolidBorder
+{
+   border-top: 1px solid #9baac0;
+}
+
+.topDottedBorder
+{
+   border-top: 1px dotted #9baac0;
+}
+
+.fadeLineSeparator
+{
+    clear: both;
+    width: 100%;
+    height: 1px;
+    background: #FFF url(../img/FadeLine.gif) no-repeat top left;
+}
+
+
+/*
+begin: for VPN choices page
+*/
+#VPN
+{
+    /*
+    width: 710px;
+	*/
+    width: 60em;
+}
+
+.VPNcell
+{
+    /*
+    float: left;
+	*/
+    /*
+    width: 329px;
+	*/
+    width: 28em;
+    min-height: 176px;
+    height: auto !important;
+    /*
+    height: 176px;
+	*/
+    height: 16em;
+    padding: 0px;
+}
+
+#VPN a
+{
+    color: #000000;
+    text-decoration: none;
+    padding: 20px 20px 20px 120px;
+    display: block;
+    border: 1px solid white;
+    /*
+    width: 190px;
+	*/
+    min-height: 176px;
+    height: auto !important;
+    /*
+    height: 176px;
+	*/
+    height: 16em;
+}
+
+#VPN a:link,
+#VPN a:visited,
+#VPN a:hover
+{
+    text-decoration: none;
+}
+
+#VPN a:hover
+{
+    border: 1px dotted silver;
+}
+
+#VPN a.AccessGatewayLink,
+#VPN a.AccessGatewayLink:link,
+#VPN a.AccessGatewayLink:visited
+{
+    background: url(/vpns/images/AccessGateway_icon.png) no-repeat top left;
+}
+
+#VPN a.AccessGatewayLink:hover
+{
+    background: url(/vpns/images/AccessGatewayHover_icon.png) no-repeat top left;
+}
+
+
+#VPN a.ActiveXLink,
+#VPN a.ActiveXLink:link,
+#VPN a.ActiveXLink:visited
+{
+    background: url(/vpns/images/ActiveX_icon.png) no-repeat top left;
+}
+
+#VPN a.ActiveXLink:hover
+{
+    background: url(/vpns/images/ActiveXHover_icon.png) no-repeat top left;
+}
+
+#VPN a.JAVALink,
+#VPN a.JAVALink:link,
+#VPN a.JAVALink:visited
+{
+    background: url(/vpns/images/JAVA_icon.png) no-repeat top left;
+}
+
+#VPN a.JavaLink:hover
+{
+    background: url(/vpns/images/JAVAHover_icon.png) no-repeat top left;
+}
+
+#VPN a.WebUILink,
+#VPN a.WebUILink:link,
+#VPN a.WebUILink:visited
+{
+    background: url(/vpns/images/WebUI_icon.png) no-repeat top left;
+}
+
+#VPN a.WebUILink:hover
+{
+    background: url(/vpns/images/WebUIHover_icon.png) no-repeat top left;
+}
+
+#VPN a.ClientlessLink,
+#VPN a.ClientlessLink:link,
+#VPN a.ClientlessLink:visited
+{
+    background: url(/vpns/images/Clientless_icon.png) no-repeat top left;
+}
+
+#VPN a.ClientlessLink:hover
+{
+    background: url(/vpns/images/ClientlessHover_icon.png) no-repeat top left;
+}
+
+#VPN a.LogoffLink,
+#VPN a.LogoffLink:link,
+#VPN a.LogoffLink:visited
+{
+    background: url(/vpns/images/Logoff_icon.png) no-repeat top left;
+}
+
+#VPN a.LogoffLink:hover
+{
+    background: url(/vpns/images/LogoffHover_icon.png) no-repeat top left;
+}
+
+.linkH4,
+.linkP,
+.linkBullet
+{
+    display: block;
+}
+
+.linkH4
+{
+    font-size: 120%;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.linkP
+{
+    padding-bottom: 5px;
+}
+
+.linkBullet
+{
+    background: transparent url(../img/BulletArrow.gif) no-repeat center left;
+    padding: 0 0 5px 15px;
+
+}
+/*
+end: for VPN choices page
+*/
+
+.CTX_CaxtonButtonBar
+{
+	height: 20px;
+	background-color: #d4d4d4;
+}
+
+#tabularView
+{
+    clear:both;
+    float:left;
+    width:100%;
+    margin: 0;
+    padding: 0;
+    border-top: 1px #BBC6D6 solid;
+    border-bottom: 1px #BBC6D6 solid;
+}
+#tabularView table
+{
+   width:100%;
+   border-collapse: collapse;
+}
+
+#tabularView .leftColumn {
+  width: 40%;
+  padding: 2px 0px 2px 20px;
+  vertical-align: top;
+}
+
+#tabularView .descriptionColumn {
+  width: 55%;
+  padding: 2px 20px 2px 0;
+}
+
+#tabularView .noLeftBorder {
+    padding-left:0px;
+}
+
+#tabularView th
+{
+    padding: 5px 25px;
+    color: #1C5492;
+    text-align: left;
+    background-color: #efefef;
+}
+
+#tabularView table td
+{
+   padding: 2px 20px;
+   vertical-align: top;
+}
+
+#tabularView tr.row1 td
+{
+   background-color: #F7F7F7;
+   color: black;
+}
+
+#tabularView img
+{
+    float: left;
+    padding-right: 5px;
+}
+
+#tabularView p
+{
+   margin: 0 10px 0 20px;
+}
+
+#tabularView tr
+{
+    padding-left: 20px;
+}
+
+/*  For kernel dialogue*/
+.dialogueForm
+{
+	margin:0;
+}
+
+.dialogueChallengeCell
+{
+	text-align:left;
+}
+
+.dialogueResponseCell
+{
+	text-align:right;
+}
+
+.dialogueSubmitCell
+{
+	padding-top:10px;
+	text-align:right;
+}
+
+.transferLogonButtonRow
+{
+	text-align:center;
+	padding-left:20px;
+}

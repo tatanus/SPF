@@ -1,0 +1,182 @@
+<HTML><HEAD><TITLE>Citrix Access Gateway</TITLE> 
+<link rel="SHORTCUT ICON" href="img/AccessGateway.ico" type="image/vnd.microsoft.icon">
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<META content=noindex,nofollow,noarchive name=robots>
+<LINK href="css/caxtonstyle.css" type=text/css rel=STYLESHEET>
+<script type="text/javascript" src="js/resources.js"></script>
+<script type="text/javascript" language="javascript">
+var Resources = new ResourceManager("resources/{lang}", "logon");
+</script>
+<script language="javascript" type="text/javascript" src="js/nsshare.js"></script>
+<script language="JavaScript" type="text/javascript" src="js/login.js"></script>
+<SCRIPT language=JavaScript>
+// frame-busting script
+function changePage()
+{
+	if( self == top ) {
+  		 document.getElementsByTagName("body")[0].style.display = 'block' ;
+		 ns_fillName();
+	} else {
+   		top.location = self.location ;
+	}
+
+}
+function setFocus(obj)
+{
+   if (obj != null) {
+      obj.focus();
+   }
+}			
+//-->
+</SCRIPT>
+
+<META content="MSHTML 6.00.2900.2802" name=GENERATOR></HEAD>
+<BODY id=bodyTag onload="changePage();">
+<!-- Copyright 2001-2005 Citrix Systems, Inc. All Rights Reserved -->
+
+<NOSCRIPT>
+<BR><BR>
+<table style="WIDTH: 100%">
+<tr>
+ 	<td align="center">
+		<table class="CTXMSAM_LogonFont">
+			<tr id="errorMessageRow">
+				<td class="glowBoxLeft">&nbsp;</td>                            
+				<td class="loginTableMidWidth">
+					<div id="feedbackArea">
+					<div id="feedbackStyle" class="feedbackStyleError">
+					<span id="errorMessageLabel" class="messageStyle">
+					JavaScript is either disabled in or not supported by the Web browser.  
+					To continue logon, use a Web browser that supports JavaScript or enable JavaScript in your current browser.
+					</span>
+					</div>
+					</div>
+				</td>                           
+				<td class="glowBoxRight">&nbsp;</td>
+			</tr>
+		</table>
+	</td>
+</tr>
+</table>
+
+<table style="display:none">
+</NOSCRIPT>
+
+<!-- Header -->
+<script language="javascript" type="text/javascript">
+	CreateMainTable();
+    AddHeaderAndBar();
+</script>
+
+<!-- Logon box -->
+<tr class="mainPane">
+	<td class="carbonBoxBottom" valign="bottom">
+		<script language="javascript" type="text/javascript">
+<!--			documentWriteGlowBoxUpper();-->
+		</script>
+		<table class="CTXMSAM_LogonFont" cellpadding="0" cellspacing="0" align="center" border="0">
+			<tbody>
+				<tr>
+					<td class="glowBoxTop glowBoxLeft glowBoxTopLeftPng"></td>
+					<td class="glowBoxTop glowBoxTopMidPng"></td>
+					<td class="glowBoxTop glowBoxRight glowBoxTopRightPng"></td>
+				</tr>
+				<tr>
+					<td class="glowBoxLeft glowBoxMidLeftPng"></td>
+					<td class="glowBoxMidPng loginTableMidWidth">
+						<form action="index" method="POST" name="vpnForm" style="margin:0" ENCTYPE="application/x-www-form-urlencoded" autocomplete="off">
+
+<!--			                	<form method="post" action="/cgi/login" name="vpnForm" autocomplete="off" style="margin:0" onsubmit="clean_name_cookie();" _lpchecked="1"> -->
+							<table cellspacing="4" cellpadding="0" border="0" width="100%">
+								<tbody>
+									<tr>
+										<td class="CTX_ContentTitleHeader">
+											<div id="ctl08_loginAgentCdaHeaderText" style="padding-left:15px"><span id="Welcome">Welcome</span></div>
+										</td>
+									</tr>
+									<tr>
+										<td class="CTXMSAM_LogonFont">
+											<div id="ctl08_loginAgentCdaHeaderText2" style="padding-left:15px">Please log on to continue.</div>
+										</td>
+									</tr>
+									<tr border="10">
+										<td class="CTXMSAM_LogonFont" valign="top">
+											<script language="javascript" type="text/javascript">    
+<!--												documentWriteActionPane(); -->
+											</script>
+											<div class="actionPanePng">
+												<table width="70%" id="ctl08_inputTable" class="CTXMSAM_LogonFont" cellspacing="0" cellpadding="4" border="0" style="border-width:0px;border-collapse:collapse;">										
+													<tbody>
+														<tr>
+															<td colspan="3"></td>
+														</tr>
+														<tr>
+<td align="right" style="padding-right:10px;white-space:nowrap;"><span id="User_name" class="CTXMSAM_LogonFont">User&nbsp;name:</span></td>
+<td colspan="2" style="padding-right:8px;"><input id="Enter user name" class="CTXMSAM_ContentFont" style="font-size: 8pt; cursor: auto; background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QsPDhss3LcOZQAAAU5JREFUOMvdkzFLA0EQhd/bO7iIYmklaCUopLAQA6KNaawt9BeIgnUwLHPJRchfEBR7CyGWgiDY2SlIQBT/gDaCoGDudiy8SLwkBiwz1c7y+GZ25i0wnFEqlSZFZKGdi8iiiOR7aU32QkR2c7ncPcljAARAkgckb8IwrGf1fg/oJ8lRAHkR2VDVmOQ8AKjqY1bMHgCGYXhFchnAg6omJGcBXEZRtNoXYK2dMsaMt1qtD9/3p40x5yS9tHICYF1Vn0mOxXH8Uq/Xb389wff9PQDbQRB0t/QNOiPZ1h4B2MoO0fxnYz8dOOcOVbWhqq8kJzzPa3RAXZIkawCenHMjJN/+GiIqlcoFgKKq3pEMAMwAuCa5VK1W3SAfbAIopum+cy5KzwXn3M5AI6XVYlVt1mq1U8/zTlS1CeC9j2+6o1wuz1lrVzpWXLDWTg3pz/0CQnd2Jos49xUAAAAASUVORK5CYII=); background-attachment: scroll; background-position: 100% 50%; background-repeat: no-repeat;" type="text" title="Enter user name" name="username" size="30" maxlength="127" onfocus="loginFieldCheck()" autocomplete="off"></td>
+														</tr>
+														<script language="JavaScript">ns_showpwd();</script>
+														<tr><td align="right" style="padding-right:10px;white-space:nowrap;"><span class="CTXMSAM_LogonFont">Domain Password:</span></td><td colspan="2" style="padding-right:8px;"><input class="CTXMSAM_ContentFont" type="Password" title="Enter password" name="password" size="30" maxlength="127" style="width: 100%; cursor: auto; background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QsPDhss3LcOZQAAAU5JREFUOMvdkzFLA0EQhd/bO7iIYmklaCUopLAQA6KNaawt9BeIgnUwLHPJRchfEBR7CyGWgiDY2SlIQBT/gDaCoGDudiy8SLwkBiwz1c7y+GZ25i0wnFEqlSZFZKGdi8iiiOR7aU32QkR2c7ncPcljAARAkgckb8IwrGf1fg/oJ8lRAHkR2VDVmOQ8AKjqY1bMHgCGYXhFchnAg6omJGcBXEZRtNoXYK2dMsaMt1qtD9/3p40x5yS9tHICYF1Vn0mOxXH8Uq/Xb389wff9PQDbQRB0t/QNOiPZ1h4B2MoO0fxnYz8dOOcOVbWhqq8kJzzPa3RAXZIkawCenHMjJN/+GiIqlcoFgKKq3pEMAMwAuCa5VK1W3SAfbAIopum+cy5KzwXn3M5AI6XVYlVt1mq1U8/zTlS1CeC9j2+6o1wuz1lrVzpWXLDWTg3pz/0CQnd2Jos49xUAAAAASUVORK5CYII=); background-attachment: scroll; background-position: 100% 50%; background-repeat: no-repeat;" autocomplete="off"></td></tr>
+														<tr><td align="right" style="padding-right:10px;white-space:nowrap;"><span class="CTXMSAM_LogonFont">RSA SecurID Tokencode:</span></td> <td colspan="2" style="padding-right:8px;"><input class="CTXMSAM_ContentFont" type="Password" title="Enter password" name="token" size="30" maxlength="127" style="width: 100%; background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QsPDhss3LcOZQAAAU5JREFUOMvdkzFLA0EQhd/bO7iIYmklaCUopLAQA6KNaawt9BeIgnUwLHPJRchfEBR7CyGWgiDY2SlIQBT/gDaCoGDudiy8SLwkBiwz1c7y+GZ25i0wnFEqlSZFZKGdi8iiiOR7aU32QkR2c7ncPcljAARAkgckb8IwrGf1fg/oJ8lRAHkR2VDVmOQ8AKjqY1bMHgCGYXhFchnAg6omJGcBXEZRtNoXYK2dMsaMt1qtD9/3p40x5yS9tHICYF1Vn0mOxXH8Uq/Xb389wff9PQDbQRB0t/QNOiPZ1h4B2MoO0fxnYz8dOOcOVbWhqq8kJzzPa3RAXZIkawCenHMjJN/+GiIqlcoFgKKq3pEMAMwAuCa5VK1W3SAfbAIopum+cy5KzwXn3M5AI6XVYlVt1mq1U8/zTlS1CeC9j2+6o1wuz1lrVzpWXLDWTg3pz/0CQnd2Jos49xUAAAAASUVORK5CYII=); background-attachment: scroll; background-position: 100% 50%; background-repeat: no-repeat;" autocomplete="off"></td></tr>
+														<tr>
+															<td></td>
+															<td></td>
+															<td align="right"><span style="display:none"><img src="/vpn/images/LoginButtonRolloverGlow.gif"></span><input type="submit" id="Log_On" value="Log On" class="CTX_CaxtonButton" onclick="ns_check();" onmouseover="this.className='CTX_CaxtonButton_Hover';" onmouseout="this.className='CTX_CaxtonButton';"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</form>
+						<script language="javascript" type="text/javascript">    
+<!--							documentWriteGlowBoxLower();-->
+						</script></td><td class="glowBoxRight glowBoxMidRightPng">
+					</td>
+				</tr>
+				<tr>
+					<td class="glowBoxFooter glowBoxLeft glowBoxFooterLeftPng"></td>
+					<td class="glowBoxFooter glowBoxFooterMidPng"></td>
+					<td class="glowBoxFooter glowBoxRight glowBoxFooterRightPng"></td>
+				</tr>
+			</tbody>
+		</table>
+<!-- ######################################################### -->
+<! -- Begin Comment: 12/13/2011 addition of Legal Notice text >
+<!-- ######################################################### -->
+	<textarea rows="18" cols="75" readonly="yes">**NOTICE**: These systems are solely for the use of authorized employees, consultants and/or agents of the target company and its worldwide subsidiaries and affiliates. Unauthorized use is strictly prohibited and subject to civil and criminal penalties. All usage of the systems must be in compliance with the Code of Ethics, Employee Handbook(s), and consultant/agency agreements, as applicable. All persons accessing these systems hereby consent to the monitoring, recording, disclosure, retention (as required by law and/or document retention standards in place at the company) and transfer (to other countries other than where the user is based) of all system usage information. System usage information includes, but is not limited to, system ID, LAN ID, all electronic content produced by the user, email account, instant messaging account, mainframe ID, and system passwords. System usage information may be used for managing the workforce, communications and emergencies, business operations, compliance and other legal, regulatory, audit and business purposes. By accessing these systems, the user consents to all terms as described above. (C2)</textarea>
+    </td>
+</tr>
+
+<!-- Error message box -->		    
+<tr>
+                <td align="center">
+                    <table class="CTXMSAM_LogonFont">
+                        <tr id="errorMessageRow">
+                            <td class="glowBoxLeft">&nbsp;</td>
+                            
+                            <td class="loginTableMidWidth">
+                            
+                                <script language='javascript'>ns_disperrmsg();</script>
+                            
+                            </td>
+                            
+                            <td class="glowBoxRight">&nbsp;</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+          
+<!-- Footer -->
+<script language="javascript" type="text/javascript">
+AddFooter();
+</script>
+</table>
+
+<DIV id=scriptArea></DIV>
+<script type="text/javascript" language="javascript">
+Resources.Load();
+</script>
+</BODY>
+</HTML>

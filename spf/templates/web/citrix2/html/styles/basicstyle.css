@@ -1,0 +1,194 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+  <meta NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW, NOARCHIVE">
+  <title>Loading</title>
+  <link rel="stylesheet" type="text/css" href="../html/styles/basicStyle.css" >
+  <script type="text/javascript">
+    <!--
+    
+function setItemInCookie(name, value) {
+    if (value == null) {
+        value = "";
+    }
+    if ((name == null) || (name == "")) {
+        return;
+    }
+
+    var newCookie = "";
+    var oldCookie = getCookie("WIClientInfo");
+    if (oldCookie != "") {
+        var cookieItems = oldCookie.split("~");
+        for (i=0; i < cookieItems.length; i++) {
+            // The name of the item will be escaped so we need to make sure
+            // that we search for the escaped version.
+            if (cookieItems[i].indexOf(escape(name) + "#") != 0) {
+                newCookie += cookieItems[i] + "~";
+            }
+        }
+    }
+
+    newCookie += escape(name) + "#" + escape(value);
+    storeCookie("WIClientInfo", newCookie);
+}
+
+
+function getItemFromCookie(name) {
+    return unescape(getValueFromString(escape(name), getCookie("WIClientInfo"), "#", "~"));
+}
+
+
+function storeCookie(name, value) {
+    if (value) { // non-null, non-empty
+        value = "\"" + value + "\"";
+    } else {
+        value = "";
+    }
+
+    if (window.location.protocol.toLowerCase() == "https:") {
+        value += "; secure";
+    }
+
+    var cookie = name + "=" + value;
+
+    cookie = cookie + "; path=/Citrix/External/auth/";
+
+    document.cookie = cookie;
+}
+
+
+function getCookie(name) {
+    var cookie = getValueFromString(name, document.cookie, "=", ";");
+    if ( (cookie.charAt(0) == "\"") && (cookie.charAt(cookie.length-1) == "\"") ) {
+        cookie = cookie.substring(1, cookie.length-1);
+    }
+    return cookie;
+}
+
+function getValueFromString(name, str, sep1, sep2) {
+    var result = "";
+
+    if (str != null) {
+        var itemStart = str.indexOf(name + sep1);
+        if (itemStart != -1) {
+            var valueStart = itemStart + name.length + 1;
+            var valueEnd = str.indexOf(sep2, valueStart);
+            if (valueEnd == -1) {
+                valueEnd = str.length;
+            }
+            result = str.substring(valueStart, valueEnd);
+        }
+    }
+
+    return result;
+}
+
+
+
+/*
+ * Detect information about the client environment
+ */
+function setClientAndEnvironmentCookies(url) {
+    if (isCookieEnabled()) {
+        detectEnvironment();
+        var newloc = new String(((url == null) || (url == "")) ? location : url);
+        location.replace(newloc);
+    } else {
+        location.replace("/nocookies.aspx");
+    }
+}
+//===============================
+// Internal functions
+//===============================
+
+// Check whether the browser accepts cookies by writing a cookie, reading
+// it back and checking if it is the same.
+function isCookieEnabled() {
+    var testName = "Cookies_On";
+    var testValue = "true";
+    setItemInCookie(testName, testValue);
+    var value = getItemFromCookie(testName);
+    return ((value != null) && (value == testValue));
+}
+
+// Detect information about the client environment
+function detectEnvironment() {
+    // Get screen resolution for embedded apps as a percentage of screen size
+    var ScreenWidth, ScreenHeight, strResolution;
+    ScreenWidth = window.screen.width;
+    ScreenHeight = window.screen.height;
+    strResolution = ScreenWidth + 'x' + ScreenHeight;
+    setItemInCookie("icaScreenResolution", strResolution);
+
+    // Duplicate of inline code from login.js. This value is used server-side at the
+    // same point screen resolution (above) is used, and this may be earlier than
+    // login.js.
+    var isSecure = (location.protocol.toLowerCase() == 'https:');
+    setItemInCookie("clientConnSecure", isSecure);
+}
+
+    // -->
+  </script>
+</head>
+
+<body onLoad="setClientAndEnvironmentCookies('');">
+<noscript>
+
+  <div id="overallWrapper">
+    <div id="pageContent">
+      
+<div id="headerWrapper">
+  <div id="header">
+    <table id="headerLeft" cellspacing="0">
+      <tr>
+
+
+        <td>
+          <table id="headerRight" cellspacing="0">
+            <tr>
+
+
+              <td>
+
+              </td>
+
+              <td>
+                <img id="headerLogo" src="../media/CitrixLogoHeader.png" alt="Page header" title="">
+              </td>
+
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+
+
+
+
+<div id="Popup_wscLink" class="wiPopup dropDownMenu">
+
+
+
+</div>
+
+
+      <div class="mainPane">
+        <div id="welcome">
+          <h4 class="info">JavaScript Required</h4>
+        </div>
+        <div id="commonBox">
+          <p>This Web site uses JavaScript to deliver your resources.</p>
+          <p>You must enable JavaScript in your browser. Contact your system administrator for assistance.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</noscript>
+</body>
+</html>

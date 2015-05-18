@@ -1,0 +1,2666 @@
+
+body
+{
+    color: #2C2D31;
+    margin: 0;
+    padding: 0;
+    font-family: Segoe UI, Tahoma,Verdana, Helvetica, Arial, sans-serif;
+    font-size: 70%;
+    text-align: center;
+
+}
+
+.gradientBackground
+{
+    background: url("../media/DesktopBackground.png") repeat-x scroll 0 45px transparent;
+}
+
+#overallWrapper
+{
+    text-align: left;
+    margin: 0 auto;
+}
+
+img, form
+{
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+table
+{
+    border: 0px;
+}
+
+a,
+a:link,
+a:visited
+{
+    color: #2C2D31;
+    text-decoration:underline;
+}
+
+a:hover
+{
+    color: #2C2D31;
+    text-decoration: underline;
+}
+
+
+a,
+input,
+label,
+p,
+select
+{
+    margin: 0;
+    padding: 0;
+    font-family: Segoe UI, Tahoma,Verdana, Helvetica, Arial, sans-serif;
+    font-size: 100%;
+}
+
+input.marginAdjust
+{
+
+}
+
+h4 
+{
+    font-size: 100%;
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+}
+
+
+h5
+{
+  margin: 1em 0;
+  padding: 0;
+  font-size: 120%;
+}
+
+
+h6
+{
+  margin: 0;
+  padding: 0;
+  font-size: 100%;
+}
+
+ul
+{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul li
+{
+    margin: 0;
+    padding: 0;
+}
+
+.screenReaderText
+{
+    position: absolute;
+    top: 0;
+    left: -9999px;
+}
+
+.buttonsPane
+{
+    padding: 20px 0 20px 40px;
+}
+
+.buttonsPane div input
+{
+    display: inline;
+    margin: 0 4px 0 0;
+}
+
+.pairPane
+{
+  margin: 10px 0 0;
+}
+
+.pairPane dt
+{
+    clear: left;
+    float: left;
+    padding: 5px 0 0 45px;
+    width: 110px;
+}
+
+.pairPane dd
+{
+    padding: 5px 0;
+}
+
+#advancedPageButtons {
+    text-align: center;
+}
+
+.accountSelfServicePane,
+.twoFactorAuthPane
+{
+   height: 125px;
+   margin-top: 16px;
+   margin-bottom: 10px;
+}
+
+.accountSelfServicePane input,
+.accountSelfServicePane label,
+.twoFactorAuthPane input,
+.twoFactorAuthPane label
+{
+   padding: 0;
+   margin: 2px 0 2px 0;
+   font-weight: bold;
+   vertical-align:middle;
+}
+
+.accountSelfServicePane input,
+.twoFactorAuthPane input
+{
+   margin-left: 40px;
+}
+
+.accountSelfServicePane p.taskDesc,
+.twoFactorAuthPane p.taskDesc
+{
+  padding: 0 0 10px 63px;
+}
+
+.accountSelfServicePane h5
+{
+  color: #0C4B8B;
+  padding: 3px 0 3px 40px;
+  margin-bottom: 4px;
+  margin-top: 2px;
+}
+
+.accountSelfServicePane h6
+{
+   padding: 5px 0 3px 20px;
+}
+
+.accountSelfServicePane p,
+.twoFactorAuthPane p
+{
+  padding: 0 0 5px 20px;
+  margin: 0;
+}
+
+.accountSelfServicePane p.questionValue
+{
+  padding-left: 40px;
+  padding-top: 5px;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.accountSelfServicePane li,
+.twoFactorAuthPane li
+{
+  margin-left: 40px;
+}
+
+#accountSSForm label,
+#twoFactorAuthForm label,
+#radiusAuthForm label
+{
+  float: left;
+  margin: 2px 0;
+  font-weight: normal;
+  width: 20ex;
+  vertical-align: top;
+}
+
+#radiusAuthForm label
+{
+  width: 40ex;
+}
+
+#accountSSForm input,
+#twoFactorAuthForm input
+{
+  font-weight: normal;
+  margin: 2px 0 5px 10px;
+  vertical-align: top;
+}
+
+
+.authPane input,
+.authPane label
+{
+  padding: 0;
+  margin: 2px 0 2px 0;
+  vertical-align: middle;
+}
+
+
+.authPane label
+{
+  line-height: 175%;
+}
+
+.outerContainerDiv
+{
+    padding-left: 10px;
+    padding-top: 3px;
+    margin: 16px 0;
+    height:110px;
+}
+
+
+
+input.Apply_Cancel_OK
+{
+    width: 12ex;
+}
+
+input.Cancel_LogIn
+{
+    width: 12ex;
+}
+
+input.Cancel_OK
+{
+    width: 13ex;
+}
+
+input.Proceed_To_Login
+{
+    width: 24ex;
+}
+
+input.Back {
+    width: 10ex;
+}
+
+input#changepwd
+{
+    width: 24ex;
+    margin-bottom: 5px;
+}
+
+div.appIcon32, img.appIcon32
+{
+    background-repeat: no-repeat;
+    width: 32px;
+    height: 32px;
+    margin: 0px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div.appIcon16, img.appIcon16
+{
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+    margin: 0px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+#headerWrapper {
+    background: #95A2AC url(../media/HeaderGradient.png) repeat-x bottom left;
+    width: 100%; /* needed for the header wrapper to fill the entire width in IE6 on the login page. Alternative fix is to remove "position: relative" from the body (for IE6) */
+}
+
+#header {
+    background: #95A2AC url(../media/HeaderGradient.png) repeat-x bottom left;
+    margin: 0 auto;
+    width: 900px;
+    color: #FFFFFF;
+}
+
+#headerLeft {
+    width: 100%;
+}
+
+#header a {
+  color: white;
+}
+
+#headerRight {
+    margin-left: auto;
+}
+
+#headerLogo {
+    padding: 11px 0 11px 18px;
+}
+
+a.navLink {
+    display:block;
+    zoom:1; /* needed for IE6 */
+    text-align: center;
+    text-decoration: none;
+    padding: 18px 18px 3px;
+    border-right: 1px solid #666;
+}
+
+a.navLink:link, a.navLink:visited, a.navLink:hover {
+    text-decoration: none;
+}
+
+a.navLink span {
+    text-decoration: none;
+}
+
+#wscLink span {
+    padding-right: 12px;
+    background: transparent url("../media/DropDownArrow.png") no-repeat right 5px;
+}
+
+#messagesLink {
+  background: transparent url(../media/Messages.png) no-repeat top center;
+}
+
+.inactiveNavLink #messagesLink {
+  background: transparent url(../media/MessagesHover.png) no-repeat top center;
+}
+
+#messagesLink:hover {
+  background: transparent url(../media/MessagesHover.png) no-repeat top center;
+}
+
+#settingsLink {
+  background: transparent url(../media/Settings.png) no-repeat top center;
+}
+
+.inactiveNavLink #settingsLink {
+  background: transparent url(../media/SettingsHover.png) no-repeat top center;
+}
+
+.inactiveNavLink span {
+  cursor: default;
+}
+
+#settingsLink:hover {
+  background: transparent url(../media/SettingsHover.png) no-repeat top center;
+}
+
+#logoffLink, #wscLink {
+  background: transparent url(../media/Logoff.png) no-repeat top center;
+}
+
+#logoffLink:hover, #wscLink:hover {
+  background: transparent url(../media/LogoffHover.png) no-repeat top center;
+}
+
+.customButton .leftDoor {
+  float: left;
+  background: transparent url(../media/ButtonLeft.png) no-repeat top left;
+  height: 26px;
+  padding: 0px 0px 0px 7px;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.customButton {
+  font-size: 11px; /* Fixed font-size to prevent the text overflowing the (fixed size) button when changing the text size in IE */
+}
+
+.customButton .leftDoor:hover {
+  background: transparent url(../media/ButtonHoverLeft.png) no-repeat top left;
+}
+
+.customButton .leftDoor:hover span {
+  background: transparent url(../media/ButtonHoverRight.png) no-repeat top right;
+}
+
+.customButton .rightDoor {
+  float: left;
+  background: url(../media/ButtonRight.png) no-repeat top right;
+  color: #2C2D31;
+  height: 20px;
+  padding: 6px 15px 0 8px;
+}
+
+.customButton a,
+.customButton a:link,
+.customButton a:visited,
+.customButton a:hover
+{
+    text-decoration: none;
+}
+
+.selectButton .rightDoor {
+  padding-right: 26px;
+  position: relative;
+}
+
+.selectButton img {
+  border: none;
+  position: absolute;
+  top: 11px;
+  right: 12px;
+}
+
+
+#welcome
+{
+    overflow: hidden;
+    z-index: 100;
+    text-align: left;
+}
+
+#welcome h4
+{
+    margin: 0;
+    padding: 5px 0px 3px;
+    font-weight: normal;
+    font-size: 160%;
+}
+
+#welcomeMessage p
+{
+    padding: 10px 0;
+}
+
+#commonBox .welcomeText
+{
+    margin-top: 10px;
+    padding: 2px 0 0 20px;
+}
+
+p.firstParagraph
+{
+    margin-top: 10px;
+}
+
+p.secondParagraph
+{
+    margin-top: 7px;
+    padding-bottom: 12px;
+}
+
+#searchPane
+{
+    display: inline;
+}
+
+#searchPane form,
+#searchPane form div
+{
+    display: inline;
+}
+
+#searchCell
+{
+    width: 216px;
+}
+
+#searchContainer
+{
+    float: left;
+    background: url(../media/Search.png) no-repeat top left;
+    width: 200px;
+    padding: 5px 0 3px 0;
+    font-size: 11px; /* Fixed font-size to prevent the text overflowing the (fixed size) search box when changing the text size in IE */
+}
+
+#searchContainer input
+{
+    float: left;
+    background: transparent;
+    color: #2C2D31;
+    width: 168px;
+    border: none;
+    font-size: 11px;
+    padding: 0 0 0 7px;
+    outline: 0; /* prevents orange border in Chrome */
+}
+
+#searchContainer a#searchLink {
+    float: right;
+    background: transparent;
+    width: 20px;
+    height: 20px;
+    outline: none;
+}
+
+#searchContainer .searchInactive
+{
+    color: #777777;
+    font-style: italic;
+}
+
+
+#searchPane a,
+#searchPane a:link,
+#searchPane a:visited
+{
+    margin: 0;
+    padding: 3px 4px 4px 4px;
+    text-decoration: none;
+    background: #3E3E3E url(../media/SearchGradient.png) repeat-x top left;
+    border: solid 1px #646464;
+    position: relative;
+}
+
+
+
+#searchPane span
+{
+    background: transparent url(../media/SearchMagnify.png) no-repeat center left;
+    padding-left: 20px;
+    padding-top: 1px;
+}
+
+#highContrast_SearchButton
+{
+   position: relative;
+   display: none;
+}
+
+
+#searchPane input,
+#searchPane a
+{
+    vertical-align: middle;
+}
+
+
+.mainPane
+{
+    margin: 0;
+    padding: 0;
+    left: 0;
+    right: 0;
+}
+
+
+#appMainPane
+{
+    margin: 10px auto 0;
+    width: 900px;
+}
+
+#commonMainPane
+{
+    width: 900px;
+    margin: 18px auto 0;
+}
+
+.hideBox div#commonBoxTop,
+.hideBox div#commonBoxFootLeft
+{
+display: none;
+}
+
+div#commonBoxTop
+{
+    background: black url("../media/TrailBackground.png") repeat-x bottom left;
+    border-top: 1px solid #CCCCCC;
+    border-left: 1px solid #CCCCCC;
+    border-right: 1px solid #CCCCCC;
+    height: 25px;
+}
+
+div#commonBoxFootLeft
+{
+    background: transparent url("../media/HintBackgroundLeft.png") no-repeat bottom left;
+    padding-left: 6px;
+}
+
+div#commonBoxFootRight
+{
+    background: transparent url("../media/HintBackgroundRight.png") no-repeat bottom right;
+    padding-right: 6px;
+}
+
+div#commonBoxFoot
+{
+    background: black url("../media/HintBackground.png") repeat-x bottom left;
+    height: 22px;
+}
+
+#commonBox
+{
+    border-top: 1px solid #CCCCCC;
+    border-bottom: 1px solid #CCCCCC;
+    background-color: white;
+    padding: 0;
+}
+
+.hideBox #commonBox
+{
+    border-width: 0px;
+    background-color: transparent;
+    padding: 0;
+}
+
+#commonBox a,
+#commonBox a:link,
+#commonBox a:visited
+{
+    color: #3F3F3F;
+    text-decoration:underline;
+}
+
+#commonBox a:hover
+{
+    color: #008CBF;
+    text-decoration: underline;
+}
+
+
+.commonInnerBox
+{
+    padding: 0 10px 10px 20px;
+}
+
+#backButton {
+    float: right;
+    margin-top: 10px;
+}
+
+
+
+.horizonPage #feedbackArea {
+    width: 21em;
+}
+
+#commonMainPane #feedbackArea
+{
+    margin: 0 0 18px 0;
+}
+
+#appMainPane #feedbackArea
+{
+    margin-bottom: 10px;
+}
+
+#appMainPane #feedbackArea.noFeedback
+{
+    display: block;
+    height: 8px;
+}
+
+#feedbackArea.noFeedback
+{
+    display: none;
+}
+
+p.feedbackStyleSuccess,
+p.feedbackStyleInfo,
+p.feedbackStyleWarning,
+p.feedbackStyleError
+{
+    color: black;
+    padding-top: 6px;
+    padding-right: 8px;
+    padding-bottom: 6px;
+    padding-left: 37px;
+    font-size: 100%;
+
+}
+
+p.feedbackStyleSuccess a,p.feedbackStyleInfo a,p.feedbackStyleWarning a,p.feedbackStyleError a,
+p.feedbackStyleSuccess a:link,p.feedbackStyleInfo a:link,p.feedbackStyleWarning a:link,p.feedbackStyleError a:link,
+p.feedbackStyleSuccess a:visited,p.feedbackStyleInfo a:visited,p.feedbackStyleWarning a:visited,p.feedbackStyleError a:visited,
+p.feedbackStyleSuccess a:hover,p.feedbackStyleInfo a:hover,p.feedbackStyleWarning a:hover,p.feedbackStyleError a:hover
+{
+    color: black;
+}
+
+p.feedbackStyleSuccess
+{
+    background: #FAFAFA url(../media/Tick.png) no-repeat 11px 4px;
+    border: solid 1px #85E57F;
+}
+
+p.feedbackStyleInfo
+{
+    background: #FAFAFA url(../media/Info16.png) no-repeat 11px 4px;
+    border: solid 1px #63A7D2;
+}
+
+p.feedbackStyleWarning
+{
+    background: #FAFAFA url(../media/WarningAlert.png) no-repeat 11px 4px;
+    border: solid 1px #F9C887;
+}
+
+p.feedbackStyleError
+{
+    background:  #FAFAFA url(../media/Error16.png) no-repeat 11px 4px;
+    border: solid 1px #B05050;
+}
+
+
+.messagesScreen li.messageRowSeparator {
+    background: #FFF url(../media/FadeLine.png) no-repeat 10px bottom;
+    padding-bottom:10px;
+}
+
+
+#sysMessage
+{
+    width: 900px;
+    margin: 0 auto;
+    padding-top: 8px;
+}
+
+
+#sysMessage p
+{
+    text-align: left;
+    padding: 10px 0;
+}
+
+
+#pageContent,
+#heightFiller,
+#footer
+{
+    margin: 0;
+    padding: 0;
+}
+
+
+#footer
+{
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+#footer p
+{
+    padding: 10px 0;
+}
+
+#footer img
+{
+    padding: 0 8px;
+    vertical-align: middle;
+}
+
+#hdxLogo {
+    display: none;
+}
+
+.horizonPage #hdxLogo {
+    display: inline;
+}
+
+.horizonPage #footer p {
+    color: #F2F2F2;
+}
+
+.loggedOut #footer p {
+    color: #2C2D31;
+}
+
+
+.spacer
+{
+    clear: both;
+}
+
+
+
+p.applistMessageStyleInfo
+{
+    margin: 5px 20px;
+    padding: 5px 0px 65px 25px;
+    background: url(../media/Info16.png) no-repeat 5px 5px;
+}
+
+
+.wiPopup
+{
+    position: absolute;
+    top: -999px; 
+    left: -999px;
+    width: 25em;
+    z-index: 1000;
+    font-size: 95%;
+    padding: 4px 10px;
+    border: solid 1px #CCCCCC;
+    background: white;
+    text-align: left;
+}
+
+.WizardBox .wiPopup
+{
+    background: white url(../media/HoverGradient.png) repeat-x bottom left;
+    border: 1px solid #A0A0A0;
+    padding: 5px 10px;
+    font-size: 100%;
+}
+
+.wiPopup h1
+{
+    font-size: 120%;
+    padding: 0;
+    margin: 0px 0px 5px 0px;
+}
+
+.wiPopup ul
+{
+    list-style-type: disc;
+}
+
+.wiPopup li
+{
+    margin: 0;
+}
+
+.wiPopup p
+{
+    margin: 5px 0 0 0;
+    padding: 0;
+}
+
+.wiPopup dl
+{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.wiPopup dt
+{
+    margin: 5px 0 0 0;
+    padding: 0;
+    width: 100%;
+}
+
+.wiPopup dd
+{
+	float: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+
+.hiddenFrameLayer
+{
+    position: absolute;
+    z-index: 990;
+    border: none;
+}
+
+#Popup_viewButton a {
+    padding: 3px 18px;
+    white-space: nowrap;
+}
+
+
+
+.invalidField
+{
+    color: #9D0000;
+}
+
+
+#directLaunchTable td {
+    vertical-align: top;
+}
+
+.directDelayedLaunchInfo
+{
+    padding-left: 35px;
+}
+
+.noDirectLaunchApp
+{
+	margin: 5px 20px 0 12px;
+	padding: 5px;
+}
+
+img.progressIndicator
+{
+    margin-top: 2px;
+    margin-left: 0px;
+}
+
+.directDelayedLaunchInfo .progressText
+{
+    padding-top: 0;
+}
+
+.loginForm {
+    margin: 0 auto;
+}
+
+.loginForm li
+{
+    list-style-type:none;
+    margin-bottom: 6px;
+    padding: 0;
+}
+
+.loginForm label
+{
+    padding: 2px 0;
+}
+
+.loginTypeOptionEntries
+{
+    width: 29.25ex;
+}
+
+.loginEntries
+{
+    width: 28ex;
+}
+
+
+.outerContainerDiv label
+{
+   margin-left: 40px;
+}
+
+
+.loginForm img
+{
+    vertical-align: middle;
+}
+
+.outerContainerDiv img
+{
+   vertical-align: top;
+   padding-top: 3px;
+}
+
+#mainPane
+{
+    margin: 0 5px;
+}
+
+#mainPane h3
+{
+    border: solid 1px #CDCDCD;
+    padding: 10px 0 10px 40px;
+}
+
+#mainPane h3.info
+{
+    background: #EEEEEE url(../media/Info24.png) no-repeat center left;
+}
+
+#mainPane p
+{
+    padding-bottom: 10px;
+}
+
+
+.changePasswordButtons
+{
+    padding: 16px 0 16px 45px;
+}
+
+#logoutAreaRestartLink
+{
+    background: transparent url(../media/Restart.png) no-repeat scroll 6px 2px;
+    float: right;
+    margin: 24px 100px 0 0;
+    padding: 7px 10px 10px 36px;
+}
+
+#directLaunchTable
+{
+    margin-top: 25px;
+}
+
+.TrustedZoneWizardLink
+{
+    margin-top: 15px;
+}
+
+p.DirectLaunchAppLink
+{
+    margin-top: 3px;
+}
+
+div.InformationCenterDivLeft
+{
+    float: left;
+    width: 70%;
+    padding-bottom: 80px;
+    overflow: hidden;
+}
+
+.horizonPage {
+    background: #566169 url("../media/HorizonBgBottom.png") repeat-x left 325px;
+}
+
+#horizonTop {
+    width: 100%;
+    height: 325px;
+    background: #FDFDFD url("../media/HorizonBgTop.png") no-repeat top left;
+    text-align: center;
+}
+
+#horizonTop img {
+    padding-top: 75px;
+}
+
+#horizonTagline {
+  color: #F2F2F2;
+  font-size: 180%;
+  font-weight: normal;
+  margin: 50px 0 0 0;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+.horizonPage .mainPane {
+    position: relative;
+    top: -120px;
+    background: url(../media/Devices.png) no-repeat center 30px;
+    color: white;
+    padding: 0;
+    overflow: auto;
+}
+
+.horizonPage .actionPane,
+.horizonPage #welcomeMessage {
+    width: 23em;
+}
+
+.loggedOut {
+	background: #383A3B url(../media/HorizonBgBottomLoggedOff.png) repeat-x top left;
+}
+
+.loggedOut #horizonTop {
+	background: #515151 url(../media/HorizonBgTopLoggedOff.png) no-repeat top left;
+}
+
+.loggedOut .glowBoxMid {
+	height: 17.5em;
+	width: 28em;
+}
+
+.loggedOut .mainPane {
+	background: url(../media/DevicesLoggedOff.png) no-repeat center 30px;
+}
+
+.loggedOut #feedbackArea {
+	padding-bottom: 1em;
+}
+
+.loggedOut p {
+	text-align: center;
+}
+
+.loggedOut .customButton {
+	margin: 1em 0 0;
+	zoom: 1;
+}
+
+.loggedOut .glowBoxMid {
+    vertical-align: top;
+}
+
+.loggedOut .actionPane {
+	width: 100%;
+}
+
+.loggedOut #sysMessage {
+    margin: 4px 0 6px 0px;
+    padding: 0;
+    width: 28em;
+}
+
+.loggedOut #feedbackArea {
+	width: 28em;
+}
+
+.loggedOut #horizonTagline {
+    color: #515151;
+}
+
+.loggedOut td.glowBoxFooterLeft {
+  background-image:url(../media/LoginPaneFooterLeftLoggedOff.png);
+}
+
+.loggedOut td.glowBoxFooterMid {
+  background-image:url(../media/LoginPaneFooterMidLoggedOff.png);
+}
+
+.loggedOut td.glowBoxFooterRight {
+  background-image:url(../media/LoginPaneFooterRightLoggedOff.png);
+}
+
+.loggedOut #feedbackArea
+{
+	margin: 3em 0 0;
+}
+
+.loggedOut #feedbackArea p
+{
+    padding: 4px 0 3px 22px;
+    border: none;
+    background-color: transparent;
+    background-position: 0 4px;
+    color: white;
+    text-align:left;
+}
+
+.loggedOut p.feedbackStyleSuccess a,
+.loggedOut p.feedbackStyleInfo a,
+.loggedOut p.feedbackStyleWarning a,
+.loggedOut p.feedbackStyleError a,
+.loggedOut p.feedbackStyleInfo a:link,
+.loggedOut p.feedbackStyleWarning a:link,
+.loggedOut p.feedbackStyleError a:link,
+.loggedOut p.feedbackStyleSuccess a:visited,
+.loggedOut p.feedbackStyleInfo a:visited,
+.loggedOut p.feedbackStyleWarning a:visited,
+.loggedOut p.feedbackStyleError a:visited,
+.loggedOut p.feedbackStyleSuccess a:hover,
+.loggedOut p.feedbackStyleInfo a:hover,
+.loggedOut p.feedbackStyleWarning a:hover,
+.loggedOut p.feedbackStyleError a:hover
+{
+    color: white;
+}
+
+.loggedOut #feedbackArea.noFeedback {
+	display: block;
+}
+
+table.carbonBox {
+    width: 100%;
+}
+
+#returnToLogOn {
+    margin: 0 auto;
+}
+
+
+table.glowBox {
+    cursor: default;
+}
+
+td.glowBoxLeft {
+  width:20px;
+}
+td.glowBoxRight {
+  width:20px;
+}
+td.glowBoxTop {
+  height:20px;
+}
+td.glowBoxFooter {
+  height:51px;
+}
+td.glowBoxMid {
+  background: #73808C;
+  padding: 7px 30px;
+}
+
+td.glowBoxTopLeft {
+  background-position:bottom right;
+  background-repeat:no-repeat;
+  background-image:url(../media/LoginPaneTopLeftBorderGlow.png);
+}
+td.glowBoxTopMid .leftGradient {
+  background-position:top left;
+  background-repeat:no-repeat;
+  background-image:url(../media/LoginPaneTopLeftGradient.png);
+  height: 20px;
+}
+td.glowBoxTopMid .rightGradient {
+  background-position:top right;
+  background-repeat:no-repeat;
+  background-image:url(../media/LoginPaneTopRightGradient.png);
+  height: 20px;
+  margin-left: 96px;
+}
+td.glowBoxTopMid .centerGradient {
+  background-position:top left;
+  background-repeat:repeat-x;
+  background-image:url(../media/LoginPaneTopMidBorderGlow.png);
+  height: 20px;
+  margin-right: 96px;
+}
+td.glowBoxTopRight {
+  background-position:bottom left;
+  background-repeat:no-repeat;
+  background-image:url(../media/LoginPaneTopRightBorderGlow.png);
+}
+td.glowBoxMidLeft {
+  background-position:center left;
+  background-repeat:repeat-y;
+  background-image:url(../media/LoginPaneCenterLeftBorderGlow.png);
+}
+td.glowBoxMidRight {
+  background-position:center right;
+  background-repeat:repeat-y;
+  background-image:url(../media/LoginPaneCenterRightBorderGlow.png);
+}
+td.glowBoxFooterLeft {
+  background-position:top left;
+  background-repeat:no-repeat;
+  background-image:url(../media/LoginPaneFooterLeftBorderGlow.png);
+}
+td.glowBoxFooterMid {
+  background-position:top center;
+  background-repeat:repeat-x;
+  background-image:url(../media/LoginPaneFooterMidBorderGlow.png);
+}
+td.glowBoxFooterRight {
+  background-position:top right;
+  background-repeat:no-repeat;
+  background-image:url(../media/LoginPaneFooterRightBorderGlow.png);
+}
+
+.delayedImageNone {
+    height: 90px;
+    background: url("../media/Transparent16.png") no-repeat scroll center center transparent;
+}
+
+.delayedImageSpinner {
+    height: 90px;
+    background: url("../media/Loader.png") no-repeat scroll center center transparent;
+}
+
+.delayedImagePlay {
+    height: 90px;
+    background: url(../media/DesktopReady.png) no-repeat scroll center center transparent;
+}
+
+.restartConfirmationIcon {
+    height: 70px;
+    width: 50px;
+    float: left;
+    padding-left: 10px;
+    background: url(../media/AlertIcon.png) no-repeat top center;
+}
+
+.restartConfirmationText {
+    height: 70px;
+    width: 260px;
+    float: left;
+}
+
+#directLaunchRestart {
+    padding-top: 13px;
+}
+.messagesScreen {
+    padding-bottom: 80px;
+}
+
+#messagesContent ul {
+    margin-bottom:10px;
+}
+
+.messagesScreen h2 {
+    margin: 10px 0 12px 0;
+    padding: 3px 15px;
+    font-size:100%;
+    font-weight: normal;
+}
+
+.messagesScreen h3 {
+    font-size:120%;
+    margin: 0 15px;
+    padding: 4px 25px 4px 30px;
+    background-color: #FAFAFA;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+}
+
+.messagesScreen #errorMessages {
+    background-image: url(../media/Error16.png);
+    border: 1px solid #B05050;
+}
+
+.messagesScreen #warningMessages {
+    background-image: url(../media/WarningAlert.png);
+    border: 1px solid #F9C887;
+}
+
+.messagesScreen #infoMessages {
+    background-image: url(../media/Info16.png);
+    border: 1px solid #63A7D2;
+}
+
+.messageText { 
+    margin: 15px;
+}
+
+#navBarWrapper {
+  background:#F2F2F2 url("../media/GreyLine.png") repeat-x bottom;
+}
+
+#navBar {
+  background:#F2F2F2 url("../media/GreyLine.png") repeat-x bottom;
+  width: 900px;
+  margin: 0 auto;
+}
+
+#navBar .leftDoor {
+  background: url("../media/TabLeft.png") no-repeat left top;
+  display: block;
+  float: left;
+  padding: 0 0 0 4px;
+}
+
+#navBar .rightDoor {
+  background:url("../media/TabRight.png") no-repeat right top;
+  display: block;
+  float: left;
+  padding: 0;
+}
+
+#navBar .leftDoor:hover {
+  background:url("../media/TabHoverLeft.png") no-repeat left top;
+}
+
+#navBar .rightDoor:hover {
+  background:url("../media/TabHoverRight.png") no-repeat right top;
+}
+
+#navBar .selectedTab .leftDoor {
+  background:url("../media/TabSelectedLeft.png") no-repeat left top;
+}
+
+#navBar .selectedTab .rightDoor {
+  background:url("../media/TabSelectedRight.png") no-repeat right top;
+  padding-bottom: 1px;
+}
+
+#navBar ul {
+  margin:0;
+  padding:10px 0 0;
+  list-style:none;
+}
+
+#navBar ul ul {
+    padding: 0;
+}
+
+#navBar li {
+  display:inline;
+  margin:0;
+  padding:0;
+}
+
+#navBar img {
+  margin: 5px 5px 0 0;
+}
+
+#navBar span {
+  white-space: nowrap;
+}
+
+#navBar .selectedTab span {
+  cursor: default;
+}
+
+#navBar li.rightTab {
+  float: left;
+}
+
+#navBar a {
+  float: left;
+  margin: 0;
+  text-decoration: none;
+}
+
+#navBar a.tabText {
+  float: left;
+  padding: 8px 22px 8px 16px;
+}
+
+
+.dropDownMenu
+{
+    padding:0; 
+    margin:0;
+    display: block;
+    
+    width: auto;
+    
+    height: auto;
+    color: black;
+}
+
+.dropDownMenu a
+{
+    display: block;
+    margin: 0;
+    border: none;
+    font-size: 100%;
+    padding: 3px 10px;
+}
+
+.dropDownMenu a,
+.dropDownMenu a:link,
+.dropDownMenu a:visited,
+.dropDownMenu a:hover,
+.dropDownMenu a:focus,
+.dropDownMenu a:active
+{
+    text-decoration: none;
+}
+
+.dropDownMenu a:hover,
+.dropDownMenu a:focus,
+.dropDownMenu a:active
+{
+    background: #C5E6F3;
+}
+
+#navBar span.navButtonError
+{
+  background: url(../media/Error16.png) center right no-repeat;
+  padding: 2px 20px 2px 0;
+}
+
+#navBar span.navButtonWarning
+{
+  background: url(../media/WarningAlert.png) center right no-repeat;
+  padding: 2px 20px 2px 0;
+}
+
+#navBar span.navButtonInfo
+{
+  background: url(../media/Info16.png) center right no-repeat;
+  padding: 2px 20px 2px 0;
+}
+
+#navBar span.navButtonSuccess
+{
+  background: url(../media/Tick.png) center right no-repeat;
+  padding: 2px 20px 2px 0;
+}
+
+
+div.AdvancedMode {
+    margin-left: 0;
+}
+
+.WizardBox .settingsHeader {
+    border-top: none;
+    padding-left: 0;
+}
+
+#preferences h3 {
+	font-family: Arial, Helvetica, Sans-Serif;
+	color: #888;
+	font-size: 170%;
+	font-weight: normal;
+	margin: 0;
+	padding: 5px 0 0;
+}
+
+h6.settingsHeader
+{
+	color: #2C639A;
+	font-family: Arial, Helvetica, Sans-Serif;
+    margin: 8px 0 0 0;
+    padding: 10px 0 2px 25px;
+    font-size: 150%;
+    font-weight: normal;
+    clear: left;
+    border-top: 1px solid silver;
+    background: white no-repeat 1px 12px;
+}
+
+h6.generalSettings 
+{
+	background-image: url('../media/User.png');
+}
+
+h6.passwordSettings 
+{
+	background-image: url('../media/Password.png');
+}
+
+h6.userExperienceSettings 
+{
+	background-image: url('../media/Desktop.png');
+}
+
+h6.devicesSettings 
+{
+	background-image: url('../media/Plug.png');
+}
+
+dl 
+{
+	width: 100%;
+	margin: 0;
+}
+
+dd, dt 
+{
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+dt 
+{
+    clear: left;
+    width: 35%;
+    padding: 3px 5px 0 0;
+}
+
+dt p
+{
+	padding-left: 25px;
+}
+
+dd 
+{
+    width: 60%;
+    margin: 0;
+    padding: 1px 0 0 20px;
+    margin-bottom: 2ex;
+}
+
+dd dt 
+{
+    width: 180px;
+    padding-top: 0;
+}
+
+dd dt.nonLabel 
+{
+    width: 60%;
+}
+
+dd dt p
+{
+	padding-bottom: 0.5em;
+	padding-left: 0;
+}
+
+dd dd
+{
+	width: auto;
+	margin-bottom: 2ex;
+}
+
+dt ul, dd ul 
+{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+dt li, dd li 
+{
+    margin: 0;
+    padding: 0;
+}
+
+.settingsButtons
+{
+    margin: -38px auto 0;
+    padding: 0;
+    text-align: right;
+    width: 50%;
+    float: right;
+}
+
+.settingsButtons.topBorder
+{
+	border-top: 1px solid silver;
+	margin-top: 0;
+	padding-top: 10px;
+	width: 100%;
+}
+
+.settingsButtons .customButton 
+{
+	float: right;
+	margin: 0 2px;
+}
+
+dt .customButton {
+	padding-bottom: 35px;
+}
+
+.preLoginPane
+{
+    background: #FFF;
+    color: #000;
+    width: 104ex;
+    margin-top: 2ex;
+    margin-left: 15px;
+    padding: 4px 6px;
+}
+
+
+#slWindowSize,
+#Help_WindowSize img
+{
+    margin-bottom: 2ex;
+}
+
+
+dd dd select,
+dd dd input,
+dd dd a img,
+dd dt input,
+dd dt a img,
+dt a img,
+label {
+	vertical-align: middle;
+}
+
+
+a.checkboxHelp img
+{
+    margin: 0;
+}
+
+dd dt ul li,
+dd dd ul li
+{
+  margin: 0 0 2ex 0;
+}
+
+
+dd select
+{
+    width: 40ex;
+}
+
+
+label#lblWindowSizeCustom,
+label#lblWindowSizePercent
+{
+    float: left;
+    width: 25ex;
+}
+
+#preLoginButtonPane
+{
+    width: 104ex;
+    padding: 6px;
+    margin: 15px;
+}
+
+#preLoginButtonPane div input
+{
+    overflow:visible;
+    padding-left: 1.25em;
+    padding-right: 1.25em;
+}
+
+#bandwidthWarning
+{
+    margin: 8px 0;
+}
+
+
+iframe.HiddenIframe, div.HiddenDiv
+{
+    width: 0px;
+    height: 0px;
+    position: fixed;
+    left:-100px;
+    top: -100px;
+    visibility: hidden;
+}
+
+
+}
+#tabHeader {
+  float:left;
+  width:100%;
+  background:url("../media/BlackLine.png") repeat-x bottom;
+  line-height:normal;
+}
+
+#tabHeader ul {
+  margin:0;
+  padding:10px 10px 0 0;
+  list-style:none;
+}
+
+#tabHeader li {
+  float: left;
+  margin:0;
+  padding:0;
+}
+
+#tabHeader .leftDoor {
+  float: left;
+  display:block;
+  background:url(../media/TabLeft.png) no-repeat left top;
+  padding: 0 4px 0 4px;
+}
+
+#tabHeader .rightDoor {
+  float: left;
+  display: block;
+  background:url(../media/TabRight.png) no-repeat right top;
+  padding: 0;
+}
+
+#tabHeader .leftDoor:hover {
+  background:url(../media/TabHoverLeft.png) no-repeat left top;
+}
+
+#tabHeader .rightDoor:hover {
+  background:url(../media/TabHoverRight.png) no-repeat right top;
+}
+
+#tabHeader .selectedTab .leftDoor {
+  background:url(../media/TabSelectedLeft.png) no-repeat left top;
+}
+
+
+#tabHeader .selectedTab .rightDoor {
+  background:url(../media/TabSelectedRight.png) no-repeat right top;
+  padding-bottom: 1px;
+}
+
+#tabHeader .tabText {
+  float: left;
+
+  padding: 7px 55px 7px 8px;
+
+  margin-right: 25px;
+}
+
+
+#tabHeader .imageTab .tabText {
+  padding-right: 35px;
+  margin-right:0;
+}
+
+#tabHeader a {
+  text-decoration: none;
+}
+
+#tabHeader img {
+  float: left;
+  margin: 5px 28px 0 0;
+  padding: 0;
+  border: none;
+}
+
+#tabHeader span {
+  color: white;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+#tabFooter {
+  clear: both;
+  height: 4px;
+  background:#3772E3 url(../media/TabBaseLeft.png) no-repeat top left;
+  border-right: 1px solid black;
+}
+
+
+.selectedTabContent
+{
+    clear: left;
+    height: 100%;
+    overflow: none;
+    border: 1px solid #CCC;
+    background: white;
+}
+
+.hideBox .selectedTabContent {
+    border-width: 0px;
+    background-color: transparent;
+}
+
+.displayTools
+{
+  background: #E4E4E4 url(../media/TrailBackground.png) repeat-x top left;
+  clear: both;
+  width: 100%;
+  border-bottom: solid 1px #CCC;
+  overflow: auto;
+  letter-spacing: 0;   
+}
+
+.hideBox .displayTools {
+    border-width: 0px;
+}
+
+.displayTools a:link,
+.displayTools a:visited,
+.displayTools a:hover,
+#hintArea a:link,
+#hintArea a:visited,
+#hintArea a:hover
+{
+    color: #393939;
+}
+
+.displayTools table tr td
+{
+  padding-right: 6px;
+}
+
+
+#displayToolsTable {
+    width: 100%;
+}
+
+.hideBox #displayToolsTable {
+    display: none;
+}
+
+#displayToolsViewCell .selectButton {
+    float: right;
+}
+
+#displayToolsMainCell
+{
+    vertical-align: middle;
+    padding-left: 18px;
+    padding-right: 8px;
+    color: #393939;
+}
+
+#displayToolsRefreshCell {
+    width: 34px;
+}
+
+
+
+.breadcrumb
+{
+    white-space: nowrap;
+}
+
+.breadcrumbLong
+{
+    white-space: normal;
+}
+
+.lastBreadcrumb
+{
+    font-weight: bold;
+}
+
+.hiddenElement {
+    visibility: hidden;
+}
+
+#viewButton {
+    outline: 0;
+}
+
+#refreshLink
+{
+    background: url(../media/Refresh.png) no-repeat top left;
+    text-decoration: none;
+    width: 34px;
+    height: 26px;
+    display: block;
+}
+
+a#refreshLink:hover
+{
+    background: url(../media/RefreshHover.png) no-repeat top left;
+}
+
+
+#hintArea
+{
+    clear: both;
+    overflow: auto;
+    background: #F9F9F9 url(../media/HintBackground.png) repeat-x bottom left;
+}
+
+#hintAreaLeft {
+    padding-left: 6px;
+    background: #F9F9F9 url(../media/HintBackgroundLeft.png) no-repeat bottom left;
+}
+
+.hideBox #hintAreaLeft {
+    display: none;
+}
+
+#hintAreaRight {
+    padding-right: 6px;
+    background: #F9F9F9 url(../media/HintBackgroundRight.png) no-repeat bottom right;
+}
+
+#hintArea p
+{
+    float: left;
+    display: inline;
+    padding: 6px 2px 6px 10px;
+    vertical-align: middle;
+}
+
+#hintArea img
+{
+  display: inline;
+  padding: 0px 10px 0px 6px;
+  vertical-align: middle;
+}
+
+
+a.iconLink:link,
+a.iconLink:visited,
+a.folderIconLink:link,
+a.folderIconLink:visited,
+a.folderIconLink:hover
+{
+    color: #3F3F3F;
+    text-decoration:none;
+}
+
+
+a.iconLink:hover
+{
+    color: #123456;
+}
+
+a.iconLink:hover span,
+a.folderIconLink:hover span
+{
+    color: #3F3F3F;
+    text-decoration:underline;
+}
+
+.folderIconLink img
+{
+    float:left;
+}
+
+
+.iconView,
+.groupView
+{
+    width: 10em;
+    height: 8.4em;
+    padding: 3px;
+    float: left;
+    overflow: hidden;
+    margin: 5px 0 3px 10px;
+
+    line-height: 2.5ex;
+
+}
+
+.iconView .spinner, .groupView .spinner {
+    padding-top: 4px;
+}
+
+.iconView .iconLink,
+.groupView .iconLink
+{
+    text-align: center;
+}
+
+.iconView .folderLink,
+.groupView .folderLink
+{
+    padding-bottom: 19px;
+}
+
+.iconView a,
+.groupView a,
+#listView a,
+#tabularView tr a
+{
+    display: block;
+    padding: 4px;
+}
+
+.iconView a:hover,
+.groupView a:hover,
+#listView a:hover,
+#tabularView tr a:hover
+{
+    background: #ECF5FA url("../media/HoverGradient.png") no-repeat top left;
+    cursor: pointer;
+    display: block;
+    border: 1px solid #B3C9E9;
+    padding: 3px;
+}
+
+#listView a:hover,
+#tabularView tr a:hover
+{
+    background: #DCEDF5 url("../media/HoverGradientList.png") repeat-y top left;
+}
+
+.desktopView {
+    margin-left: -20px;
+}
+
+.iconView a.iconLinkLaunching, .iconView a.iconLinkLaunching:hover,
+.groupView a.iconLinkLaunching, .groupView a.iconLinkLaunching:hover,
+.desktopView a.iconLinkLaunching, .desktopView a.iconLinkLaunching:hover,
+#listView a.iconLinkLaunching, #listView a.iconLinkLaunching:hover,
+#treeView a.iconLinkLaunching, #treeView a.iconLinkLaunching:hover,
+#tabularView a.iconLinkLaunching, #tabularView a.iconLinkLaunching:hover
+{
+    cursor: default;
+}
+
+.iconView a.folderLink:hover,
+.groupView a.folderLink:hover
+{
+    padding-bottom: 19px;
+}
+
+#listView a.folderLink:hover {
+    padding-left: 17px;
+}
+
+#tabularView a.folderLink:hover {
+    padding-left: 18px;
+}
+
+.iconView p,
+.groupView p
+{
+    text-align: center;
+}
+
+
+.iconView span,
+.groupView span
+{
+    display: block;
+    overflow: hidden;
+    width: 9.0em;
+    margin: 0 auto;
+}
+
+
+#listView
+{
+    padding: 0 0 10px 10px;
+    margin: 8px 0 5px 0;
+}
+
+#listView .spinner {
+    padding-right: 2px;
+}
+
+#listView .folderLink {
+    padding-left: 18px;
+}
+
+#listView li
+{
+    float: left;
+    width: 26em;
+}
+
+#listView li img,
+#listView span
+{
+    vertical-align:middle;
+}
+
+#listView span
+{
+  padding: 0 0 2px 4px;
+}
+
+
+#tabularView
+{
+    clear:both;
+    width:100%;
+    margin: 0;
+    padding: 0 0 12px 0;
+}
+
+#tabularView table
+{
+   width:100%;
+   border-collapse: collapse;
+}
+
+#tabularView .spinner {
+    padding-top: 1px;
+    padding-right: 2px;
+}
+
+#tabularView .folderLink
+{
+    padding-left: 19px;
+}
+
+#tabularView .leftColumn {
+  width: 40%;
+  padding: 2px;
+  vertical-align: top;
+}
+
+#tabularView .descriptionColumn {
+  width: auto;
+  padding: 2px 20px 2px 0;
+}
+
+#tabularView .noLeftBorder {
+    padding-left:0px;
+}
+
+#tabularView th
+{
+    padding: 5px 5px 5px 24px;
+    text-align: left;
+    background-color: #F7F7F7;
+}
+
+#tabularView table td
+{
+   padding: 2px 20px;
+   vertical-align: top;
+}
+
+#tabularView img
+{
+    float: left;
+}
+
+#tabularView span
+{
+    padding-left: 3px;
+}
+
+#tabularView tr
+{
+    padding-left: 20px;
+}
+
+
+#treeView
+{
+    list-style-type: none;
+    list-style-image: none;
+    list-style-position: outside;
+    padding: 14px 14px 18px 50px;
+    margin: 0;
+}
+
+#treeView li
+{
+    position: relative;
+    margin: 5px 15px 5px 5px;
+    padding: 1px 0 0 0;
+}
+
+#treeView .spinner {
+    left: -35px;
+    top: 4px;
+}
+
+#treeView li img
+{
+    position: absolute;
+    left: -21px;
+    vertical-align: middle;
+}
+
+#treeView li ul
+{
+    display:none;
+    margin: 0 0 0 10px;
+}
+
+li.rootApps
+{
+    padding-left:16px;
+}
+
+
+
+.groupHeader
+{
+    clear: both;
+    padding:20px 8px 0pt 10px;
+}
+
+.groupHeaderRule
+{
+    border-top: 1px solid #b5b5b5;
+    margin-right: 5px;
+}
+
+.groupHeaderText {
+    display: inline;
+    background-color: white;
+    padding-right: 0.25em;
+    position: relative;
+    top: -0.75em;
+    font-weight: bold;
+}
+
+a.folderClose, a.folderOpen,
+a.folderClose:visited, a.folderOpen:visited,
+a.folderClose:hover, a.folderOpen:hover
+{
+    color: #3F3F3F;
+    text-decoration: none;
+}
+
+#treeView li a.folderClose img,
+#treeView li a.folderOpen img
+{
+    left:-36px; 
+}
+
+
+#tabularView div
+{
+    clear:both;
+    float:left;
+    width:90%;
+}
+
+
+#nextLink:hover,#previousLink:hover
+{
+    text-decoration: underline;
+}
+
+
+
+#nextLink {
+   padding: 5px;
+   float:right;
+   text-decoration: none;
+   color:#000;
+   margin-right:10px;
+}
+
+
+#previousLink {
+   padding: 5px;
+   float:right;
+   text-decoration: none;
+   color:#000;
+   margin-right:10px;
+}
+
+#currentResultsNo {
+    float:right;
+    padding:5px;
+}
+
+
+
+
+.delayedLaunch {
+     padding: 15px 5px 15px 45px;
+}
+
+.delayedLaunchStatus a:link,
+.delayedLaunchStatus a:visited,
+.delayedLaunchStatus a:hover {
+    color: #3F3F3F;
+}
+
+.delayedLaunch img, .delayedLaunch span {
+     vertical-align:middle;
+}
+
+.delayedLaunchStatus {
+    clear: left;
+}
+
+.delayedLaunchStatus p {
+    padding: 0px;
+    margin-top: 3px;
+}
+
+.delayedLaunchStatus li {
+    display: inline;
+}
+
+.delayedLaunchLink {
+    border-left: 1px #696969 solid;
+    padding-left: 5px;
+}
+
+.progressText {
+    float: left;
+    font-weight: bold;
+    padding: 5px 0px;
+}
+
+.delayedLaunchInfo {
+   margin-top: -33px;
+   padding-left: 50px;
+}
+
+.desktopScreenContainer {
+    margin-left: 30px;
+    width: 130px;
+}
+
+.restartBoxButtonPane {
+    margin-left: 195px;
+}
+
+.desktopResourceDirectLaunch {
+	padding-top: 160px;
+    width: 186px;
+    margin: auto;
+	font-size: 120%;
+	text-decoration: none;
+	display: block;
+}
+
+.desktopResource a,
+.desktopResource a:link,
+.desktopResource a:visited,
+.desktopResource a:hover,
+#commonBox .desktopResourceDirectLaunch a,
+#commonBox .desktopResourceDirectLaunch a:link,
+#commonBox .desktopResourceDirectLaunch a:visited,
+#commonBox .desktopResourceDirectLaunch a:hover
+{
+    cursor: hand;
+    color: #3F3F3F;
+}
+
+.directLaunchRestart {
+	width: 130px;
+	height: 10px;
+	vertical-align: bottom;
+	text-align: center;
+    font-size: 95%;
+    margin: 11px 0 6px 40px;
+    visibility: hidden;
+}
+
+.visible {
+    visibility: visible;
+}
+
+.restartConfirmationContent {
+    padding: 28px 15px 10px 10px;
+    font-size: 110%;
+}
+
+.directLaunchRestartConfirmation {
+    margin:auto;
+    width: 200px;
+    visibility: hidden;
+    background: url("../media/HoverBubble.png") no-repeat scroll 0pt 0pt;
+    width: 350px;
+    height: 146px;
+}
+
+
+
+
+.desktopResource {
+	float: left;
+	padding: 20px 0px;
+    width: 186px;
+	font-size: 120%;
+	display: block;
+    margin: 0px 15px;
+}
+
+.desktopFocus {
+	background: url('../media/DesktopRollover.png') no-repeat bottom;
+}
+
+.restartLinkHidden,
+.restartLinkShowOnFocus,
+.restartLinkNotRestartable,
+.restartLinkAlwaysShow {
+	width: 130px;
+	height: 22px;
+    margin: 0px 30px;
+	text-align: center;
+    padding-top: 16px;
+}
+
+.restartLinkHidden a,
+.restartLinkShowOnFocus a,
+.restartLinkNotRestartable a {
+    display: none;
+}
+
+
+.restartLinkShowOnFocus a,
+.restartLinkAlwaysShow a {
+    font-size: 85%;
+    text-decoration: underline;
+}
+
+.restartLinkNotRestartable,
+.restartLinkHidden,
+.restartLinkShowOnFocus {
+    
+}
+
+.desktopFocus .restartLinkShowOnFocus {
+    background-image: none;
+}
+
+.desktopFocus .restartLinkShowOnFocus a {
+    display: block;
+}
+
+.desktopScreen {
+	display: block;
+	width: 130px;
+    margin: 0;
+	height: 88px;
+	background: url('../media/DesktopInactive.png') no-repeat bottom;
+	text-align: center;
+}
+
+.activeDesktop {
+    background: url('../media/DesktopActive.png') no-repeat bottom;
+}
+
+.restartPane {
+    display: none;
+	padding-top: 10px;
+}
+
+.restartLink {
+    font-size: 95%;
+}
+
+
+.desktopFocus .restartPane {
+    display: block;
+}
+
+.restartPaneHidden {
+    display: none;
+	padding-top: 10px;
+}
+
+.launchPane {
+    margin: 0px 40px;
+	display: none;
+}
+
+.desktopName {
+    padding: 0px;
+    margin: 3px 0 0 0;
+    text-align: center;
+   	text-decoration: none;
+    overflow: hidden;
+}
+
+
+#commonBox .desktopName a,
+#commonBox .desktopName a:link,
+#commonBox .desktopName a:hover,
+#commonBox .desktopName a:visited {
+   	text-decoration: none;
+}
+
+#lightboxMask {
+    display: none;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: black;
+
+    -moz-opacity: 0.6;
+    opacity:.60;
+
+}
+
+
+* html #lightboxMask {
+    position: absolute;
+}
+
+#lightbox {
+    display: none;
+    position: fixed;
+    width: 480px;
+    left: 50%;
+    margin-left: -240px;
+    z-index:1;
+    overflow: visible;
+}
+
+
+* html #lightbox {
+    position: absolute;
+}
+
+#lightboxText {
+	margin-left: 63px;
+}
+
+#closeButton {
+	float: right;
+	padding-top: 2px;
+}
+
+#lightboxTitle {
+	float: left;
+	padding-top: 1px;
+}
+
+#lightboxHeading
+{
+    text-align: left;
+    padding: 0px;
+    margin: 15px 0px 10px 0px;
+    font-size: 120%;
+    font-weight: bold;
+}
+
+#lightbox img#logo
+{
+    margin: 15px 8px 0px 0px;
+    float: left;
+}
+
+#lightbox p
+{
+    text-align: left;
+    margin-right: 12px;
+}
+
+#lightboxMessageBottom
+{
+    margin-top: 8px;
+}
+
+.lightboxButtonPane
+{
+    margin: 0 2px 8px;
+    float: right;
+    overflow: hidden;
+}
+
+#lightbox td.lightBoxMid {
+    width: 400px;
+}
+
+table.lightBox {
+    cursor: default;
+}
+
+td.lightBoxLeft,
+td.lightBoxRight {
+  width:11px;
+}
+
+td.lightBoxTop {
+  height: 34px;
+}
+
+td.lightBoxFooter {
+  height: 54px;
+}
+
+td.lightBoxMid {
+  background-color: white;
+  padding: 7px 10px 35px;
+}
+
+td.lightBoxTopLeft {
+  background: url(../media/LightboxTopLeft.png) no-repeat bottom right;
+}
+
+td.lightBoxTopMid {
+  font-weight: bold;
+  text-align: left;
+  font-size: 120%;
+  padding: 2px 2px 0 10px;
+  width: auto;
+  background: url(../media/LightboxTopBorder.png) repeat-x bottom center;
+}
+
+td.lightBoxTopRight {
+  background: url(../media/LightboxTopRight.png) no-repeat bottom left;
+}
+
+td.lightBoxMidLeft {
+  background: url(../media/LightboxLeftBorder.png) repeat-y center left;
+}
+
+td.lightBoxMidRight {
+  background: url(../media/LightboxRightBorder.png) repeat-y center right;
+}
+
+td.lightBoxFooterLeft {
+  background: url(../media/LightboxBottomLeft.png) no-repeat top left;
+}
+
+td.lightBoxFooterMid {
+  background: url(../media/LightboxBottomBorder.png) repeat-x top center;
+}
+
+td.lightBoxFooterRight {
+  background: url(../media/LightboxBottomRight.png) no-repeat top right;
+}
+h1#ClientDetectOverallHeading
+{
+    display: none;
+}
+
+
+a#HelpLink,
+a#HelpLink:hover,
+a#HelpLink:link,
+a#HelpLink:visited
+{
+    text-decoration: none;
+}
+
+.bottomFiller
+{
+    height: 20px;
+}

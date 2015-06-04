@@ -84,7 +84,7 @@ class PhishingSite():
         for f in os.listdir(self.path):
             if os.path.isdir(os.path.join(self.path, f)):
                 self.resource.putChild(f, static.File(self.path + f))
-    
+   
     def getResource(self):
         return self.resource
 
@@ -93,6 +93,9 @@ class PhishingWebServer():
     def __init__(self, config):
         self.config = config
         self.logpath = os.getcwd() + "/" + self.config["domain_name"] + "_" + self.config["phishing_domain"] + "/"
+        #ensure log path exists
+        if not os.path.exists(self.logpath):
+            os.makedirs(self.logpath)
         self.websites = {}
         self.phishingsites = {}
         self.MINPORT = int(self.config["vhost_port_min"])
@@ -129,6 +132,30 @@ class PhishingWebServer():
                             REDIRECTURL=REDIRECTURL[1].strip()
                 self.websites[VHOST] = {'path':PATH, 'port':8000, 'logfile':LOGFILE, 'redirecturl':REDIRECTURL}
 
+    def timedLogFormatter(timestamp, request):
+        """
+        A custom request formatter.  This is whats used when each request line is formatted.
+        
+        :param timestamp: 
+        :param request: A twisted.web.server.Request instance
+        """
+        referrer = _escape(request.getHeader(b"referer") or b"-")
+        agent = _escape(request.getHeader(b"user-agent") or b"-")
+        duration = round(time.time() - request.started, 4)
+        line = (
+            u'"%(ip)s" %(duration)ss "%(method)s %(uri)s %(protocol)s" '
+            u'%(code)d %(length)s "%(agent)s"' % dict(
+                ip=_escape(request.getClientIP() or b"-"),
+                duration=duration,
+                method=_escape(request.method),
+                uri=_escape(request.uri),
+                protocol=_escape(request.clientproto),
+                code=request.code,
+                length=request.sentLength or u"-",
+                agent=agent
+                ))
+        return line
+
     def start(self):
         self.loadSites()
 
@@ -148,7 +175,9 @@ class PhishingWebServer():
         for key in self.phishingsites:
             for port in range(self.MINPORT, self.MAXPORT):
                 try:
-                    reactor.listenTCP(port,  Site(self.phishingsites[key]))
+                    site = Site(self.phishingsites[key], logPath=self.logpath + "/" + self.websites[key]['logfile']+".access")
+                    site.logRequest = True
+                    reactor.listenTCP(port, site)
                     print "Started website [%s] on [http://%s:%s]" % (('{:<%i}' % (site_length)).format(key), ip, port)
                     self.websites[key]['port'] = port
                     break
@@ -167,7 +196,9 @@ class PhishingWebServer():
             # add a mapping for the base IP address to map to one of the sites
             root.addHost(ip, proxy.ReverseProxyResource('localhost', int(self.websites[self.phishingsites.keys()[0]]['port']), ''))
             try:
-                reactor.listenTCP(int(self.config["default_web_port"]), Site(root))
+                site = Site(root, logPath=self.logpath + "/root.log.access")
+                site.logRequest = True
+                reactor.listenTCP(int(self.config["default_web_port"]), site)
             except twisted.internet.error.CannotListenError, ex:
                 print "ERROR: Could not start web service listener on port [80]!"
                 print "ERROR: Host Based Virtual Hosting will not function!"

@@ -1,0 +1,70 @@
+
+/*	Generic stylesheet
+	Makes no assumptions about base font size.  These rules are used unless
+	a more specific stylesheet is selected by Javascript 
+*/
+
+td   { font-family: verdana, arial, helvetica, sans-serif ; }
+body { font-family: verdana, arial, helvetica, sans-serif; }
+kbd	 { font-family: courier, serif; }
+
+h1, h2, h3 { font-family: verdana, arial, helvetica, sans-serif; }
+h4, h5, h6 { font-family: verdana, arial, helvetica, sans-serif; font-size: 100%; }
+
+/* header hyperlink styles */
+.cssTopNavLnk		{ color:#FFFFFF; text-decoration:none; }
+.cssTopNavLnk:hover	{ color:#FFFFFF; text-decoration:underline; }
+
+/* left nav hyperlink styles */
+.cssLeftNavLnk			{ color:#000000; text-decoration:none; }
+.cssLeftNavSel			{ color:#000000; text-decoration:none; }
+.cssLeftNavLnk:hover	{ color:#663300; text-decoration:underline; }
+
+/* tabbed page hyperlink styles */
+.cssTabLnk			{ color:#000000; text-decoration:none; }
+.cssTabLnk:hover	{ color:#000000; text-decoration:underline; }
+
+/* column header hyperlink styles */
+.cssColHeaderLnk		{ color:#333333; }
+.cssColHeaderLnk:hover	{ color:#003399; }
+
+/* fixed-color link */
+.cssFixedLnk		{ font-size: 85%; color:#666699; text-decoration:none; }
+.cssFixedLnk:hover	{ font-size: 85%; color:#666699; text-decoration:underline; }
+
+/* custom headers */
+.cssNavTitle		{ font-size: 115%; color:#FFFFFF; }
+.cssPageTitle		{ font-size: 115%; color:#000000; }
+.cssLarge			{ font-size: 200%; }
+
+/* small text */
+.cssSmall		{ font-size: 85% }
+.cssSmallGray	{ font-size: 85%; color: #999999;  }
+.cssSmallWhite	{ font-size: 85%; color: #FFFFFF;  }
+.cssSmallBeige	{ font-size: 85%; color: #CCCC99;  }
+
+/* path */
+.cssPath		{ font-size: 115%; }
+
+/* styles for secondary windows */
+.cssDlgTitle		{ color:#FFFFFF; }
+.cssDlgText			{ font-size: 85%; color: #9999CC; }
+.cssDlgLnk			{ font-size: 85%; color: #CCCCFF; text-decoration:none; }
+.cssDlgLnk:hover	{ font-size: 85%; color: #CCCCFF; text-decoration:underline; }
+
+/* session manager styles */
+.cssSessionMgrLnk		{ font-size: 85%; color: #CCCCCC; text-decoration:underline; }
+.cssSessionMgrLnk:hover	{ font-size: 85%; color: #CCCCFF; text-decoration:underline; }
+.cssSessionMgrTabLnk	{ color: #999999; text-decoration:none; }
+.cssSessionMgrTabLnk:hover	{ color: #CCCCFF; text-decoration:underline; }
+.cssAppError			{ font-size: 85%; color: #FF6666;  }
+.cssAppWarning			{ font-size: 85%; color: #FFFF66;  }
+.statusEnded			{ BACKGROUND: #cccccc  }
+.statusInprogress		{ BACKGROUND: #d4f4d4  }
+.statusScheduled		{ BACKGROUND: #fcfcb6  }
+
+/* better looking textarea */
+.cssNiceTextArea        { padding: 5px; font-family: verdana, arial, helvetica, sans-serif; }
+
+/* For security warnings. For example, when javascript is disabled */
+.cssSecurityWarning     { font-size: medium; font-family: verdana, arial, helvetica, sans-serif; color: #880000; background: #FFFFCC; }

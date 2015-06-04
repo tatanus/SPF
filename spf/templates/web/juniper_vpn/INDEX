@@ -1,0 +1,91 @@
+
+<html>
+<head>
+<meta http-equiv="Content-Language">
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="robots" content="none">
+<title>Juniper VPN</title>
+
+<link rel="stylesheet" href="/css/ds.css">
+
+</head>
+
+<body bgcolor="#FFFFFF" color="#000000" link="#3366CC" vlink="#CC6699" alink="#3366CC" leftmargin="0" topmargin="0" rightmargin="0" marginwidth="0" marginheight="0">
+
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+        <tr>
+            <td bgcolor="FFFFFF"><img border="0" src="/imgs/logo.jpg" alt="Logo"></td>
+	        <td bgcolor="FFFFFF" align="right">&nbsp;</td>
+
+        </tr>
+</table>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+                <td bgcolor="#000000" colspan="2"><img border="0" src="/imgs/space.gif" width="1" height="1"></td>
+        </tr>
+</table>
+<blockquote><form method="post" action="index" name="frmLogin" autocomplete="off">
+        <input type="hidden" name="tz_offset">
+        <table border="0" cellpadding="2" cellspacing="0">
+                                        <tr>
+                                                <td nowrap  colspan="3"><span class="cssLarge"><b>VPN Gateway</b></span></td></tr>
+                                      
+                                        <tr>
+                                              <td colspan="3">&nbsp;</td>
+                                        </tr>
+				<tr>
+				
+                                <td valign="top">
+                                
+                                        <table border="0" cellspacing="0" cellpadding="2">													<tr>
+														<td>Username</td>
+														<td>&nbsp;</td>
+														<td><input type="text" name="username" size="20"></td>
+													</tr>													<tr>
+														<td>Password</td>
+														<td>&nbsp;</td>
+														<td><input type="password" name="password" size="20"></td>
+													</tr>
+                                                <tr>
+                                                        <td colspan="3">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                        <td>&nbsp;</td>
+                                                        <td>&nbsp;</td>
+                                                        <td><input type="submit" value="Sign In" name="btnSubmit">&nbsp;</td>
+                                                </tr>                                        </table>
+                              
+                        </td>
+                        <td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td valign="top"><table border="0" cellspacing="0" cellpadding="2">
+<tr><td>Please sign in using your corporate credentials.</tr>
+	</tr>
+<tr><td><b> Warning! </b> This system is for the use of authorized users only.  Any other use is a violation of Title 18 United States Code Section 1030, and is subject to criminal penalties and civil damages.  Individuals using this computer system without authority, or in excess of their authority, are subject to having all of their activities on this system monitored and recorded by systems personnel.  In the course of monitoring individuals improperly using this system, or in the course of system maintenance, the activities of authorized users may also be monitored.  Anyone using this system expressly consents to such monitoring and is advised that if such monitoring reveals possible criminal activity, system personnel may provide the evidence of such monitoring to law enforcement officials.</td></tr>
+</td></table></td>
+        </table>  </form>
+</blockquote>
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td background="/imgs/footerbg.gif">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+					<td><img src="/imgs/space.gif" width="10" height="10"></td>
+					<td><img src="/imgs/space.gif" width="1" height="2"></td>
+					<td><img src="/imgs/space.gif" width="10" height="10"></td>
+        </tr>
+				<tr valign="top">
+					<td><img src="/imgs/space.gif" width="10" height="1"></td>
+					<td nowrap ><br><br><br><br>
+					<td align="right"><img src="/imgs/space.gif" width="10" height="10"></td>
+        </tr>
+			</table>
+		</td>
+        </tr>
+        <tr>
+		<td colspan="2"><img border="0" src="/imgs/space.gif" height="6" width="1" alt=""></td>
+        </tr>
+</table>
+
+</body>
+</html>

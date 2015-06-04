@@ -1,0 +1,3 @@
+VHOST=junipervpn
+LOGFILE=junipervpn.log
+REDIRECTURL=error

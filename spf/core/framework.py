@@ -13,6 +13,7 @@ from utils import Utils
 from display import Display
 from gather import Gather
 from mydns import Dns
+import portscan
 
 from modules.theharvester import theHarvester
 
@@ -25,7 +26,8 @@ class Framework(object):
     def __init__(self):
         self.config = {}        # dict to contain combined list of config file options and commandline parameters
         self.email_list = []    # list of email targets
-        self.subdomain_list = []    # list of dns subdomains
+        self.hostname_list = []    # list of dns hosts
+        self.server_list = {}
         self.webserver = None   # web server process
         self.gather = None
 
@@ -132,7 +134,7 @@ class Framework(object):
         enablegroup.add_argument("--recon",
                             dest="enable_recon",
                             action='store_true',
-                            help="gather info (i.e. email addresses, dns subdomains, websites, etc...) same as (-e -g --dns -v -v)")
+                            help="gather info (i.e. email addresses, dns hosts, websites, etc...) same as (-e -g --dns -v -v)")
         enablegroup.add_argument("-e",
                             dest="enable_external",
                             action='store_true',
@@ -140,7 +142,7 @@ class Framework(object):
         enablegroup.add_argument("--dns",
                             dest="enable_gather_dns",
                             action='store_true',
-                            help="enable automated gathering of dns subdomains")
+                            help="enable automated gathering of dns hosts")
         enablegroup.add_argument("-g",
                             dest="enable_gather_email",
                             action='store_true',
@@ -357,59 +359,77 @@ class Framework(object):
                     self.display.log(email + "\n", filename="email_targets.txt")
 
         #==================================================
-        # Gather dns subdomains
+        # Gather dns hosts
         #==================================================
 
         if (self.config["gather_dns"] == True):
             print
             self.display.output("Obtaining list of host on the %s domain" % (self.config["domain_name"]))
             self.display.verbose("Gathering hosts via built-in methods")
+
             self.display.verbose(Gather.get_sources())
             if (not self.gather):
                 self.gather = Gather(self.config["domain_name"], display=self.display)
             temp_list = self.gather.hosts()
             self.display.verbose("Gathered [%s] hosts from the Internet Search" % (len(temp_list)))
-            self.subdomain_list += temp_list
+            self.hostname_list += temp_list
 
             temp_list = Dns.brute(self.config["domain_name"], display=self.display)
             self.display.verbose("Gathered [%s] hosts from DNS BruteForce/Dictionay Lookup" % (len(temp_list)))
-            self.subdomain_list += temp_list
+            self.hostname_list += temp_list
 
 
             # sort/unique email list
-            self.subdomain_list = Utils.unique_list(self.subdomain_list)
-            self.subdomain_list.sort()
+            self.hostname_list = Utils.unique_list(self.hostname_list)
+            self.hostname_list.sort()
 
             # print list of email addresses
-            self.display.verbose("Collected [%s] host names" % (len(self.subdomain_list)))
-            self.display.print_list("HOST LIST",self.subdomain_list)
+            self.display.verbose("Collected [%s] host names" % (len(self.hostname_list)))
+            self.display.print_list("HOST LIST",self.hostname_list)
 
             self.display.output("Determining if any of the identified hosts have web or mail servers.")
-            for subdomain in self.subdomain_list:
+           
+            self.server_list[80] = [] 
+            self.server_list[443] = [] 
+            self.server_list[110] = [] 
+            self.server_list[995] = [] 
+            self.server_list[143] = [] 
+            self.server_list[993] = [] 
+            self.server_list[25] = [] 
+            for host in self.hostname_list:
+                openports = portscan.scan(host, [25, 80, 110, 143,443, 993, 995])
                 found = False
-                if (Utils.openPort(subdomain, 80)):
-                    self.display.verbose("Found valid website at: %s 80" % (subdomain))
-                    found = True
-                if (Utils.openPort(subdomain, 443)):
-                    self.display.verbose("Found valid website at: %s 443" % (subdomain))
-                    found = True
-                if (Utils.openPort(subdomain, 110)):
-                    self.display.verbose("Found valid POP at    : %s 110" % (subdomain))
-                    found = True
-                if (Utils.openPort(subdomain, 995)):
-                    self.display.verbose("Found valid POPS at   : %s 995" % (subdomain))
-                    found = True
-                if (Utils.openPort(subdomain, 143)):
-                    self.display.verbose("Found valid IMAP at   : %s 143" % (subdomain))
-                    found = True
-                if (Utils.openPort(subdomain, 993)):
-                    self.display.verbose("Found valid IMAPS at  : %s 993" % (subdomain))
-                    found = True
-                if (Utils.openPort(subdomain, 25)):
-                    self.display.verbose("Found valid SMTP at   : %s 25" % (subdomain))
-                    found = True
-                if (found):
-                    self.display.log(subdomain + "\n", filename="subdomains.txt") 
+                for port in openports:
+                    if (port == 80):
+                        self.display.verbose("Found website at: %s 80" % (host))
+                        self.server_list[80].append(host)
+                        found = True
+                    elif (port == 443):
+                        self.display.verbose("Found website at: %s 443" % (host))
+                        self.server_list[443].append(host)
+                        found = True
+                    elif (port == 110):
+                        self.display.verbose("Found POP at    : %s 110" % (host))
+                        self.server_list[110].append(host)
+                        found = True
+                    elif (port == 995):
+                        self.display.verbose("Found POPS at   : %s 995" % (host))
+                        self.server_list[995].append(host)
+                        found = True
+                    elif (port == 143):
+                        self.display.verbose("Found IMAP at   : %s 143" % (host))
+                        self.server_list[143].append(host)
+                        found = True
+                    elif (port == 993):
+                        self.display.verbose("Found IMAPS at  : %s 993" % (host))
+                        self.server_list[993].append(host)
+                        found = True
+                    elif (port == 25):
+                        self.display.verbose("Found SMTP at   : %s 25" % (host))
+                        self.server_list[25].append(host)
+                        found = True
+                    if (found):
+                        self.display.log(host + "\n", filename="hosts.txt")
 
         #==================================================
         # Load web sites

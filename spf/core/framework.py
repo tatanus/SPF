@@ -12,6 +12,7 @@ from emails import EmailTemplate
 from utils import Utils
 from display import Display
 from gather import Gather
+from mydns import Dns
 
 from modules.theharvester import theHarvester
 
@@ -24,10 +25,13 @@ class Framework(object):
     def __init__(self):
         self.config = {}        # dict to contain combined list of config file options and commandline parameters
         self.email_list = []    # list of email targets
+        self.subdomain_list = []    # list of dns subdomains
         self.webserver = None   # web server process
+        self.gather = None
 
         # initialize some config options
         self.config["domain_name"] = ""
+        self.config["phishing_domain"] = ""
         self.config["company_name"] = ""
         self.config["config_filename"] = ""
         self.config["email_list_filename"] = ""
@@ -35,6 +39,7 @@ class Framework(object):
         # default all bool values to False
         self.config["verbose"] = False
         self.config["gather_emails"] = False
+        self.config["gather_dns"] = False
         self.config["enable_externals"] = False
         self.config["enable_web"] = False
         self.config["enable_email"] = False
@@ -124,10 +129,18 @@ class Framework(object):
                             dest="enable_test",
                             action='store_true',
                             help="enable all flags EXCEPT sending of emails... same as (-e -g --simulate -w -y -v -v)")
+        enablegroup.add_argument("--recon",
+                            dest="enable_recon",
+                            action='store_true',
+                            help="gather info (i.e. email addresses, dns subdomains, websites, etc...) same as (-e -g --dns -v -v)")
         enablegroup.add_argument("-e",
                             dest="enable_external",
                             action='store_true',
                             help="enable external tool utilization")
+        enablegroup.add_argument("--dns",
+                            dest="enable_gather_dns",
+                            action='store_true',
+                            help="enable automated gathering of dns subdomains")
         enablegroup.add_argument("-g",
                             dest="enable_gather_email",
                             action='store_true',
@@ -157,6 +170,12 @@ class Framework(object):
                             dest="domain",
                             action='store',
                             help="domain name to phish")
+        parser.add_argument("-p",
+                            metavar="<domain>",
+                            dest="phishdomain",
+                            default="example.com",
+                            action='store',
+                            help="newly registered 'phish' domain name")
         parser.add_argument("-c",
                             metavar="<company's name>",
                             dest="company",
@@ -188,12 +207,16 @@ class Framework(object):
         self.config["domain_name"] = args.domain
         if (self.config["domain_name"] is None):
             self.config["domain_name"] = ""
+        self.config["phishing_domain"] = args.phishdomain
+        if (self.config["phishing_domain"] is None):
+            self.config["phishing_domain"] = "example.com"
         self.config["company_name"] = args.company
         self.config["ip"] = args.ip
         self.config["config_filename"] = args.config_file
         self.config["email_list_filename"] = args.email_list_file
         self.config["verbose"] = args.verbose
         self.config["gather_emails"] = args.enable_gather_email
+        self.config["gather_dns"] = args.enable_gather_dns
         self.config["enable_externals"] = args.enable_external
         self.config["enable_web"] = args.enable_web
         self.config["enable_email_sending"] = args.enable_send_email
@@ -201,11 +224,19 @@ class Framework(object):
         self.config["daemon_web"] = args.daemon_web
         self.config["always_yes"] = args.always_yes
 
+        if (args.enable_recon == True):
+            self.config["gather_emails"] =  True
+            self.config["enable_externals"] = True
+            self.config["gather_domains"] = True
+            self.config["gather_dns"] = True
+            self.config["verbose"] = 2
+
         if (args.enable_all == True):
             self.config["gather_emails"] =  True
             self.config["enable_externals"] = True
             self.config["enable_web"] = True
             self.config["enable_email_sending"] = True
+            self.config["verbose"] = 2
 
         if (args.enable_test == True):
             self.config["gather_emails"] = True
@@ -264,6 +295,7 @@ class Framework(object):
         self.display.log("STARTTIME=%s\n" % (time.strftime("%Y/%m/%d %H:%M:%S")), filename="INFO.txt")
         self.display.log("TARGETDOMAIN=%s\n" % (self.config["domain_name"]), filename="INFO.txt")
         self.display.log("PHISHINGDOMAIN=%s\n" % (self.config["phishing_domain"]), filename="INFO.txt")
+
         #==================================================
         # Load/Gather target email addresses
         #==================================================
@@ -287,7 +319,8 @@ class Framework(object):
                     else:
                         self.display.verbose("Gathering emails via built-in methods")
                         self.display.verbose(Gather.get_sources())
-                        self.gather = Gather(self.config["domain_name"], display=self.display)
+                        if (not self.gather):
+                            self.gather = Gather(self.config["domain_name"], display=self.display)
                         temp_list = self.gather.emails()
                         self.display.verbose("Gathered [%s] email addresses from the Internet" % (len(temp_list)))
                         self.email_list += temp_list
@@ -322,6 +355,61 @@ class Framework(object):
                 self.display.print_list("EMAIL LIST",self.email_list)
                 for email in self.email_list:
                     self.display.log(email + "\n", filename="email_targets.txt")
+
+        #==================================================
+        # Gather dns subdomains
+        #==================================================
+
+        if (self.config["gather_dns"] == True):
+            print
+            self.display.output("Obtaining list of host on the %s domain" % (self.config["domain_name"]))
+            self.display.verbose("Gathering hosts via built-in methods")
+            self.display.verbose(Gather.get_sources())
+            if (not self.gather):
+                self.gather = Gather(self.config["domain_name"], display=self.display)
+            temp_list = self.gather.hosts()
+            self.display.verbose("Gathered [%s] hosts from the Internet Search" % (len(temp_list)))
+            self.subdomain_list += temp_list
+
+            temp_list = Dns.brute(self.config["domain_name"], display=self.display)
+            self.display.verbose("Gathered [%s] hosts from DNS BruteForce/Dictionay Lookup" % (len(temp_list)))
+            self.subdomain_list += temp_list
+
+
+            # sort/unique email list
+            self.subdomain_list = Utils.unique_list(self.subdomain_list)
+            self.subdomain_list.sort()
+
+            # print list of email addresses
+            self.display.verbose("Collected [%s] host names" % (len(self.subdomain_list)))
+            self.display.print_list("HOST LIST",self.subdomain_list)
+
+            self.display.output("Determining if any of the identified hosts have web or mail servers.")
+            for subdomain in self.subdomain_list:
+                found = False
+                if (Utils.openPort(subdomain, 80)):
+                    self.display.verbose("Found valid website at: %s 80" % (subdomain))
+                    found = True
+                if (Utils.openPort(subdomain, 443)):
+                    self.display.verbose("Found valid website at: %s 443" % (subdomain))
+                    found = True
+                if (Utils.openPort(subdomain, 110)):
+                    self.display.verbose("Found valid POP at    : %s 110" % (subdomain))
+                    found = True
+                if (Utils.openPort(subdomain, 995)):
+                    self.display.verbose("Found valid POPS at   : %s 995" % (subdomain))
+                    found = True
+                if (Utils.openPort(subdomain, 143)):
+                    self.display.verbose("Found valid IMAP at   : %s 143" % (subdomain))
+                    found = True
+                if (Utils.openPort(subdomain, 993)):
+                    self.display.verbose("Found valid IMAPS at  : %s 993" % (subdomain))
+                    found = True
+                if (Utils.openPort(subdomain, 25)):
+                    self.display.verbose("Found valid SMTP at   : %s 25" % (subdomain))
+                    found = True
+                if (found):
+                    self.display.log(subdomain + "\n", filename="subdomains.txt") 
 
         #==================================================
         # Load web sites

@@ -8,6 +8,7 @@ import dns.reversename
 import socket
 
 from core.utils import Utils
+from core.mydns import Dns
 
 MX_RECORD_CACHE = {}
 
@@ -41,8 +42,7 @@ def validate_mx(server, domain):
 
 # Lookup a domain and get its mailserver
 def get_mx_records(domain):
-    records = dns.resolver.query(domain, 'MX')
-    hosts = []
+    hosts = Dns.mx(domain)
     for rdata in records:
         if (validate_mx((str(rdata.exchange))[:-1], domain)):
             hosts.append((str(rdata.exchange))[:-1])
@@ -50,7 +50,7 @@ def get_mx_records(domain):
     
 # Lookup a domain and get its mailserver
 def get_mx_record(domain):
-    hosts = get_mx_records(domain)
+    hosts = Dns.mx(domain)
     if (hosts):
         return hosts[0]
     else:
@@ -180,12 +180,4 @@ class EmailTemplate():
         return "TYPE = [%s]\nSUBJECT = [%s]\nBODY = \n%s" % (self.TYPE, self.SUBJECT, self.BODY)
 
 if __name__ == "__main__":
-    #print get_mx_record("knowledgecg.com")
-    #print get_mx_record("rapid7.com")
-    #print get_mx_record("gmail.com")
-    #print get_mx_record("knowledgecg.com")
-    #print get_mx_record("rapid7.com")
-    #print get_mx_record("gmail.com")
-    #print validate_email_address("adam.compton@knowledgecg.com", "adam.compton@gmail.com", debug=False)
-    #print validate_email_address("adam.compt@knowledgecg.com", "adam.compton@gmail.com", debug=False)
     print "hi"

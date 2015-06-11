@@ -81,6 +81,20 @@ class Utils():
         for e in ('>', ':', '=', '<', '/', '\\', ';', '&', '%3A', '%3D', '%3C'):
             text = string.replace(text, e, ' ')
         return text
+
+    @staticmethod
+    def openPort(host, port):
+        state = False
+        try:
+            s=socket.socket(socket.AF_INET, socket.SOCK_STREAM) # TCP Socket
+            s.connect((host, port))
+            socket.setdefaulttimeout(2)
+            state = True
+        except:
+            state = False
+        finally:
+            s.close()
+            return state
    
     @staticmethod
     def unique_list(old_list):

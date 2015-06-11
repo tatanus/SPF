@@ -92,6 +92,15 @@ class Utils():
         return new_list
 
     @staticmethod
+    def filterList(old_list, string):
+        new_list = []
+        if old_list != []:
+            for x in old_list:
+                if x.endswith(string):
+                    new_list.append(x)
+        return new_list
+
+    @staticmethod
     def load_config(filename):
         config = {}
         if Utils.is_readable(filename):

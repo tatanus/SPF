@@ -367,6 +367,7 @@ class Framework(object):
             self.display.output("Obtaining list of host on the %s domain" % (self.config["domain_name"]))
             self.display.verbose("Gathering hosts via built-in methods")
 
+            # Gather hosts from internet search
             self.display.verbose(Gather.get_sources())
             if (not self.gather):
                 self.gather = Gather(self.config["domain_name"], display=self.display)
@@ -374,17 +375,32 @@ class Framework(object):
             self.display.verbose("Gathered [%s] hosts from the Internet Search" % (len(temp_list)))
             self.hostname_list += temp_list
 
+            # Gather hosts from DNS lookups
+            temp_list = Dns.xfr(self.config["domain_name"])
+            self.display.verbose("Gathered [%s] hosts from DNS Zone Transfer" % (len(temp_list)))
+            self.hostname_list += temp_list
+
+            temp_list = Dns.ns(self.config["domain_name"])
+            temp_list = Utils.filterList(temp_list, self.config["domain_name"])
+            self.display.verbose("Gathered [%s] hosts from DNS NS lookups" % (len(temp_list)))
+            self.hostname_list += temp_list
+
+            temp_list = Dns.mx(self.config["domain_name"])
+            temp_list = Utils.filterList(temp_list, self.config["domain_name"])
+            self.display.verbose("Gathered [%s] hosts from DNS MX lookups" % (len(temp_list)))
+            self.hostname_list += temp_list
+
+            # Gather hosts from dictionary lookup
             temp_list = Dns.brute(self.config["domain_name"], display=self.display)
             self.display.verbose("Gathered [%s] hosts from DNS BruteForce/Dictionay Lookup" % (len(temp_list)))
             self.hostname_list += temp_list
-
 
             # sort/unique email list
             self.hostname_list = Utils.unique_list(self.hostname_list)
             self.hostname_list.sort()
 
             # print list of email addresses
-            self.display.verbose("Collected [%s] host names" % (len(self.hostname_list)))
+            self.display.verbose("Collected [%s] unique host names" % (len(self.hostname_list)))
             self.display.print_list("HOST LIST",self.hostname_list)
 
             self.display.output("Determining if any of the identified hosts have web or mail servers.")

@@ -75,17 +75,23 @@ class Dns():
             return hosts
 
     @staticmethod    
-    def axfr(domain):
-        hosts = Dns.ns(domain)
-        for host in hosts:
-            z = dns.zone.from_xfr(dns.query.xfr(host, domain))
-            print dns.query.xfr(host, domain)
-            if (z):
-                names = z.nodes.keys()
-                names.sort()
-                for n in names:
-                    print z[n].to_text(n)
-                print ""
+    def xfr(domain):
+        hosts = []
+        ns_list = Dns.ns(domain)
+        for ns in ns_list:
+            try:
+                z = dns.zone.from_xfr(dns.query.xfr(ns, domain))
+                if (z):
+                    names = z.nodes.keys()
+                    names.sort()
+                    for n in names:
+                        #print n
+                        #print z[n].to_text(n)
+                        hosts.append(n.to_text() + "." + domain)
+            #except dns.exception.FormError:
+            except:
+                pass
+        return hosts
 
     @staticmethod    
     def brute(domain, display):

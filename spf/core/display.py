@@ -158,7 +158,7 @@ class Display():
             choice = self.input(line + prompt)
             if default is not None and choice == '':
                 return valid[default.lower()]
-            elif choice in valid:
+            elif choice.lower() in valid:
                 return valid[choice.lower()]
             else:
                 self.alert("Please respond with 'yes/no' or 'y/n'.")

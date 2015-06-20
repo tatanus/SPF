@@ -1,0 +1,22 @@
+
+
+#copyright_panel {background-color:#fffff9; color:#555555; height:30}
+
+#form_panel {background-color:#ffffff; color:#000000;vertical-align:top; height:100%;}
+#form_margin {margin-top:100px; margin-left:30px}
+
+#keepout_margin {margin-top:100px;font-weight:bold;}
+#keepout {font-weight:bold;}
+#logon_form {background-color:#cccccc; color:#cccccc; height:30}
+
+#info-panel {background-color:#ffffff; color:#000000;padding-left: 10;width: 70%}
+#info-area {margin-top:100}
+#info-image-area {text-align: center}
+#info-text-area {text-align: center}
+
+#banner_nogradient { border-bottom:1px solid #858A91; background-color: #336666;}
+
+#banner_accent {background: #003333; height:8px} 
+#banner_logo{}
+
+

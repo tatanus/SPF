@@ -1,0 +1,13 @@
+OWA	url	owa
+OWA	headers	x-owa-version
+LOTUS	url	lotusnotes
+LOTUS	headers	server: lotus-domino
+CITRIX	url	citrix
+CITRIX	body	citrix systems
+CITRIX	body	XenServer
+CITRIX	body	Citrix Access Gateway
+CITRIX	title	Citrix Access Gateway
+JUNIPER_VPN	url	dana-na
+CISCO_VPN	url	\+CSCOE\+
+CISCO_VPN	cookies	webvpn
+OWA	headers	Location:.*\/owa

@@ -9,8 +9,10 @@ import sys
 import time
 import os
 import re
+import string
 from core.utils import Utils
 from core.display import Display
+from core.mydb import MyDB
 
 # define standard error page
 class errorPage(Resource):
@@ -93,6 +95,10 @@ class PhishingWebServer():
     def __init__(self, config):
         self.config = config
         self.logpath = os.getcwd() + "/" + self.config["domain_name"] + "_" + self.config["phishing_domain"] + "/"
+
+        # set up database connection
+        self.db = MyDB(sqlite_file=self.logpath)
+
         #ensure log path exists
         if not os.path.exists(self.logpath):
             os.makedirs(self.logpath)
@@ -101,17 +107,43 @@ class PhishingWebServer():
         self.MINPORT = int(self.config["vhost_port_min"])
         self.MAXPORT = int(self.config["vhost_port_max"])
 
+    def getTemplates(self):
+        templates = []
+        db_static_templates = self.db.getWebTemplates(ttype="static")
+        db_dynamic_templates = self.db.getWebTemplates(ttype="dynamic")
+        if (db_static_templates or db_dynamic_templates):
+            for template in db_static_templates:
+                parts = template.split("[-]")
+                templates.append(parts[0])
+                print "STATIC = [%s]" % (parts[0])
+            for template in db_dynamic_templates:
+                parts = template.split("[-]")
+                templates.append(parts[0])
+                print "DYNAMIC = [%s]" % (parts[0])
+        else:
+            for f in os.listdir(self.config["web_template_path"]):
+                template_file = os.path.join(self.config["web_template_path"], f) + "/CONFIG"
+                if Utils.is_readable(template_file) and os.path.isfile(template_file):
+                    templates.append(os.path.join(self.config["web_template_path"], f))
+                    print "FIXED = [%s]" % (os.path.join(self.config["web_template_path"], f))
+        return templates
+
     def loadSites(self):
+
+        templates = self.getTemplates() 
+        print
+
         # loop over each web template
-        for f in os.listdir(self.config["web_template_path"]):
-            template_file = os.path.join(self.config["web_template_path"], f) + "/CONFIG"
-            print "Found the following web sites: [%s]" % template_file
+        for f in templates:
+            template_file = f + "/CONFIG"
             if Utils.is_readable(template_file) and os.path.isfile(template_file):
+                print "Found the following web sites: [%s]" % template_file
                 # read in the VHOST, LOGFILE, and REDIRECTURL
                 VHOST = ""
                 LOGFILE = ""
                 REDIRECTURL = ""
-                PATH = self.config["web_template_path"] + f + "/"
+                #PATH = self.config["web_template_path"] + f + "/"
+                PATH = f + "/"
                 with open (template_file, "r") as myfile:
                     for line in myfile.readlines():
                         match=re.search("VHOST=", line)
@@ -194,12 +226,16 @@ class PhishingWebServer():
                 root.addHost(key + "." + self.config["phishing_domain"], proxy.ReverseProxyResource('localhost', self.websites[key]['port'], ''))
                 print "Created VHOST [%s] -> [http://%s:%s]" % (('{:<%i}' % (site_length)).format(key + "." + self.config["phishing_domain"]), ip, str(self.websites[key]['port']))
             # add a mapping for the base IP address to map to one of the sites
-            root.addHost(ip, proxy.ReverseProxyResource('localhost', int(self.websites[self.phishingsites.keys()[0]]['port']), ''))
-            try:
-                site = Site(root, logPath=self.logpath + "/root.log.access")
-                site.logRequest = True
-                reactor.listenTCP(int(self.config["default_web_port"]), site)
-            except twisted.internet.error.CannotListenError, ex:
+            if (self.phishingsites):
+                root.addHost(ip, proxy.ReverseProxyResource('localhost', int(self.websites[self.phishingsites.keys()[0]]['port']), ''))
+                try:
+                    site = Site(root, logPath=self.logpath + "/root.log.access")
+                    site.logRequest = True
+                    reactor.listenTCP(int(self.config["default_web_port"]), site)
+                except twisted.internet.error.CannotListenError, ex:
+                    print "ERROR: Could not start web service listener on port [80]!"
+                    print "ERROR: Host Based Virtual Hosting will not function!"
+            else:
                 print "ERROR: Could not start web service listener on port [80]!"
                 print "ERROR: Host Based Virtual Hosting will not function!"
 

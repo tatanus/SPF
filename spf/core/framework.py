@@ -13,6 +13,9 @@ from utils import Utils
 from display import Display
 from gather import Gather
 from mydns import Dns
+from webprofiler import profiler
+from mydb import MyDB
+from sitecloner import SiteCloner
 import portscan
 
 from modules.theharvester import theHarvester
@@ -28,6 +31,8 @@ class Framework(object):
         self.email_list = []    # list of email targets
         self.hostname_list = []    # list of dns hosts
         self.server_list = {}
+        self.profile_valid_web_templates = []
+        self.profile_dynamic_web_templates = []
         self.webserver = None   # web server process
         self.gather = None
 
@@ -49,7 +54,8 @@ class Framework(object):
         self.config["simulate_email_sending"] = False
         self.config["daemon_web"] = False
         self.config["always_yes"] = False
-
+        self.config["enable_advanced"] = False
+        self.config["profile_domain"] = False
 
         # get current IP
         self.config['ip'] = Utils.getIP()
@@ -85,8 +91,8 @@ class Framework(object):
 
         path = os.path.dirname(os.path.realpath(__file__))
         # Start process
-        cmd = [path + "/../report.py", os.getcwd() + "/" + self.config["domain_name"] + "_" + self.config["phishing_domain"] + "/"]
-        self.display.output("Report file located at %s%s" % (os.getcwd() + "/" + self.config["domain_name"] + "_" + self.config["phishing_domain"] + "/", subprocess.check_output(cmd)))
+        cmd = [path + "/../report.py", self.logpath]
+        self.display.output("Report file located at %s%s" % (self.logpath, subprocess.check_output(cmd)))
 
     def parse_parameters(self, argv):
         parser = argparse.ArgumentParser()
@@ -165,6 +171,19 @@ class Framework(object):
                             help="leave web server running after termination of spf.py")
 
         #==================================================
+        # Advanced Flags
+        #==================================================
+        advgroup = parser.add_argument_group('ADVANCED')
+        advgroup.add_argument("--adv",
+                            dest="enable_advanced",
+                            action='store_true',
+                            help="perform all ADVANCED features same as (-e -g --dns -v -v)")
+        advgroup.add_argument("--profile",
+                            dest="profile_domain",
+                            action='store_true',
+                            help="profile the target domain")
+
+        #==================================================
         # Optional Args
         #==================================================
         parser.add_argument("-d",
@@ -219,6 +238,7 @@ class Framework(object):
         self.config["verbose"] = args.verbose
         self.config["gather_emails"] = args.enable_gather_email
         self.config["gather_dns"] = args.enable_gather_dns
+        self.config["profile_domain"] = args.profile_domain
         self.config["enable_externals"] = args.enable_external
         self.config["enable_web"] = args.enable_web
         self.config["enable_email_sending"] = args.enable_send_email
@@ -232,6 +252,7 @@ class Framework(object):
             self.config["gather_domains"] = True
             self.config["gather_dns"] = True
             self.config["verbose"] = 2
+            self.config["always_yes"] = True
 
         if (args.enable_all == True):
             self.config["gather_emails"] =  True
@@ -239,6 +260,7 @@ class Framework(object):
             self.config["enable_web"] = True
             self.config["enable_email_sending"] = True
             self.config["verbose"] = 2
+            self.config["always_yes"] = True
 
         if (args.enable_test == True):
             self.config["gather_emails"] = True
@@ -248,9 +270,15 @@ class Framework(object):
             self.config["always_yes"] = True
             self.config["verbose"] = 2
 
+        if (args.enable_advanced == True):
+            self.config["gather_dns"] = True
+            self.config["profile_domain"] = True
+            self.config["always_yes"] = True
+            self.config["verbose"] = 2
+
         good = True
         if (not good):
-            self.display.error("Please enable/define at least one of the following parameters: --all --test -e -g -s --simulate -w")
+#            self.display.error("Please enable/define at least one of the following parameters: --all --test -e -g -s --simulate -w")
             print
             parser.print_help()
             sys.exit(1)
@@ -292,7 +320,13 @@ class Framework(object):
             self.display.enableDebug()
 
         # set logging path
-        self.display.setLogPath(os.getcwd() + "/" + self.config["domain_name"] + "_" + self.config["phishing_domain"] + "/")
+        self.logpath = os.getcwd() + "/" + self.config["domain_name"] + "_" + self.config["phishing_domain"] + "/"
+        if not os.path.exists(os.path.dirname(self.logpath)):
+            os.makedirs(os.path.dirname(self.logpath))
+
+        self.display.setLogPath(self.logpath)
+        print self.logpath
+        self.db = MyDB(sqlite_file=self.logpath)
 
         self.display.log("STARTTIME=%s\n" % (time.strftime("%Y/%m/%d %H:%M:%S")), filename="INFO.txt")
         self.display.log("TARGETDOMAIN=%s\n" % (self.config["domain_name"]), filename="INFO.txt")
@@ -347,10 +381,12 @@ class Framework(object):
     #                        temp_list = reconng(self.config["domain_name"], self.config["reconng_path"]).gather()
     #                        self.display.verbose("Gathered [%s] email addresses from Recon-NG" % (len(temp_list)))
     #                        self.email_list += temp_list
-            
+           
                 # sort/unique email list
                 self.email_list = Utils.unique_list(self.email_list)
                 self.email_list.sort()
+
+                self.db.addUsers(self.email_list)
             
                 # print list of email addresses
                 self.display.verbose("Collected [%s] unique email addresses" % (len(self.email_list)))
@@ -395,57 +431,126 @@ class Framework(object):
             self.display.verbose("Gathered [%s] hosts from DNS BruteForce/Dictionay Lookup" % (len(temp_list)))
             self.hostname_list += temp_list
 
-            # sort/unique email list
+            # sort/unique ihostname list
             self.hostname_list = Utils.unique_list(self.hostname_list)
             self.hostname_list.sort()
 
-            # print list of email addresses
+            self.db.addHosts(self.hostname_list)
+
+            # print list of hostnames
             self.display.verbose("Collected [%s] unique host names" % (len(self.hostname_list)))
             self.display.print_list("HOST LIST",self.hostname_list)
 
+        #==================================================
+        # Profile Web Sites
+        #==================================================
+        if (self.config["profile_domain"] == True):
             self.display.output("Determining if any of the identified hosts have web or mail servers.")
-           
-            self.server_list[80] = [] 
-            self.server_list[443] = [] 
-            self.server_list[110] = [] 
-            self.server_list[995] = [] 
-            self.server_list[143] = [] 
-            self.server_list[993] = [] 
-            self.server_list[25] = [] 
-            for host in self.hostname_list:
-                openports = portscan.scan(host, [25, 80, 110, 143,443, 993, 995])
-                found = False
-                for port in openports:
-                    if (port == 80):
-                        self.display.verbose("Found website at: %s 80" % (host))
-                        self.server_list[80].append(host)
-                        found = True
-                    elif (port == 443):
-                        self.display.verbose("Found website at: %s 443" % (host))
-                        self.server_list[443].append(host)
-                        found = True
-                    elif (port == 110):
-                        self.display.verbose("Found POP at    : %s 110" % (host))
-                        self.server_list[110].append(host)
-                        found = True
-                    elif (port == 995):
-                        self.display.verbose("Found POPS at   : %s 995" % (host))
-                        self.server_list[995].append(host)
-                        found = True
-                    elif (port == 143):
-                        self.display.verbose("Found IMAP at   : %s 143" % (host))
-                        self.server_list[143].append(host)
-                        found = True
-                    elif (port == 993):
-                        self.display.verbose("Found IMAPS at  : %s 993" % (host))
-                        self.server_list[993].append(host)
-                        found = True
-                    elif (port == 25):
-                        self.display.verbose("Found SMTP at   : %s 25" % (host))
-                        self.server_list[25].append(host)
-                        found = True
-                    if (found):
-                        self.display.log(host + "\n", filename="hosts.txt")
+            if (self.config["gather_dns"] == False):
+                self.display.error("Dns recon was not enabled.  Domain enumeration can not be performed.")
+            else:
+                self.server_list[80] = [] 
+                self.server_list[443] = [] 
+                self.server_list[110] = [] 
+                self.server_list[995] = [] 
+                self.server_list[143] = [] 
+                self.server_list[993] = [] 
+                self.server_list[25] = [] 
+        
+                for host in self.hostname_list:
+                    openports = portscan.scan(host, [25, 80, 110, 143,443, 993, 995])
+                    found = False
+                    for port in openports:
+                        self.db.addPort(port, host)
+                        if (port == 80):
+                            self.display.verbose("Found website at: %s 80" % (host))
+                            self.server_list[80].append(host)
+                            found = True
+                        elif (port == 443):
+                            self.display.verbose("Found website at: %s 443" % (host))
+                            self.server_list[443].append(host)
+                            found = True
+                        elif (port == 110):
+                            self.display.verbose("Found POP at    : %s 110" % (host))
+                            self.server_list[110].append(host)
+                            found = True
+                        elif (port == 995):
+                            self.display.verbose("Found POPS at   : %s 995" % (host))
+                            self.server_list[995].append(host)
+                            found = True
+                        elif (port == 143):
+                            self.display.verbose("Found IMAP at   : %s 143" % (host))
+                            self.server_list[143].append(host)
+                            found = True
+                        elif (port == 993):
+                            self.display.verbose("Found IMAPS at  : %s 993" % (host))
+                            self.server_list[993].append(host)
+                            found = True
+                        elif (port == 25):
+                            self.display.verbose("Found SMTP at   : %s 25" % (host))
+                            self.server_list[25].append(host)
+                            found = True
+                        if (found):
+                            self.display.log(host + "\n", filename="hosts.txt")
+        
+                for host in self.server_list[80]:
+                    p = profiler()
+                    profile_results = p.run("http://" + host)
+                    if (profile_results and (len(profile_results) > 0)):
+                        max_key = ""
+                        max_value = 0
+                        for key, value in profile_results:
+                            if (value > max_value):
+                                max_key = key
+                                max_value = value
+                        if (max_value > 0):
+                            self.display.verbose("POSSIBLE MATCH FOR [http://%s] => [%s]" % (host, max_key))
+                            self.profile_valid_web_templates.append(max_key)
+                    else:
+                        if (p.hasLogin("http://" + host)):
+                            self.profile_dynamic_web_templates.append("http://" + host)
+        
+                for host in self.server_list[443]:
+                    p = profiler()
+                    profile_results = p.run("https://" + host)
+                    if (profile_results and (len(profile_results) > 0)):
+                        max_key = ""
+                        max_value = 0
+                        for key, value in profile_results:
+                            if (value > max_value):
+                                max_key = key
+                                max_value = value
+                        if (max_value > 0):
+                            self.display.verbose("POSSIBLE MATCH FOR [https://%s] => [%s]" % (host, max_key))
+                            self.profile_valid_web_templates.append(max_key)
+                    else:
+                        if (p.hasLogin("https://" + host)):
+                            self.display.verbose("POSSIBLE DYNAMIC TEMPLATE SITE [https://%s]" % (host))
+                            self.profile_dynamic_web_templates.append("https://" + host)
+
+                self.profile_valid_web_templates = Utils.unique_list(self.profile_valid_web_templates)
+                self.profile_valid_web_templates.sort()
+                # print list of valid templatess
+                self.display.verbose("Collected [%s] valid web templates" % (len(self.profile_valid_web_templates)))
+                self.display.print_list("VALID TEMPLATE LIST",self.profile_valid_web_templates)
+
+                self.profile_dynamic_web_templates = Utils.unique_list(self.profile_dynamic_web_templates)
+                self.profile_dynamic_web_templates.sort()
+
+                # print list of valid templatess
+                self.display.verbose("Collected [%s] dynamic web templates" % (len(self.profile_dynamic_web_templates)))
+                self.display.print_list("DYNAMIC TEMPLATE LIST",self.profile_dynamic_web_templates)
+
+                self.display.output("Cloning any DYNAMIC sites")
+                for template in self.profile_dynamic_web_templates:
+                    sc = SiteCloner(clone_dir=self.logpath)
+                    tdir = sc.cloneUrl(template)
+                    self.display.verbose("Cloning [%s] to [%s]" % (template, tdir))
+                    self.db.addWebTemplate(ttype="dynamic", src_url=template, tdir=tdir)
+
+                for f in os.listdir(self.config["web_template_path"]):
+                    template_file = os.path.join(self.config["web_template_path"], f) + "/CONFIG"
+                    self.db.addWebTemplate(ttype="static", src_url="", tdir=os.path.join(self.config["web_template_path"], f))
 
         #==================================================
         # Load web sites
@@ -487,13 +592,9 @@ class Framework(object):
                             self.config[VHOST + "_port"] = PORT
                             self.config[VHOST + "_vhost"] = VHOST
                             Utils.screenCaptureWebSite("http://" + PORT,
-                                os.getcwd() + "/" +
-                                self.config["domain_name"] + "_" + self.config["phishing_domain"] + "/" +
-                                PORT + "_" + VHOST + ".png")
+                                self.logpath + PORT + "_" + VHOST + ".png")
                             Utils.screenCaptureWebSite("http://" + VHOST + "." + self.config["phishing_domain"],
-                                os.getcwd() + "/" +
-                                self.config["domain_name"] + "_" + self.config["phishing_domain"] + "/" +
-                                VHOST + "." + self.config["phishing_domain"] + ".png")
+                                self.logpath + VHOST + "." + self.config["phishing_domain"] + ".png")
     
                 # Write PID file
                 pidfilename = os.path.join(self.pid_path, "spfwebsrv.pid")

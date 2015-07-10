@@ -431,6 +431,9 @@ class Framework(object):
             self.display.verbose("Gathered [%s] hosts from DNS BruteForce/Dictionay Lookup" % (len(temp_list)))
             self.hostname_list += temp_list
 
+#            self.hostname_list = [ "3Dcommunity.rapid7.com", "3Dnse.extranet.rapid7.com", "3Dscanner2.labs.rapid7.com", "3Dupdates.rapid7.com", "BOSTONEX.tor.rapid7.com", "Community.rapid7.com", "autodiscover.rapid7.com", "blog.rapid7.com", "community.rapid7.com", "dev.rapid7.com", "download.rapid7.com", "download2.rapid7.com", "email.rapid7.com", "experttracks.rapid7.com", "filetransfer.rapid7.com", "go.rapid7.com", "help.rapid7.com", "info.rapid7.com", "information.rapid7.com", "insight.rapid7.com", "is-upnp-check.rapid7.com", "legacy.rapid7.com", "lists.rapid7.com", "lyncdiscover.rapid7.com", "mail.rapid7.com", "nse.extranet.rapid7.com", "owa.rapid7.com", "scanner1.labs.rapid7.com", "scanner2.labs.rapid7.com", "sip.rapid7.com", "sonar.labs.rapid7.com", "staging.rapid7.com", "support.rapid7.com", "testing.rapid7.com", "updates.rapid7.com", "upnp-check.rapid7.com", "va1.rapid7.com", "web1.rapid7.com", "web2.rapid7.com", "www.rapid7.com"]
+#            self.hostname_list = [ "autodiscover.rapid7.com", "email.rapid7.com", "mail.rapid7.com", "owa.rapid7.com" ]
+
             # sort/unique ihostname list
             self.hostname_list = Utils.unique_list(self.hostname_list)
             self.hostname_list.sort()
@@ -495,14 +498,14 @@ class Framework(object):
         
                 for host in self.server_list[80]:
                     p = profiler()
-                    profile_results = p.run("http://" + host)
+                    profile_results = p.run("http://" + host, debug=False)
                     if (profile_results and (len(profile_results) > 0)):
                         max_key = ""
                         max_value = 0
                         for key, value in profile_results:
-                            if (value > max_value):
+                            if (value.getscore() > max_value):
                                 max_key = key
-                                max_value = value
+                                max_value = value.getscore()
                         if (max_value > 0):
                             self.display.verbose("POSSIBLE MATCH FOR [http://%s] => [%s]" % (host, max_key))
                             self.profile_valid_web_templates.append(max_key)
@@ -512,14 +515,14 @@ class Framework(object):
         
                 for host in self.server_list[443]:
                     p = profiler()
-                    profile_results = p.run("https://" + host)
+                    profile_results = p.run("https://" + host, debug=False)
                     if (profile_results and (len(profile_results) > 0)):
                         max_key = ""
                         max_value = 0
                         for key, value in profile_results:
-                            if (value > max_value):
+                            if (value.getscore() > max_value):
                                 max_key = key
-                                max_value = value
+                                max_value = value.getscore()
                         if (max_value > 0):
                             self.display.verbose("POSSIBLE MATCH FOR [https://%s] => [%s]" % (host, max_key))
                             self.profile_valid_web_templates.append(max_key)
@@ -550,7 +553,12 @@ class Framework(object):
 
                 for f in os.listdir(self.config["web_template_path"]):
                     template_file = os.path.join(self.config["web_template_path"], f) + "/CONFIG"
-                    self.db.addWebTemplate(ttype="static", src_url="", tdir=os.path.join(self.config["web_template_path"], f))
+#                    self.db.addWebTemplate(ttype="static", src_url="", tdir=os.path.join(self.config["web_template_path"], f))
+                    for line in open(template_file).readlines():
+                        for tem in self.profile_valid_web_templates:
+                            if re.match("^VHOST=\s*"+tem+"\s*$", line, re.IGNORECASE):
+                                self.db.addWebTemplate(ttype="static", src_url="", tdir=os.path.join(self.config["web_template_path"], f))
+                                break
 
         #==================================================
         # Load web sites

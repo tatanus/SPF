@@ -35,8 +35,8 @@ class SiteCloner():
             # check if we have wget
             if os.path.isfile("/usr/local/bin/wget") or os.path.isfile("/usr/bin/wget") or os.path.isfile("/usr/local/wget"):
                 #use WGET to clone the index and supporting files
-                subprocess.Popen('cd %s;wget --no-check-certificate -e robots=off -O INDEX -c "%s";' % (self.clone_dir, url), stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).wait()
-                subprocess.Popen('cd %s;wget --no-check-certificate -e robots=off -c -p -k "%s";' % (self.clone_dir, url), stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).wait()
+                subprocess.Popen('cd %s;timeout -s KILL 60 wget --no-check-certificate -e robots=off -O INDEX -c "%s";' % (self.clone_dir, url), stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).wait()
+                subprocess.Popen('cd %s;timeout -s KILL 60 wget --no-check-certificate -e robots=off -c -p -k "%s";' % (self.clone_dir, url), stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).wait()
     
                 # fix the <form> tag in INDEX to work with SPF
                 html = ""

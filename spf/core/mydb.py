@@ -109,5 +109,5 @@ class MyDB():
         cursor = self.getCursor()
         cursor.execute('SELECT src_url, tdir FROM web_templates WHERE ttype=?', (ttype,))
         for row in cursor.fetchall():
-            templates.append(row[1]+"[-]"+row[0])
+            templates.append(str(row[1])+"[-]"+str(row[0]))
         return Utils.unique_list(templates)

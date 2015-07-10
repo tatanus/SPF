@@ -96,12 +96,13 @@ class PhishingWebServer():
         self.config = config
         self.logpath = os.getcwd() + "/" + self.config["domain_name"] + "_" + self.config["phishing_domain"] + "/"
 
-        # set up database connection
-        self.db = MyDB(sqlite_file=self.logpath)
-
         #ensure log path exists
         if not os.path.exists(self.logpath):
             os.makedirs(self.logpath)
+
+        # set up database connection
+        self.db = MyDB(sqlite_file=self.logpath)
+
         self.websites = {}
         self.phishingsites = {}
         self.MINPORT = int(self.config["vhost_port_min"])

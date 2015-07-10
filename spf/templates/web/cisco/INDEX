@@ -6,44 +6,31 @@
 <link href="portal.css" rel="stylesheet" type="text/css">
 <link href="logon_custom.css" rel="stylesheet" type="text/css">
 <style>
-     .auth-page-title {color:#800000;font-size:larger;font-weight:bold;background-image:url('gradient.gif');}
+     .auth-page-title {color:#800000;font-size:larger;font-weight:bold;background-image:url('img/gradient.gif');}
 .auth-page-form-title {background-color:#666666;color:#ffffff;}
 </style>
 
 </head>
 
 
-<body style="background-color:#ffffff; overflow:auto;" onload="blinkDapMessage();">
-<table style="width:100%;height: 100%"  cellspacing=0 cellpadding=0>
+<body style="background-color:#ffffff; overflow:auto;">
+<table style="width:100%"  cellspacing=0 cellpadding=0>
 
 <tr>
-<td style="border-bottom:1px solid #aaaaaa" colspan=2>    
-
-<table   style="width:100%" border="0" cellpadding="0" cellspacing="0" class="cuesHeaderBg">
-<tr>
-<td colspan="2" class="cuesHeaderAccent"></td>
-</tr>
-   <tr>
-      <td class="auth-page-title" style="height:40px; padding: 8px">
-<img src="csco_logo.gif"  align="absmiddle" alt="Logo"  title="Logo">
+<td class="auth-page-title" style="height:40px; padding: 8px">
+<img src="img/cisco_logo.gif"  align="absmiddle" alt="Logo"  title="Logo">
 &nbsp;&nbsp;SSL VPN Service
 </td>
 </tr>
-</table>
-
- 
-</td>
-</tr>
-
+<tr><td><hr></td></tr>
+<tr>
 <tr style="height:40px">
 <td align="right" colspan="2">
 
 </td>
 </tr>
-<tr>
-
 <td id=form_panel align=middle>
-<div style="margin-top:100px;">
+<div style="margin-top:1px;">
 <form id="unicorn_form"
       method="POST"
       action="index">

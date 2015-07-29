@@ -35,7 +35,10 @@ class Gather():
                 headers = { 'User-Agent' : self.user_agent }
                 req = urllib2.Request(temp_url, None, headers)
                 data += urllib2.urlopen(req).read()
-            except Exception, e:
+            except urllib2.URLError as e:
+                self.display.error("Could not access [%s]" % (title))
+                return data
+            except Exception as e:
                 print e
             current_offset += offset
         self.p.done()

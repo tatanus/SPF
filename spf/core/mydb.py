@@ -7,14 +7,14 @@ from utils import Utils
 class MyDB():
     def __init__(self, sqlite_file):
         self.sqlite_file = sqlite_file + "spf.sqlite"
-        print self.sqlite_file
+        #print self.sqlite_file
         self.conn = None
         if (not self.checkDB()):
             self.initDB()
 
     def getCursor(self):
         if (self.conn == None):
-            print self.sqlite_file
+            #print self.sqlite_file
             try:
                 self.conn = sqlite3.connect(self.sqlite_file)
             except sqlite3.OperationalError as e:

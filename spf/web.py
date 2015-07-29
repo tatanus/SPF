@@ -209,7 +209,7 @@ class PhishingWebServer():
             for port in range(self.MINPORT, self.MAXPORT):
                 try:
                     site = Site(self.phishingsites[key], logPath=self.logpath + "/" + self.websites[key]['logfile']+".access")
-                    site.logRequest = True
+#                    site.logRequest = True
                     reactor.listenTCP(port, site)
                     print "Started website [%s] on [http://%s:%s]" % (('{:<%i}' % (site_length)).format(key), ip, port)
                     self.websites[key]['port'] = port
@@ -231,7 +231,7 @@ class PhishingWebServer():
                 root.addHost(ip, proxy.ReverseProxyResource('localhost', int(self.websites[self.phishingsites.keys()[0]]['port']), ''))
                 try:
                     site = Site(root, logPath=self.logpath + "/root.log.access")
-                    site.logRequest = True
+#                    site.logRequest = True
                     reactor.listenTCP(int(self.config["default_web_port"]), site)
                 except twisted.internet.error.CannotListenError, ex:
                     print "ERROR: Could not start web service listener on port [80]!"

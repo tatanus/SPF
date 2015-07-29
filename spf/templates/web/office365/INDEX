@@ -96,10 +96,10 @@
                 </span>
                                         <form method="POST" action="index" name="LoginForm" autocomplete="off">
                                             </br>
-                                            <input type="text" name="UsernameForm" class="login_textfield textfield required email field normaltext" placeholder="someone@example.com " tabindex="1">
+                                            <input type="text" name="username" class="login_textfield textfield required email field normaltext" placeholder="someone@example.com " tabindex="1">
                                             </br>
                                             </br>
-                                            <input type="password" name="PasswordForm" placeholder="Password" class="login_textfield textfield required field normaltext" tabindex="2" type="password" aria-label="Password">
+                                            <input type="password" name="password" placeholder="Password" class="login_textfield textfield required field normaltext" tabindex="2" type="password" aria-label="Password">
                                             </br>
                                             </br>
                                             </br>

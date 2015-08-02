@@ -606,19 +606,19 @@ class  MailPillager():
         else:
             print "USER [%s] with PASSWORD [%s] is NOT valid on [%s:%i]" % (username, password, server, port)
 
-    def pillage(self, username, password, server, port, domain):
+    def pillage(self, username, password, server, port, domain, outputdir="."):
 
         print "%s, %s, %s, %s" % (username, password, server, domain)
         mail = None
-#        if (port == 143):
-#            mail = IMAP()
         if (port == 993):
-            mail = IMAPS()
-#        if (port == 110):
-#            mail = POP3()
-#        if (port == 995):
-#            mail = POP3S()
-        if (mail == None):
+            mail = IMAPS(outputdir=outputdir)
+        elif (port == 143):
+            mail = IMAP(outputdir=outputdir)
+        elif (port == 995):
+            mail = POP3S(outputdir=outputdir)
+        elif (port == 110):
+            mail = POP3(outputdir=outputdir)
+        else:
             print "ERROR, unknown port provided"
             return
 

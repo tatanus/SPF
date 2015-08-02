@@ -29,7 +29,7 @@ class theHarvester(dataCollector):
         return
 
 if __name__ == "__main__":
-    th = theHarvester("knowledgecg.com", "/TOOLS/theHarvester/theHarvester.py")
+    th = theHarvester("example.com", "/TOOLS/theHarvester/theHarvester.py")
     th.run()
     print th.emails()
     print th.hosts()

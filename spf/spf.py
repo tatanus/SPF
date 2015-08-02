@@ -12,4 +12,6 @@ if __name__ == "__main__":
     try:
         framework.run(sys.argv[1:])
     except KeyboardInterrupt:
+        framework.ctrlc()
+    except Exception as e:
         framework.cleanup()

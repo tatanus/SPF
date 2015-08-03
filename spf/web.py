@@ -115,12 +115,16 @@ class PhishingWebServer():
         if (db_static_templates or db_dynamic_templates):
             for template in db_static_templates:
                 parts = template.split("[-]")
-                templates.append(parts[0])
-                print "STATIC = [%s]" % (parts[0])
+                template_file = parts[0] + "/CONFIG"
+                if Utils.is_readable(template_file) and os.path.isfile(template_file):
+                    templates.append(parts[0])
+                    print "STATIC = [%s]" % (parts[0])
             for template in db_dynamic_templates:
                 parts = template.split("[-]")
-                templates.append(parts[0])
-                print "DYNAMIC = [%s]" % (parts[0])
+                template_file = parts[0] + "/CONFIG"
+                if Utils.is_readable(template_file) and os.path.isfile(template_file):
+                    templates.append(parts[0])
+                    print "DYNAMIC = [%s]" % (parts[0])
         else:
             for f in os.listdir(self.config["web_template_path"]):
                 template_file = os.path.join(self.config["web_template_path"], f) + "/CONFIG"

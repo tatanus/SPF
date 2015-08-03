@@ -103,7 +103,8 @@ class Framework(object):
         if (os.path.exists("/proc/" + str(pid))):
             self.display.alert("Killing process [%s]" % (pid))
             os.kill(pid, signal.SIGKILL)
-            os.remove(self.pid_path + "spfwebsrv.pid") 
+            if (os.path.isfile(self.pid_path + "spfwebsrv.pid")):
+                os.remove(self.pid_path + "spfwebsrv.pid") 
 
     def generateReport(self):
         self.display.output("Generating phishing report")

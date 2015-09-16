@@ -2,6 +2,9 @@
 
 import sqlite3
 import sys
+import base64
+from random import  sample
+from string import digits, ascii_letters
 from utils import Utils
 
 class MyDB():
@@ -49,7 +52,7 @@ class MyDB():
     def initDB(self):
         cursor = self.getCursor()
         cursor.execute("DROP TABLE IF EXISTS users")
-        cursor.execute("CREATE TABLE users(user TEXT)")
+        cursor.execute("CREATE TABLE users(user TEXT, trackid TEXT)")
 
         cursor.execute("DROP TABLE IF EXISTS hosts")
         cursor.execute("CREATE TABLE hosts(name TEXT, ip TEXT)")
@@ -64,7 +67,7 @@ class MyDB():
 
     def addUser(self, user):
         cursor = self.getCursor()
-        cursor.execute('INSERT INTO users VALUES(?)', (user,))
+        cursor.execute('INSERT INTO users VALUES(?,?)', (user, "".join(sample(digits + ascii_letters, 8))))
         self.conn.commit()
         return
 
@@ -104,6 +107,23 @@ class MyDB():
             users.append(row[0])
         return Utils.unique_list(users)
         
+    def findUser(self, trackid):
+        user = ""
+        cursor = self.getCursor()
+        cursor.execute('SELECT user FROM users WHERE trackid=?', (trackid,))
+        for row in cursor.fetchall():
+            user = row[0]
+        return user
+
+    def getUserTrackId(self, user):
+        trackid = ""
+        cursor = self.getCursor()
+        print user
+        cursor.execute('SELECT trackid FROM users WHERE user=?', (user,))
+        for row in cursor.fetchall():
+            trackid = row[0]
+        return trackid
+
     def getWebTemplates(self, ttype="static"):
         templates = []
         cursor = self.getCursor()

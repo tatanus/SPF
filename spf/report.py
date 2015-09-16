@@ -18,12 +18,12 @@ class ReportGen():
         self.load_config()
         self.filename = "report-%s.html" % (time.strftime("%Y_%m_%d_%H_%M_%S"))
 
-        self.WEBLOGS_FILENAME = self.directory + "*.log"
+        self.WEBLOGS_FILENAME = self.directory + "logs/*.log"
 
         self.campaigns = {}
 
     def load_config(self):
-        filename = self.directory + "INFO.txt"
+        filename = self.directory + "logs/INFO.txt"
         if not Utils.is_readable(filename):
             raise ReportGenException("Filename: [%s] is NOT readable." % (filename))
 
@@ -95,7 +95,7 @@ class ReportGen():
         # loop over each campaign, calling self.process_campaign(campaign) on each
         for log in weblogs:
             campaign = log[:-4]
-            campaign = re.sub('^' + self.directory, '', campaign)
+            campaign = re.sub('^' + self.directory + "logs/" , '', campaign)
             self.process_campaign(campaign)
 
             self.print_campaign(campaign)
@@ -105,8 +105,8 @@ class ReportGen():
         self.campaigns[campaign] = {}
         # load screenshot
         self.campaigns[campaign]["screenshots"] = []
-        self.campaigns[campaign]["screenshots"].append(self.directory + campaign + "." + self.config["phishing_domain"] + ".png")
-        files = self.find_files(self.directory + Utils.getIP() + ":*_" + campaign + ".png")
+        self.campaigns[campaign]["screenshots"].append(self.directory + "screenshots/" + campaign + "." + self.config["phishing_domain"] + ".png")
+        files = self.find_files(self.directory + "screenshots/" + Utils.getIP() + ":*_" + campaign + ".png")
         if (files):
             self.campaigns[campaign]["screenshots"].append(files[0])
 
@@ -135,8 +135,8 @@ class ReportGen():
             self.campaigns[campaign]["stats"]["emails_sent"] = len(self.campaigns[campaign]["email_targets"])
         else:
             self.campaigns[campaign]["stats"]["emails_sent"] = 0
-        self.campaigns[campaign]["stats"]["website_access"] = self.grep_file(self.directory + campaign + ".log", "[ACCESS]")
-        self.campaigns[campaign]["stats"]["credentials"] = self.grep_file(self.directory + campaign + ".log", "[CREDENTIALS]")
+        self.campaigns[campaign]["stats"]["website_access"] = self.grep_file(self.directory + "logs/" + campaign + ".log", "[ACCESS]")
+        self.campaigns[campaign]["stats"]["credentials"] = self.grep_file(self.directory + "logs/" + campaign + ".log", "[CREDENTIALS]")
 
         return
 
@@ -174,7 +174,7 @@ class ReportGen():
         self.print_file("</h3>")
         self.print_file("<div id=\"images\">")
         for s in self.campaigns[campaign]["screenshots"]:
-            s = re.sub('^' + self.directory, '', s)
+            s = re.sub('^' + self.directory + "screenshots/", '', s)
             self.print_file("<img src=\"%s\" width=\"500px\" height=\"500px\" />" % (s))
             caption = s[:-4]
             caption = re.sub("_" + campaign + "$", '', caption)
@@ -213,7 +213,7 @@ class ReportGen():
         return glob.glob(filemask)
 
     def print_file(self, line):
-        fullfilename = self.directory + self.filename
+        fullfilename = self.directory + "reports/" + self.filename
         
         if not os.path.exists(os.path.dirname(fullfilename)):
             os.makedirs(os.path.dirname(fullfilename))
@@ -235,7 +235,7 @@ if __name__ == "__main__":
         usage()
         exit(0)
 
-    if Utils.is_readable(sys.argv[1] + "INFO.txt"):
+    if Utils.is_readable(sys.argv[1] + "logs/INFO.txt"):
         try:
             print ReportGen(sys.argv[1]).start()
         except ReportGenException as e:

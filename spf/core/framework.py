@@ -8,6 +8,8 @@ import subprocess
 import time
 import signal
 from collections import defaultdict
+
+#import our libs
 from emails import EmailTemplate
 from utils import Utils
 from display import Display
@@ -19,6 +21,7 @@ from sitecloner import SiteCloner
 from mailpillager import MailPillager
 import portscan
 
+#import our modules
 from modules.theharvester import theHarvester
 
 #=================================================
@@ -76,11 +79,17 @@ class Framework(object):
     # SUPPORT METHODS
     #==================================================
 
+    #----------------------------
+    # CTRL-C display and exit
+    #----------------------------
     def ctrlc(self):
         print
         self.display.alert("Ctrl-C caught!!!")
         self.cleanup()
 
+    #----------------------------
+    # Close everything down nicely
+    #----------------------------
     def cleanup(self):
         print
         if (self.webserver is not None):
@@ -99,6 +108,9 @@ class Framework(object):
         # exit
         sys.exit(0)
 
+    #----------------------------
+    # Kill specified process
+    #----------------------------
     def killProcess(self, pid):
         if (os.path.exists("/proc/" + str(pid))):
             self.display.alert("Killing process [%s]" % (pid))
@@ -106,28 +118,22 @@ class Framework(object):
             if (os.path.isfile(self.pid_path + "spfwebsrv.pid")):
                 os.remove(self.pid_path + "spfwebsrv.pid") 
 
+    #----------------------------
+    # Generate The simple report
+    #----------------------------
     def generateReport(self):
         self.display.output("Generating phishing report")
         self.display.log("ENDTIME=%s\n" % (time.strftime("%Y/%m/%d %H:%M:%S")), filename="INFO.txt")
 
-        path = os.path.dirname(os.path.realpath(__file__))
         # Start process
-        cmd = [path + "/../report.py", self.logpath]
+        cmd = [os.getcwd() + "/report.py", self.logpath]
         self.display.output("Report file located at %s%s" % (self.logpath, subprocess.check_output(cmd)))
 
+    #----------------------------
+    # Parse CommandLine Parms
+    #----------------------------
     def parse_parameters(self, argv):
         parser = argparse.ArgumentParser()
-
-        #==================================================
-        # Required Args
-        #==================================================
-#        requiredgroup = parser.add_argument_group('required arguments')
-#        requiredgroup.add_argument("-d",
-#                            metavar="<domain>",
-#                            dest="domain",
-#                            action='store',
-#                            required=True,
-#                            help="domain name to phish")
 
         #==================================================
         # Input Files
@@ -137,13 +143,11 @@ class Framework(object):
                             metavar="<list.txt>",
                             dest="email_list_file",
                             action='store',
-#                            type=argparse.FileType('r'),
                             help="file containing list of email addresses")
         filesgroup.add_argument("-C",
                             metavar="<config.txt>",
                             dest="config_file",
                             action='store',
-#                            type=argparse.FileType('r'),
                             help="config file")
 
         #==================================================
@@ -247,6 +251,7 @@ class Framework(object):
                             action='store_true',
                             help="automatically answer yes to all questions")
 
+        # parse args
         args = parser.parse_args()
 
         # convert parameters to values in the config dict
@@ -272,10 +277,14 @@ class Framework(object):
         self.config["daemon_web"] = args.daemon_web
         self.config["always_yes"] = args.always_yes
 
+        # process meta flags
+        
+        # recon = gather emails and gather dns
         if (args.enable_recon == True):
             self.config["gather_emails"] =  True
             self.config["gather_dns"] = True
 
+        # all = gather emails, enable externals, etc...
         if (args.enable_all == True):
             self.config["gather_emails"] =  True
             self.config["enable_externals"] = True
@@ -284,6 +293,7 @@ class Framework(object):
             self.config["verbose"] = 2
             self.config["always_yes"] = True
 
+        # test = gather emails, enable externals, etc...
         if (args.enable_test == True):
             self.config["gather_emails"] = True
             self.config["enable_externals"] = True
@@ -292,21 +302,33 @@ class Framework(object):
             self.config["always_yes"] = True
             self.config["verbose"] = 2
 
+        # advanced = dns, profile, and pillage
         if (args.enable_advanced == True):
             self.config["gather_dns"] = True
             self.config["profile_domain"] = True
             self.config["pillage_email"] = True
 
+        # profile requires dns
         if (self.config["profile_domain"] and not self.config["gather_dns"]):
             self.config["profile_domain"] = False
             self.display.error("--profile requires the --dns option to be enabled as well.")
 
+        # pillage requires dns
         if (self.config["pillage_email"] and not self.config["gather_dns"]):
             self.config["pillage_email"] = False
             self.display.error("--pillage requires the --dns option to be enabled as well.")
 
+        # see if we are good to go
         good = False
-        if (self.config["email_list_filename"] or self.config["gather_emails"] or self.config["enable_externals"] or self.config["enable_web"] or self.config["enable_email_sending"] or self.config["simulate_email_sending"] or self.config["gather_dns"] or self.config["profile_domain"] or self.config["pillage_email"]):
+        if (self.config["email_list_filename"]
+                or self.config["gather_emails"]
+                or self.config["enable_externals"]
+                or self.config["enable_web"]
+                or self.config["enable_email_sending"]
+                or self.config["simulate_email_sending"]
+                or self.config["gather_dns"]
+                or self.config["profile_domain"]
+                or self.config["pillage_email"]):
             good = True
         if (not good):
             self.display.error("Please enable at least one of the following parameters: -g --external --dns -s --simulate -w ( --all --test --recon --adv )")
@@ -314,25 +336,17 @@ class Framework(object):
             parser.print_help()
             sys.exit(1)
 
-
-    #==================================================
-    # Primary METHOD
-    #==================================================
-
-    def run(self, argv):
-
-        #==================================================
-        # Process/Load commanline args and config file
-        #==================================================
-
-        self.parse_parameters(argv)
-
-        # load the config file
+    #----------------------------
+    # Process/Load config file
+    #----------------------------
+    def load_config(self):
+        # does config file exist?
         if (self.config["config_filename"] is not None):
             temp1 = self.config
             temp2 = Utils.load_config(self.config["config_filename"])
             self.config = dict(temp2.items() + temp1.items())
         else:
+            # guess not..   so try to load the default one
             if Utils.is_readable("default.cfg"):
                 self.display.error("a CONFIG FILE was not specified...  defaulting to [default.cfg]")
                 print
@@ -340,11 +354,12 @@ class Framework(object):
                 temp2 = Utils.load_config("default.cfg")
                 self.config = dict(temp2.items() + temp1.items())
             else:
+                # someone must have removed it!
                 self.display.error("a CONFIG FILE was not specified...")
                 print
-                sys.exit()
+                sys.exit(1)
 
-        # set verbosity level
+        # set verbosity/debug level
         if (self.config['verbose'] >= 1):
             self.display.enableVerbose()
         if (self.config['verbose'] > 1):
@@ -354,25 +369,27 @@ class Framework(object):
         self.logpath = os.getcwd() + "/" + self.config["domain_name"] + "_" + self.config["phishing_domain"] + "/"
         if not os.path.exists(os.path.dirname(self.logpath)):
             os.makedirs(os.path.dirname(self.logpath))
-
         self.display.setLogPath(self.logpath)
-        #print self.logpath
+
+        # create sqllite db
         self.db = MyDB(sqlite_file=self.logpath)
 
+        # log it
         self.display.log("STARTTIME=%s\n" % (time.strftime("%Y/%m/%d %H:%M:%S")), filename="INFO.txt")
         self.display.log("TARGETDOMAIN=%s\n" % (self.config["domain_name"]), filename="INFO.txt")
         self.display.log("PHISHINGDOMAIN=%s\n" % (self.config["phishing_domain"]), filename="INFO.txt")
 
-        #==================================================
-        # Load/Gather target email addresses
-        #==================================================
-
+    #----------------------------
+    # Load/Gather target email addresses
+    #----------------------------
+    def prep_email(self):
+        # are required flags set?
         if ((self.config["email_list_filename"] is not None) or (self.config["gather_emails"] == True)):
             print
             self.display.output("Obtaining list of email targets")
             if (self.config["always_yes"] or self.display.yn("Continue", default="y")):
 
-                # if an external emaillist file was specified, read it in
+                # if an external email list file was specified, read it in
                 if self.config["email_list_filename"] is not None:
                     file = open(self.config["email_list_filename"], 'r')
                     temp_list = file.read().splitlines()
@@ -417,6 +434,7 @@ class Framework(object):
                 self.email_list = Utils.unique_list(self.email_list)
                 self.email_list.sort()
 
+                # add each user to the sqllite db
                 self.db.addUsers(self.email_list)
 
                 # print list of email addresses
@@ -424,12 +442,12 @@ class Framework(object):
                 self.display.print_list("EMAIL LIST",self.email_list)
                 for email in self.email_list:
                     self.display.log(email + "\n", filename="email_targets.txt")
-            #        self.display.debug("%s -> %s" % (email, self.db.getUserTrackId(email)))
 
-        #==================================================
-        # Gather dns hosts
-        #==================================================
-
+    #----------------------------
+    # Gather dns hosts
+    #----------------------------
+    def gather_dns(self):
+        # are required flags set?
         if (self.config["gather_dns"] == True):
             print
             self.display.output("Obtaining list of host on the %s domain" % (self.config["domain_name"]))
@@ -470,29 +488,35 @@ class Framework(object):
             self.hostname_list = Utils.unique_list(self.hostname_list)
             self.hostname_list.sort()
 
+            # add list of identified hosts to sqllite db
             self.db.addHosts(self.hostname_list)
 
             # print list of hostnames
             self.display.verbose("Collected [%s] unique host names" % (len(self.hostname_list)))
-            self.display.print_list("HOST LIST",self.hostname_list)
+            self.display.print_list("HOST LIST", self.hostname_list)
 
-        #==================================================
-        # Perform Port Scans
-        #==================================================
-
+    #----------------------------
+    # Perform Port Scans
+    #----------------------------
+    def port_scan(self):
+        # are required flags set?
         if (self.config["gather_dns"] == True):
             self.display.output("Performing basic port scans of any identified hosts.")
-            self.server_list[80] = []
-            self.server_list[443] = []
-            self.server_list[110] = []
-            self.server_list[995] = []
-            self.server_list[143] = []
-            self.server_list[993] = []
-            self.server_list[25] = []
 
+            # define list of ports to scan for
+            ports = [25, 80,110, 143, 443, 993, 995]
+ 
+            # prep array of arrays
+            for port in ports:
+                self.server_list[port] = []
+
+            # for each host in the host list
             for host in self.hostname_list:
-                openports = portscan.scan(host, [25, 80, 110, 143,443, 993, 995])
+                # run port scan
+                openports = portscan.scan(host, ports)
                 found = False
+                
+                # for any open ports, add it to the associated list
                 for port in openports:
                     self.db.addPort(port, host)
                     if (port == 80):
@@ -526,16 +550,21 @@ class Framework(object):
                     if (found):
                         self.display.log(host + "\n", filename="hosts.txt")
 
-        #==================================================
-        # Profile Web Sites
-        #==================================================
-
+    #----------------------------
+    # Profile Web Sites
+    #----------------------------
+    def profile_site(self):
+        # are required flags set?
         if (self.config["profile_domain"] == True):
             self.display.output("Determining if any of the identified hosts have web servers.")
 
+            # for hosts in the port 80 list
             for host in self.server_list[80]:
+                # create a profiler object
                 p = profiler()
+                # run it against the website
                 profile_results = p.run("http://" + host, debug=False)
+                # if we got valid results, look to see if we have a match for one of the templates
                 if (profile_results and (len(profile_results) > 0)):
                     max_key = ""
                     max_value = 0
@@ -547,9 +576,11 @@ class Framework(object):
                         self.display.verbose("POSSIBLE MATCH FOR [http://%s] => [%s]" % (host, max_key))
                         self.profile_valid_web_templates.append(max_key)
                 else:
+                    # other wise we will see about adding it to a list of sites to clone
                     if (p.hasLogin("http://" + host)):
                         self.profile_dynamic_web_templates.append("http://" + host)
 
+            # repeat same as for port 80
             for host in self.server_list[443]:
                 p = profiler()
                 profile_results = p.run("https://" + host, debug=False)
@@ -568,12 +599,14 @@ class Framework(object):
                         self.display.verbose("POSSIBLE DYNAMIC TEMPLATE SITE [https://%s]" % (host))
                         self.profile_dynamic_web_templates.append("https://" + host)
 
+            # sort/unique list of valid templates
             self.profile_valid_web_templates = Utils.unique_list(self.profile_valid_web_templates)
             self.profile_valid_web_templates.sort()
             # print list of valid templatess
             self.display.verbose("Collected [%s] valid web templates" % (len(self.profile_valid_web_templates)))
             self.display.print_list("VALID TEMPLATE LIST",self.profile_valid_web_templates)
 
+            # sort/unique list of dynamic templates
             self.profile_dynamic_web_templates = Utils.unique_list(self.profile_dynamic_web_templates)
             self.profile_dynamic_web_templates.sort()
 
@@ -581,6 +614,7 @@ class Framework(object):
             self.display.verbose("Collected [%s] dynamic web templates" % (len(self.profile_dynamic_web_templates)))
             self.display.print_list("DYNAMIC TEMPLATE LIST",self.profile_dynamic_web_templates)
 
+            # for any dynamic sites, try to clone them
             self.display.output("Cloning any DYNAMIC sites")
             for template in self.profile_dynamic_web_templates:
                 sc = SiteCloner(clone_dir=self.logpath)
@@ -588,19 +622,20 @@ class Framework(object):
                 self.display.verbose("Cloning [%s] to [%s]" % (template, tdir))
                 self.db.addWebTemplate(ttype="dynamic", src_url=template, tdir=tdir)
 
+            # loop over all built in templates
             for f in os.listdir(self.config["web_template_path"]):
                 template_file = os.path.join(self.config["web_template_path"], f) + "/CONFIG"
-#                self.db.addWebTemplate(ttype="static", src_url="", tdir=os.path.join(self.config["web_template_path"], f))
                 for line in open(template_file).readlines():
                     for tem in self.profile_valid_web_templates:
                         if re.match("^VHOST=\s*"+tem+"\s*$", line, re.IGNORECASE):
                             self.db.addWebTemplate(ttype="static", src_url="", tdir=os.path.join(self.config["web_template_path"], f))
                             break
 
-        #==================================================
-        # Load web sites
-        #==================================================
-
+    #----------------------------
+    # Load web sites
+    #----------------------------
+    def load_websites(self):
+        # are required flags set?
         if self.config["enable_web"] == True:
             print
             self.display.output("Starting phishing webserver")
@@ -649,11 +684,15 @@ class Framework(object):
                 self.webserverpid = self.webserver.pid
                 self.display.verbose("Started WebServer with pid = [%s]" % self.webserver.pid)
 
-        #==================================================
-        # Build array of email templates
-        #==================================================
-
-        if (((self.email_list is not None) and (self.email_list)) and ((self.config["enable_email_sending"] == True) or (self.config["simulate_email_sending"] == True))):
+    #----------------------------
+    # Build array of email templates
+    #----------------------------
+    def load_email_templates(self):
+        # do we even have targets?
+        if (((self.email_list is not None)
+            and (self.email_list))
+                and ((self.config["enable_email_sending"] == True)
+                    or (self.config["simulate_email_sending"] == True))):
             print
             self.display.verbose("Locating phishing email templates")
             if (self.config["always_yes"] or self.display.yn("Continue", default="y")):
@@ -688,10 +727,11 @@ class Framework(object):
                                     BODY=BODY[1].strip()
                         self.email_templates[TYPE].append(EmailTemplate(TYPE, SUBJECT, BODY))
 
-        #==================================================
-        # Generate/Send phishing emails
-        #==================================================
-
+    #----------------------------
+    # Generate/Send phishing emails
+    #----------------------------
+    def send_emails(self):
+        # are required flags set?
         if ((self.config["enable_email_sending"] == True) or (self.config["simulate_email_sending"] == True)):
             if ((self.config["determine_smtp"] == "1") and (self.config["use_specific_smtp"] == "1")):
                self.display.error("ONLY 1 of DETERMINE_SMTP or USE_SPECIFIC_SMTP can be enabled at a time.")
@@ -734,16 +774,12 @@ class Framework(object):
                                             # perform necessary SEARCH/REPLACE 
                                             if self.config["enable_host_based_vhosts"] == "1":
                                                 targetlink="http://" + key + "." + self.config["phishing_domain"]
-                                                #if self.config["default_web_port"] != "80":
-                                                #    BODY += ":" + self.config["default_web_port"]
                                                 if self.config["enable_user_tracking"] == "1":
                                                     targetlink += "?u=" + self.db.getUserTrackId(target)
                                                 BODY=BODY.replace(r'[[TARGET]]', targetlink)
                                             else:
                                                 if (not key == "dynamic"):
                                                     targetlink="http://" + self.config[key+ "_port"]
-                                                    #if self.config["default_web_port"] != "80":
-                                                    #    BODY += ":" + self.config["default_web_port"]
                                                     if self.config["enable_user_tracking"] == "1":
                                                         targetlink += "?u=" + self.db.getUserTrackId(target)
                                                     BODY=BODY.replace(r'[[TARGET]]', targetlink)
@@ -768,19 +804,33 @@ class Framework(object):
                                             else:
                                                 try:
                                                     if self.config["determine_smtp"] == "1":
-                                                        emails.send_email_direct(target, FROM, self.config["smtp_displayname"], SUBJECT, BODY, debug=True)
+                                                        emails.send_email_direct(target,
+                                                                FROM,
+                                                                self.config["smtp_displayname"],
+                                                                SUBJECT,
+                                                                BODY,
+                                                                debug=True)
                                                     if self.config["use_specific_smtp"] == "1":
-                                                        #self.display.error("[USE_SPECIFIC_SMTP] not implemented")
                                                         print self.config["smtp_fromaddr"]
-                                                        emails.send_email_account(self.config["smtp_server"], int(self.config["smtp_port"]), self.config["smtp_user"], self.config["smtp_pass"], target, self.config["smtp_fromaddr"], self.config["smtp_displayname"], SUBJECT, BODY, debug=True)
+                                                        emails.send_email_account(self.config["smtp_server"],
+                                                                int(self.config["smtp_port"]),
+                                                                self.config["smtp_user"],
+                                                                self.config["smtp_pass"],
+                                                                target,
+                                                                self.config["smtp_fromaddr"],
+                                                                self.config["smtp_displayname"],
+                                                                SUBJECT,
+                                                                BODY,
+                                                                debug=True)
                                                 except:
                                                     self.display.error("Count not send email to " + target)
 
 
-        #==================================================
-        # Monitor web sites
-        #==================================================
-
+    #----------------------------
+    # Monitor web sites
+    #----------------------------
+    def monitor_results(self):
+        # are required flags set?
         if self.config["enable_web"] == True:
             print
             self.display.output("Monitoring phishing website activity!")
@@ -797,6 +847,9 @@ class Framework(object):
     # Secondary METHODS
     #==================================================
 
+    #----------------------------
+    # Pillage Emails
+    #----------------------------
     def pillage(self, line):
         username = None
         password = None
@@ -805,31 +858,42 @@ class Framework(object):
         usermatch = re.match(".*username=\['(.*?)'\].*", line)
         if (usermatch):
             username = usermatch.group(1)
-
         passmatch = re.match(".*password=\['(.*?)'\].*", line)
         if (passmatch):
             password = passmatch.group(1)
 
+        # if no username or password, then return
         if ((not username) or (not password)):
             return
 
+        # is it a new username/password pair we have not seen before?
         if (not username+":"+password in self.pillaged_users):
             self.pillaged_users.append(username+":"+password)
 
+            # make a new MailPillager if one does not exist
             if (not self.mp):
                 self.mp = MailPillager()
 
+            # attempt to determine the best Mail Server to use
             if (not self.bestMailServer):
                 self.determineBestMailServer()
 
+            # if no Best Mail Server was identified, return
             if (not self.bestMailServer):
                 self.display.error("No valid target IMAP/POP3 mail servers were identified.")
                 return
 
-            print self.bestMailServer + ":" + str(self.bestMailServerPort)
+            #print self.bestMailServer + ":" + str(self.bestMailServerPort)
 
-            self.mp.pillage(username=username, password=password, server=self.bestMailServer, port=self.bestMailServerPort, domain=self.config["domain_name"], outputdir=self.logpath)
+            # PILLAGE!!!
+            self.mp.pillage(username=username, password=password, server=self.bestMailServer,
+                    port=self.bestMailServerPort, domain=self.config["domain_name"], outputdir=self.logpath)
 
+    #----------------------------
+    # See which Mail Server we should use
+    #
+    # TODO: needs to be updated!!!
+    #----------------------------
     def determineBestMailServer(self):
         if self.server_list[993]: # IMAPS
             self.bestMailServerPort = 993
@@ -843,3 +907,31 @@ class Framework(object):
         elif self.server_list[110]: # POP3
             self.bestMailServerPort = 110
             self.bestMailServer = self.server_list[110][0]
+
+    #==========================================================================================
+    #==========================================================================================
+    #==========================================================================================
+
+    #----------------------------
+    # Primary METHOD
+    #----------------------------
+    def run(self, argv):
+        # load config
+        self.parse_parameters(argv)
+        self.load_config()
+        
+        # dns/portscan/cloning
+        self.gather_dns()
+        self.port_scan()
+        self.profile_site()
+
+        # load websites 
+        self.load_websites()
+
+        # do email stuff
+        self.prep_email()
+        self.load_email_templates()
+        self.send_emails()
+
+        # sit back and listen
+        self.monitor_results()

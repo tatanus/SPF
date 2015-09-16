@@ -126,8 +126,8 @@ class Framework(object):
         self.display.log("ENDTIME=%s\n" % (time.strftime("%Y/%m/%d %H:%M:%S")), filename="INFO.txt")
 
         # Start process
-        cmd = [os.getcwd() + "/report.py", self.logpath]
-        self.display.output("Report file located at %s%s" % (self.logpath, subprocess.check_output(cmd)))
+        cmd = [os.getcwd() + "/report.py", self.outdir]
+        self.display.output("Report file located at %s%s" % (self.outdir + "reports/", subprocess.check_output(cmd)))
 
     #----------------------------
     # Parse CommandLine Parms
@@ -366,13 +366,13 @@ class Framework(object):
             self.display.enableDebug()
 
         # set logging path
-        self.logpath = os.getcwd() + "/" + self.config["domain_name"] + "_" + self.config["phishing_domain"] + "/"
-        if not os.path.exists(os.path.dirname(self.logpath)):
-            os.makedirs(os.path.dirname(self.logpath))
-        self.display.setLogPath(self.logpath)
+        self.outdir = os.getcwd() + "/" + self.config["domain_name"] + "_" + self.config["phishing_domain"] + "/"
+        if not os.path.exists(os.path.dirname(self.outdir)):
+            os.makedirs(os.path.dirname(self.outdir))
+        self.display.setLogPath(self.outdir + "logs/")
 
         # create sqllite db
-        self.db = MyDB(sqlite_file=self.logpath)
+        self.db = MyDB(sqlite_file=self.outdir)
 
         # log it
         self.display.log("STARTTIME=%s\n" % (time.strftime("%Y/%m/%d %H:%M:%S")), filename="INFO.txt")
@@ -614,10 +614,15 @@ class Framework(object):
             self.display.verbose("Collected [%s] dynamic web templates" % (len(self.profile_dynamic_web_templates)))
             self.display.print_list("DYNAMIC TEMPLATE LIST",self.profile_dynamic_web_templates)
 
+            # sort/unique hostname list
+            self.profile_dynamic_web_templates = Utils.lowercase_list(self.profile_dynamic_web_templates)
+            self.profile_dynamic_web_templates = Utils.unique_list(self.profile_dynamic_web_templates)
+            self.profile_dynamic_web_templates.sort()
+
             # for any dynamic sites, try to clone them
             self.display.output("Cloning any DYNAMIC sites")
             for template in self.profile_dynamic_web_templates:
-                sc = SiteCloner(clone_dir=self.logpath)
+                sc = SiteCloner(clone_dir=self.outdir+"web_clones/")
                 tdir = sc.cloneUrl(template)
                 self.display.verbose("Cloning [%s] to [%s]" % (template, tdir))
                 self.db.addWebTemplate(ttype="dynamic", src_url=template, tdir=tdir)
@@ -632,11 +637,44 @@ class Framework(object):
                             break
 
     #----------------------------
+    # Select Web Templates
+    #----------------------------
+    def select_web_templates(self):
+        templates = []
+
+        # get lists of current templates
+        db_static_templates = self.db.getWebTemplates(ttype="static")
+        db_dynamic_templates = self.db.getWebTemplates(ttype="dynamic")
+        
+        # check to see if we have templates
+        if (db_static_templates or db_dynamic_templates):
+            for template in db_static_templates:
+                parts = template.split("[-]")
+                template_file = parts[0] + "/CONFIG"
+                if Utils.is_readable(template_file) and os.path.isfile(template_file):
+                    templates.append(("static", parts[0], parts[1]))
+            for template in db_dynamic_templates:
+                parts = template.split("[-]")
+                template_file = parts[0] + "/CONFIG"
+                if Utils.is_readable(template_file) and os.path.isfile(template_file):
+                    templates.append(("dynamic", parts[0], parts[1]))
+        else:
+            # assume we do not have any valid templates
+            # load all standard templates
+            for f in os.listdir(self.config["web_template_path"]):
+                template_file = os.path.join(self.config["web_template_path"], f) + "/CONFIG"
+                if Utils.is_readable(template_file) and os.path.isfile(template_file):
+                    templates.append(("static", os.path.join(self.config["web_template_path"], f), ""))
+                    print "FIXED = [%s]" % (os.path.join(self.config["web_template_path"], f))
+        self.display.print_list("TEMPLATE LIST", templates)
+        
+    #----------------------------
     # Load web sites
     #----------------------------
     def load_websites(self):
-        # are required flags set?
+        # a required flags set?
         if self.config["enable_web"] == True:
+            self.select_web_templates()
             print
             self.display.output("Starting phishing webserver")
             if (self.config["always_yes"] or self.display.yn("Continue", default="y")):
@@ -672,9 +710,9 @@ class Framework(object):
                             self.config[VHOST + "_port"] = PORT
                             self.config[VHOST + "_vhost"] = VHOST
                             Utils.screenCaptureWebSite("http://" + PORT,
-                                self.logpath + PORT + "_" + VHOST + ".png")
+                                self.outdir + "screenshots/" + PORT + "_" + VHOST + ".png")
                             Utils.screenCaptureWebSite("http://" + VHOST + "." + self.config["phishing_domain"],
-                                self.logpath + VHOST + "." + self.config["phishing_domain"] + ".png")
+                                self.outdir + "screenshots/" + VHOST + "." + self.config["phishing_domain"] + ".png")
 
                 # Write PID file
                 pidfilename = os.path.join(self.pid_path, "spfwebsrv.pid")
@@ -887,7 +925,7 @@ class Framework(object):
 
             # PILLAGE!!!
             self.mp.pillage(username=username, password=password, server=self.bestMailServer,
-                    port=self.bestMailServerPort, domain=self.config["domain_name"], outputdir=self.logpath)
+                    port=self.bestMailServerPort, domain=self.config["domain_name"], outputdir=self.outdir + "pillage_data/")
 
     #----------------------------
     # See which Mail Server we should use
@@ -919,7 +957,19 @@ class Framework(object):
         # load config
         self.parse_parameters(argv)
         self.load_config()
-        
+       
+        # make directories
+        if not os.path.isdir(self.outdir + "reports/"):
+            os.makedirs(self.outdir + "reports/")
+        if not os.path.isdir(self.outdir + "logs/"):
+            os.makedirs(self.outdir + "logs/")
+        if not os.path.isdir(self.outdir + "screenshots/"):
+            os.makedirs(self.outdir + "screenshots/")
+        if not os.path.isdir(self.outdir + "web_clones/"):
+            os.makedirs(self.outdir + "web_clones/")
+        if not os.path.isdir(self.outdir + "pillage_data/"):
+            os.makedirs(self.outdir + "pillage_data/")
+
         # dns/portscan/cloning
         self.gather_dns()
         self.port_scan()

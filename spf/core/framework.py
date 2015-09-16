@@ -306,7 +306,7 @@ class Framework(object):
             self.display.error("--pillage requires the --dns option to be enabled as well.")
 
         good = False
-        if (self.config["gather_emails"] or self.config["enable_externals"] or self.config["enable_web"] or self.config["enable_email_sending"] or self.config["simulate_email_sending"] or self.config["gather_dns"] or self.config["profile_domain"] or self.config["pillage_email"]):
+        if (self.config["email_list_filename"] or self.config["gather_emails"] or self.config["enable_externals"] or self.config["enable_web"] or self.config["enable_email_sending"] or self.config["simulate_email_sending"] or self.config["gather_dns"] or self.config["profile_domain"] or self.config["pillage_email"]):
             good = True
         if (not good):
             self.display.error("Please enable at least one of the following parameters: -g --external --dns -s --simulate -w ( --all --test --recon --adv )")
@@ -378,7 +378,7 @@ class Framework(object):
                     temp_list = file.read().splitlines()
                     self.display.verbose("Loaded [%s] email addresses from [%s]" % (len(temp_list), self.config["email_list_filename"]))
                     self.email_list += temp_list
-            
+
                 # gather email addresses
                 if self.config["gather_emails"] == True:
                     if (self.config["domain_name"] == ""):
@@ -392,7 +392,7 @@ class Framework(object):
                         self.display.verbose("Gathered [%s] email addresses from the Internet" % (len(temp_list)))
                         self.email_list += temp_list
                         print
-    
+
                         # gather email addresses from external sources
                         if (self.config["gather_emails"] == True) and (self.config["enable_externals"] == True):
                             # theHarvester
@@ -406,24 +406,25 @@ class Framework(object):
                             else:
                                 self.display.error(out)
                             print
-    
+
     #                        # Recon-NG
     #                        self.display.verbose("Gathering emails via Recon-NG")
     #                        temp_list = reconng(self.config["domain_name"], self.config["reconng_path"]).gather()
     #                        self.display.verbose("Gathered [%s] email addresses from Recon-NG" % (len(temp_list)))
     #                        self.email_list += temp_list
-           
+
                 # sort/unique email list
                 self.email_list = Utils.unique_list(self.email_list)
                 self.email_list.sort()
 
                 self.db.addUsers(self.email_list)
-            
+
                 # print list of email addresses
                 self.display.verbose("Collected [%s] unique email addresses" % (len(self.email_list)))
                 self.display.print_list("EMAIL LIST",self.email_list)
                 for email in self.email_list:
                     self.display.log(email + "\n", filename="email_targets.txt")
+            #        self.display.debug("%s -> %s" % (email, self.db.getUserTrackId(email)))
 
         #==================================================
         # Gather dns hosts
@@ -458,7 +459,10 @@ class Framework(object):
             self.hostname_list += temp_list
 
             # Gather hosts from dictionary lookup
-            temp_list = Dns.brute(self.config["domain_name"], display=self.display)
+            try:
+                temp_list = Dns.brute(self.config["domain_name"], display=self.display)
+            except:
+                pass
             self.display.verbose("Gathered [%s] hosts from DNS BruteForce/Dictionay Lookup" % (len(temp_list)))
             self.hostname_list += temp_list
 
@@ -478,14 +482,14 @@ class Framework(object):
 
         if (self.config["gather_dns"] == True):
             self.display.output("Performing basic port scans of any identified hosts.")
-            self.server_list[80] = [] 
-            self.server_list[443] = [] 
-            self.server_list[110] = [] 
-            self.server_list[995] = [] 
-            self.server_list[143] = [] 
-            self.server_list[993] = [] 
-            self.server_list[25] = [] 
-        
+            self.server_list[80] = []
+            self.server_list[443] = []
+            self.server_list[110] = []
+            self.server_list[995] = []
+            self.server_list[143] = []
+            self.server_list[993] = []
+            self.server_list[25] = []
+
             for host in self.hostname_list:
                 openports = portscan.scan(host, [25, 80, 110, 143,443, 993, 995])
                 found = False
@@ -528,7 +532,7 @@ class Framework(object):
 
         if (self.config["profile_domain"] == True):
             self.display.output("Determining if any of the identified hosts have web servers.")
-        
+
             for host in self.server_list[80]:
                 p = profiler()
                 profile_results = p.run("http://" + host, debug=False)
@@ -545,7 +549,7 @@ class Framework(object):
                 else:
                     if (p.hasLogin("http://" + host)):
                         self.profile_dynamic_web_templates.append("http://" + host)
-        
+
             for host in self.server_list[443]:
                 p = profiler()
                 profile_results = p.run("https://" + host, debug=False)
@@ -606,7 +610,7 @@ class Framework(object):
                 # Start process
                 cmd = [path + "/../web.py", Utils.compressDict(self.config)]
                 self.webserver = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE)
-    
+
                 # monitor output to gather website information
                 while True:
                     line = self.webserver.stdout.readline()
@@ -629,14 +633,14 @@ class Framework(object):
                             # if port is 80, then it does not need to be included in the URL
                             if (PORT[-3:] == ":80"):
                                 PORT = PORT[:-3]
-    
+
                             self.config[VHOST + "_port"] = PORT
                             self.config[VHOST + "_vhost"] = VHOST
                             Utils.screenCaptureWebSite("http://" + PORT,
                                 self.logpath + PORT + "_" + VHOST + ".png")
                             Utils.screenCaptureWebSite("http://" + VHOST + "." + self.config["phishing_domain"],
                                 self.logpath + VHOST + "." + self.config["phishing_domain"] + ".png")
-    
+
                 # Write PID file
                 pidfilename = os.path.join(self.pid_path, "spfwebsrv.pid")
                 pidfile = open(pidfilename, 'w')
@@ -658,7 +662,7 @@ class Framework(object):
                 for f in os.listdir("templates/email/"):
                     template_file = os.path.join("templates/email/", f)
                     self.display.debug("Found the following email template: [%s]" % template_file)
-            
+
                     if ((Utils.is_readable(template_file)) and (os.path.isfile(template_file))):
                         # read in the template SUBJECT, TYPE, and BODY
                         TYPE = ""
@@ -683,7 +687,7 @@ class Framework(object):
                                     BODY=BODY.split("=")
                                     BODY=BODY[1].strip()
                         self.email_templates[TYPE].append(EmailTemplate(TYPE, SUBJECT, BODY))
-        
+
         #==================================================
         # Generate/Send phishing emails
         #==================================================
@@ -723,18 +727,27 @@ class Framework(object):
                                             self.display.verbose("Sending Email to [%s]" % target)
                                             #FROM = "support@" + self.config["phishing_domain"]
                                             FROM = self.config["smtp_fromaddr"]
-        
+
                                             SUBJECT = template.getSUBJECT()
                                             BODY = template.getBODY()
-        
+
                                             # perform necessary SEARCH/REPLACE 
                                             if self.config["enable_host_based_vhosts"] == "1":
-                                                BODY=BODY.replace(r'[[TARGET]]', "http://" + key + "." + self.config["phishing_domain"])
-                                                if self.config["default_web_port"] != "80":
-                                                    BODY += ":" + self.config["default_web_port"]
+                                                targetlink="http://" + key + "." + self.config["phishing_domain"]
+                                                #if self.config["default_web_port"] != "80":
+                                                #    BODY += ":" + self.config["default_web_port"]
+                                                if self.config["enable_user_tracking"] == "1":
+                                                    targetlink += "?u=" + self.db.getUserTrackId(target)
+                                                BODY=BODY.replace(r'[[TARGET]]', targetlink)
                                             else:
-                                                BODY=BODY.replace(r'[[TARGET]]', "http://" + self.config[key + "_port"])
-    
+                                                if (not key == "dynamic"):
+                                                    targetlink="http://" + self.config[key+ "_port"]
+                                                    #if self.config["default_web_port"] != "80":
+                                                    #    BODY += ":" + self.config["default_web_port"]
+                                                    if self.config["enable_user_tracking"] == "1":
+                                                        targetlink += "?u=" + self.db.getUserTrackId(target)
+                                                    BODY=BODY.replace(r'[[TARGET]]', targetlink)
+
                                             # log
                                             if (key not in templates_logged):
                                                 self.display.log("----------------------------------------------\n\n" +
@@ -748,20 +761,20 @@ class Framework(object):
                                                                  filename="email_template_" + key + ".txt")
                                                 templates_logged.append(key)
                                             self.display.log(target + "\n", filename="email_template_" + key + ".txt")
-                                            
+
                                             # send the email
                                             if (self.config["simulate_email_sending"] == True):
                                                 self.display.output("Would have sent an email to [%s] with subject of [%s], but this was just a test." % (target, SUBJECT))
                                             else:
                                                 try:
                                                     if self.config["determine_smtp"] == "1":
-                                                        emails.send_email_direct(target, FROM, SUBJECT, BODY, debug=True)
+                                                        emails.send_email_direct(target, FROM, self.config["smtp_displayname"], SUBJECT, BODY, debug=True)
                                                     if self.config["use_specific_smtp"] == "1":
                                                         #self.display.error("[USE_SPECIFIC_SMTP] not implemented")
                                                         print self.config["smtp_fromaddr"]
-                                                        emails.send_email_account(self.config["smtp_server"], int(self.config["smtp_port"]), self.config["smtp_user"], self.config["smtp_pass"], target, self.config["smtp_fromaddr"], SUBJECT, BODY, debug=True)
+                                                        emails.send_email_account(self.config["smtp_server"], int(self.config["smtp_port"]), self.config["smtp_user"], self.config["smtp_pass"], target, self.config["smtp_fromaddr"], self.config["smtp_displayname"], SUBJECT, BODY, debug=True)
                                                 except:
-                                                    self.display.error(sys.exc_info()[0])
+                                                    self.display.error("Count not send email to " + target)
 
 
         #==================================================
@@ -787,7 +800,7 @@ class Framework(object):
     def pillage(self, line):
         username = None
         password = None
-       
+
         # parse line into username/password
         usermatch = re.match(".*username=\['(.*?)'\].*", line)
         if (usermatch):

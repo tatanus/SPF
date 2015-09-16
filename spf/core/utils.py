@@ -83,6 +83,10 @@ class Utils():
         return text
 
     @staticmethod
+    def lowercase_list(old_list):
+        return [item.lower() for item in old_list]
+
+    @staticmethod
     def unique_list(old_list):
         new_list = []
         if old_list != []:

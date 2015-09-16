@@ -193,7 +193,7 @@ class profiler(urllib2.HTTPRedirectHandler):
             response = urllib2.urlopen(url)
             if (response):
                 body = response.read()
-                m = re.search("(<\s*form.*)", body, re.IGNORECASE)
+                m = re.search("(<\s*form.*)", body, re.IGNORECASE|re.DOTALL)
                 if m:
                     m2 = re.search("(pass|login|user)", m.group(1), re.IGNORECASE)
                     if (m2):

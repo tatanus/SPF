@@ -9,6 +9,9 @@ import socket
 
 from core.utils import Utils
 from core.mydns import Dns
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEBase import MIMEBase
+from email import Encoders
 
 MX_RECORD_CACHE = {}
 
@@ -102,7 +105,7 @@ def validate_email_address(email_to, email_from, debug=False):
     smtp.quit()
     return False
 
-def send_email_direct(email_to, email_from, subject, body, debug=False):
+def send_email_direct(email_to, email_from, display_name, subject, body, debug=False):
     # find the appropiate mail server
     domain = email_to.split('@')[1]
     remote_server = get_mx_record(domain)
@@ -110,9 +113,13 @@ def send_email_direct(email_to, email_from, subject, body, debug=False):
         print "No valid email server could be found for [%s]!" % (email_to)
         return
 
+    # make sure we have a display name
+    if (not display_name):
+        display_name = email_from
+
     # connect to remote mail server and forward message on 
     server = smtplib.SMTP(remote_server, 25)
-    message = "From: %s\r\nTo: %s\r\nSubject: %s\r\n\r\n%s" % (email_from, email_to, subject, body)
+    message = "From: <%s>\r\nTo: <%s>\r\nSubject: %s\r\n\r\n%s" % (display_name, email_to, subject, body)
 
     smtp_sendmail_return = ""
     if debug:
@@ -124,13 +131,17 @@ def send_email_direct(email_to, email_from, subject, body, debug=False):
     finally:
         server.quit()
 
-def send_email_account(remote_server, remote_port, username, password, email_to, email_from, subject, body, debug=False):
+def send_email_account(remote_server, remote_port, username, password, email_to, email_from, display_name, subject, body, debug=False):
     if (remote_server == "smtp.gmail.com"):
         send_email_gmail(username, password, email_to, email_from, subject, body, debug)
     else:
+        # make sure we have a display name
+        if (not display_name):
+            display_name = email_from
+
         # connect to remote mail server and forward message on 
         server = smtplib.SMTP(remote_server, remote_port)
-        message = "From: %s\r\nTo: %s\r\nSubject: %s\r\n\r\n%s" % (email_from, email_to, subject, body)
+        message = "From: %s\r\nTo: %s\r\nSubject: %s\r\n\r\n%s" % (display_name, email_to, subject, body)
 
         smtp_sendmail_return = ""
         if debug:

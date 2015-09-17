@@ -99,6 +99,12 @@ class MyDB():
         self.conn.commit()
         return
 
+    def clearWebTemplates(self):
+        cursor = self.getCursor()
+        cursor.execute('DELETE FROM web_templates')
+        self.conn.commit()
+        return
+
     def getUsers(self):
         users = []
         cursor = self.getCursor()

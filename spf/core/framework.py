@@ -666,6 +666,17 @@ class Framework(object):
                 if Utils.is_readable(template_file) and os.path.isfile(template_file):
                     templates.append(("static", os.path.join(self.config["web_template_path"], f), ""))
                     print "FIXED = [%s]" % (os.path.join(self.config["web_template_path"], f))
+
+        # if "always yes" is enabled then just use all templates
+        if (not self.config["always_yes"]):
+            items = self.display.selectlist("Please select (comma seperated) the item(s) you wish to use. : ", templates)
+            templates_temp = []
+            for item in items:
+                print templates[int(item)-1]
+                templates_temp.append(templates[int(item)-1])
+            templates = templates_temp
+
+        # print list of enabled templates
         self.display.print_list("TEMPLATE LIST", templates)
         
     #----------------------------

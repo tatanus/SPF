@@ -85,10 +85,7 @@ class Dns():
                     names = z.nodes.keys()
                     names.sort()
                     for n in names:
-                        #print n
-                        #print z[n].to_text(n)
                         hosts.append(n.to_text() + "." + domain)
-            #except dns.exception.FormError:
             except:
                 pass
         return hosts

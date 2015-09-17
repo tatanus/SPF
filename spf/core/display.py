@@ -166,7 +166,6 @@ class Display():
     def selectlist(self, line, input_list):
         answers = []
         
-        # loop over and display the list
         if input_list != []:
             i = 1
             for item in input_list:
@@ -175,13 +174,8 @@ class Display():
         else:
             return answers
 
-        # prompt the user
         choice = self.input(line)
-
-        # seperate choice into an array
         answers = (choice.replace(' ', '')).split(',')
-
-        # return the results
         return answers
 
     def input(self, line):

@@ -209,7 +209,8 @@ class PhishingWebServer():
     def start(self):
         self.loadSites()
 
-        ip = Utils.getIP()
+        if self.config["ip"] == "0.0.0.0":
+            self.config["ip"]=Utils.getIP()
 
         #define phishing sites
         for key in self.websites:
@@ -228,7 +229,7 @@ class PhishingWebServer():
                     site = Site(self.phishingsites[key], logPath=self.logpath + "logs/" + self.websites[key]['logfile']+".access")
 #                    site.logRequest = True
                     reactor.listenTCP(port, site)
-                    print "Started website [%s] on [http://%s:%s]" % (('{:<%i}' % (site_length)).format(key), ip, port)
+                    print "Started website [%s] on [http://%s:%s]" % (('{:<%i}' % (site_length)).format(key), self.config["ip"], port)
                     self.websites[key]['port'] = port
                     break
                 except twisted.internet.error.CannotListenError, ex:
@@ -242,10 +243,10 @@ class PhishingWebServer():
             # add each port based vhost to the nam based vhost
             for key in self.phishingsites:
                 root.addHost(key + "." + self.config["phishing_domain"], proxy.ReverseProxyResource('localhost', self.websites[key]['port'], ''))
-                print "Created VHOST [%s] -> [http://%s:%s]" % (('{:<%i}' % (site_length)).format(key + "." + self.config["phishing_domain"]), ip, str(self.websites[key]['port']))
+                print "Created VHOST [%s] -> [http://%s:%s]" % (('{:<%i}' % (site_length)).format(key + "." + self.config["phishing_domain"]), self.config["ip"], str(self.websites[key]['port']))
             # add a mapping for the base IP address to map to one of the sites
             if (self.phishingsites):
-                root.addHost(ip, proxy.ReverseProxyResource('localhost', int(self.websites[self.phishingsites.keys()[0]]['port']), ''))
+                root.addHost(self.config["ip"], proxy.ReverseProxyResource('localhost', int(self.websites[self.phishingsites.keys()[0]]['port']), ''))
                 try:
                     site = Site(root, logPath=self.logpath + "logs/root.log.access")
 #                    site.logRequest = True

@@ -68,7 +68,7 @@ class Framework(object):
         self.config["pillage_email"] = False
 
         # get current IP
-        self.config['ip'] = Utils.getIP()
+        #self.config['ip'] = None
 
         # set a few misc values
         self.pid_path = os.path.dirname(os.path.realpath(__file__)) + "/../"
@@ -234,7 +234,7 @@ class Framework(object):
         parser.add_argument("--ip",
                             metavar="<IP address>",
                             dest="ip",
-                            default=Utils.getIP(),
+                            #default=Utils.getIP(),
                             action='store',
                             help="IP of webserver defaults to [%s]" % (Utils.getIP()))
         parser.add_argument("-v", "--verbosity",
@@ -262,7 +262,8 @@ class Framework(object):
         if (self.config["phishing_domain"] is None):
             self.config["phishing_domain"] = "example.com"
         self.config["company_name"] = args.company
-        self.config["ip"] = args.ip
+        if (args.ip):
+            self.config["ip"] = args.ip
         self.config["config_filename"] = args.config_file
         self.config["email_list_filename"] = args.email_list_file
         self.config["verbose"] = args.verbose
@@ -364,6 +365,9 @@ class Framework(object):
             self.display.enableVerbose()
         if (self.config['verbose'] > 1):
             self.display.enableDebug()
+
+        if (self.config["ip"] == "0.0.0.0") or (self.config["ip"] == None):
+            self.config["ip"]=Utils.getIP()
 
         # set logging path
         self.outdir = os.getcwd() + "/" + self.config["domain_name"] + "_" + self.config["phishing_domain"] + "/"

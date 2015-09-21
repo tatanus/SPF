@@ -67,6 +67,9 @@ class Framework(object):
         self.config["profile_domain"] = False
         self.config["pillage_email"] = False
 
+        #self.config["attachment_filename"] = None
+        #self.config["attachment_fullpath"] = None
+
         # get current IP
         #self.config['ip'] = None
 
@@ -864,7 +867,9 @@ class Framework(object):
                                                                 self.config["smtp_displayname"],
                                                                 SUBJECT,
                                                                 BODY,
-                                                                debug=True)
+                                                                self.config["attachment_filename"],
+                                                                self.config["attachment_fullpath"],
+                                                                True)
                                                     if self.config["use_specific_smtp"] == "1":
                                                         print self.config["smtp_fromaddr"]
                                                         emails.send_email_account(self.config["smtp_server"],
@@ -876,9 +881,12 @@ class Framework(object):
                                                                 self.config["smtp_displayname"],
                                                                 SUBJECT,
                                                                 BODY,
-                                                                debug=True)
-                                                except:
-                                                    self.display.error("Count not send email to " + target)
+                                                                self.config["attachment_filename"],
+                                                                self.config["attachment_fullpath"],
+                                                                True)
+                                                except Exception as e:
+                                                    self.display.error("Can not send email to " + target)
+                                                    print e
 
 
     #----------------------------

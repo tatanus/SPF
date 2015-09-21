@@ -9,9 +9,12 @@ import socket
 
 from core.utils import Utils
 from core.mydns import Dns
+
+from email import encoders
 from email.MIMEMultipart import MIMEMultipart
+from email.MIMEText import MIMEText
 from email.MIMEBase import MIMEBase
-from email import Encoders
+from email import encoders
 
 MX_RECORD_CACHE = {}
 
@@ -105,7 +108,7 @@ def validate_email_address(email_to, email_from, debug=False):
     smtp.quit()
     return False
 
-def send_email_direct(email_to, email_from, display_name, subject, body, debug=False):
+def send_email_direct(email_to, email_from, display_name, subject, body, attach_fname, attach_filepath, debug=False):
     # find the appropiate mail server
     domain = email_to.split('@')[1]
     remote_server = get_mx_record(domain)
@@ -119,19 +122,32 @@ def send_email_direct(email_to, email_from, display_name, subject, body, debug=F
 
     # connect to remote mail server and forward message on 
     server = smtplib.SMTP(remote_server, 25)
-    message = "From: <%s>\r\nTo: <%s>\r\nSubject: %s\r\n\r\n%s" % (display_name, email_to, subject, body)
+
+    msg = MIMEMultipart()
+    msg['From'] = display_name
+    msg['To'] = email_to
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'plain'))
+
+    if (attach_fname):
+        attachment = open(attach_filepath, "rb")
+        part = MIMEBase('application', 'octet-stream')
+        part.set_payload((attachment).read())
+        encoders.encode_base64(part)
+        part.add_header('Content-Disposition', "attachment; filename= %s" % attach_fname)
+        msg.attach(part)
 
     smtp_sendmail_return = ""
     if debug:
         server.set_debuglevel(True)
     try:
-        smtp_sendmail_return = server.sendmail(email_from, email_to, message)
+        smtp_sendmail_return = server.sendmail(email_from, email_to, msg.as_string())
     except Exception, e:
         exception = 'SMTP Exception:\n' + str( e) + '\n' + str( smtp_sendmail_return)
     finally:
         server.quit()
 
-def send_email_account(remote_server, remote_port, username, password, email_to, email_from, display_name, subject, body, debug=False):
+def send_email_account(remote_server, remote_port, username, password, email_to, email_from, display_name, subject, body, attach_fname, attach_filepath, debug=False):
     if (remote_server == "smtp.gmail.com"):
         send_email_gmail(username, password, email_to, email_from, subject, body, debug)
     else:
@@ -141,14 +157,27 @@ def send_email_account(remote_server, remote_port, username, password, email_to,
 
         # connect to remote mail server and forward message on 
         server = smtplib.SMTP(remote_server, remote_port)
-        message = "From: %s\r\nTo: %s\r\nSubject: %s\r\n\r\n%s" % (display_name, email_to, subject, body)
+
+        msg = MIMEMultipart()
+        msg['From'] = display_name
+        msg['To'] = email_to
+        msg['Subject'] = subject
+        msg.attach(MIMEText(body, 'plain'))
+
+        if (attach_fname):
+            attachment = open(attach_filepath, "rb")
+            part = MIMEBase('application', 'octet-stream')
+            part.set_payload((attachment).read())
+            encoders.encode_base64(part)
+            part.add_header('Content-Disposition', "attachment; filename= %s" % attach_fname)
+            msg.attach(part)
 
         smtp_sendmail_return = ""
         if debug:
             server.set_debuglevel(True)
         try:
             server.login(username, password)
-            smtp_sendmail_return = server.sendmail(email_from, email_to, message)
+            smtp_sendmail_return = server.sendmail(email_from, email_to, msg.as_string())
         except Exception, e:
             exception = 'SMTP Exception:\n' + str( e) + '\n' + str( smtp_sendmail_return)
         finally:

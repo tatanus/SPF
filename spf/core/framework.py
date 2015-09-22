@@ -783,7 +783,11 @@ class Framework(object):
                                     BODY=BODY.replace(r'\n', "\n")
                                     BODY=BODY.split("=")
                                     BODY=BODY[1].strip()
-                        self.email_templates[TYPE].append(EmailTemplate(TYPE, SUBJECT, BODY))
+
+                        if (TYPE + "_port" in self.config.keys()):
+                            self.email_templates[TYPE].append(EmailTemplate(TYPE, SUBJECT, BODY))
+                        else:
+                            self.display.debug("     No Matching webtemplate found.  Skipping this email template.")
 
     #----------------------------
     # Generate/Send phishing emails

@@ -814,79 +814,81 @@ class Framework(object):
                             time.sleep(temp_delay)
                             # for each type of email (citrix, owa, office365, ...)
                             for key in self.email_templates:
-                                # double check
-                                if temp_target_list:
-                                    # for each email template of the given type
-                                    for template in self.email_templates[key]:
-                                        # double check
-                                        if temp_target_list:
-                                            # grab a new target email address
-                                            target = temp_target_list.pop(0)
-                                            self.display.verbose("Sending Email to [%s]" % target)
-                                            #FROM = "support@" + self.config["phishing_domain"]
-                                            FROM = self.config["smtp_fromaddr"]
-
-                                            SUBJECT = template.getSUBJECT()
-                                            BODY = template.getBODY()
-
-                                            # perform necessary SEARCH/REPLACE 
-                                            if self.config["enable_host_based_vhosts"] == "1":
-                                                targetlink="http://" + key + "." + self.config["phishing_domain"]
-                                                if self.config["enable_user_tracking"] == "1":
-                                                    targetlink += "?u=" + self.db.getUserTrackId(target)
-                                                BODY=BODY.replace(r'[[TARGET]]', targetlink)
-                                            else:
-                                                if (not key == "dynamic"):
-                                                    targetlink="http://" + self.config[key+ "_port"]
+                                if (key+"_port" in self.config.keys()):
+                                    # double check
+                                    if temp_target_list:
+                                        # for each email template of the given type
+                                        for template in self.email_templates[key]:
+                                            # double check
+                                            if temp_target_list:
+                                                # grab a new target email address
+                                                target = temp_target_list.pop(0)
+                                                self.display.verbose("Sending Email to [%s]" % target)
+                                                #FROM = "support@" + self.config["phishing_domain"]
+                                                FROM = self.config["smtp_fromaddr"]
+    
+                                                SUBJECT = template.getSUBJECT()
+                                                BODY = template.getBODY()
+    
+                                                # perform necessary SEARCH/REPLACE 
+                                                if self.config["enable_host_based_vhosts"] == "1":
+                                                    targetlink="http://" + key + "." + self.config["phishing_domain"]
                                                     if self.config["enable_user_tracking"] == "1":
                                                         targetlink += "?u=" + self.db.getUserTrackId(target)
                                                     BODY=BODY.replace(r'[[TARGET]]', targetlink)
-
-                                            # log
-                                            if (key not in templates_logged):
-                                                self.display.log("----------------------------------------------\n\n" +
-                                                                 "TO: <XXXXX>\n" +
-                                                                 "FROM: " + FROM + "\n" +
-                                                                 "SUBJECT: " + SUBJECT + "\n\n" +
-                                                                 BODY + "\n\n" + 
-                                                                 "----------------------------------------------\n\n" +
-                                                                 "TARGETS:\n" +
-                                                                 "--------\n",
-                                                                 filename="email_template_" + key + ".txt")
-                                                templates_logged.append(key)
-                                            self.display.log(target + "\n", filename="email_template_" + key + ".txt")
-
-                                            # send the email
-                                            if (self.config["simulate_email_sending"] == True):
-                                                self.display.output("Would have sent an email to [%s] with subject of [%s], but this was just a test." % (target, SUBJECT))
-                                            else:
-                                                try:
-                                                    if self.config["determine_smtp"] == "1":
-                                                        emails.send_email_direct(target,
-                                                                FROM,
-                                                                self.config["smtp_displayname"],
-                                                                SUBJECT,
-                                                                BODY,
-                                                                self.config["attachment_filename"],
-                                                                self.config["attachment_fullpath"],
-                                                                True)
-                                                    if self.config["use_specific_smtp"] == "1":
-                                                        print self.config["smtp_fromaddr"]
-                                                        emails.send_email_account(self.config["smtp_server"],
-                                                                int(self.config["smtp_port"]),
-                                                                self.config["smtp_user"],
-                                                                self.config["smtp_pass"],
-                                                                target,
-                                                                self.config["smtp_fromaddr"],
-                                                                self.config["smtp_displayname"],
-                                                                SUBJECT,
-                                                                BODY,
-                                                                self.config["attachment_filename"],
-                                                                self.config["attachment_fullpath"],
-                                                                True)
-                                                except Exception as e:
-                                                    self.display.error("Can not send email to " + target)
-                                                    print e
+                                                else:
+                                                    if (not key == "dynamic"):
+                                                        print key
+                                                        targetlink="http://" + self.config[key+ "_port"]
+                                                        if self.config["enable_user_tracking"] == "1":
+                                                            targetlink += "?u=" + self.db.getUserTrackId(target)
+                                                        BODY=BODY.replace(r'[[TARGET]]', targetlink)
+    
+                                                # log
+                                                if (key not in templates_logged):
+                                                    self.display.log("----------------------------------------------\n\n" +
+                                                                     "TO: <XXXXX>\n" +
+                                                                     "FROM: " + FROM + "\n" +
+                                                                     "SUBJECT: " + SUBJECT + "\n\n" +
+                                                                     BODY + "\n\n" + 
+                                                                     "----------------------------------------------\n\n" +
+                                                                     "TARGETS:\n" +
+                                                                     "--------\n",
+                                                                     filename="email_template_" + key + ".txt")
+                                                    templates_logged.append(key)
+                                                self.display.log(target + "\n", filename="email_template_" + key + ".txt")
+    
+                                                # send the email
+                                                if (self.config["simulate_email_sending"] == True):
+                                                    self.display.output("Would have sent an email to [%s] with subject of [%s], but this was just a test." % (target, SUBJECT))
+                                                else:
+                                                    try:
+                                                        if self.config["determine_smtp"] == "1":
+                                                            emails.send_email_direct(target,
+                                                                    FROM,
+                                                                    self.config["smtp_displayname"],
+                                                                    SUBJECT,
+                                                                    BODY,
+                                                                    self.config["attachment_filename"],
+                                                                    self.config["attachment_fullpath"],
+                                                                    True)
+                                                        if self.config["use_specific_smtp"] == "1":
+                                                            print self.config["smtp_fromaddr"]
+                                                            emails.send_email_account(self.config["smtp_server"],
+                                                                    int(self.config["smtp_port"]),
+                                                                    self.config["smtp_user"],
+                                                                    self.config["smtp_pass"],
+                                                                    target,
+                                                                    self.config["smtp_fromaddr"],
+                                                                    self.config["smtp_displayname"],
+                                                                    SUBJECT,
+                                                                    BODY,
+                                                                    self.config["attachment_filename"],
+                                                                    self.config["attachment_fullpath"],
+                                                                    True)
+                                                    except Exception as e:
+                                                        self.display.error("Can not send email to " + target)
+                                                        print e
 
 
     #----------------------------

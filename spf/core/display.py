@@ -175,6 +175,9 @@ class Display():
             return answers
 
         choice = self.input(line)
+        if not choice:
+            return answers
+
         answers = (choice.replace(' ', '')).split(',')
         return answers
 

@@ -48,14 +48,20 @@ python web.py default.cfg
 ```
 
 # Misc
+DerbyCon 2015 Video
+
+[![DerbyCon 2015 Video](https://www.youtube.com/watch?v=uyUyD1hwL9k/0.jpg)](https://www.youtube.com/watch?v=uyUyD1hwL9k)
+
+BsidesLV 2015 Video
+
+[![BSidesLV 2015 Video](http://img.youtube.com/vi/TtgJ3DaMtAo/0.jpg)](http://www.youtube.com/watch?v=TtgJ3DaMtAo)
+
+BsidesKnox 2015 Video
+
+[![BsidesKnox 2015 Viedo](http://img.youtube.com/vi/85QQwOduH6A/0.jpg)](http://www.youtube.com/watch?v=85QQwOduH6A)
+
 Video of sample usage
 
 [![Video of simple usage](http://img.youtube.com/vi/wMPlO41lo80/0.jpg)](http://www.youtube.com/watch?v=wMPlO41lo80)
 
-BsidesKnox 2015 video
 
-[![Video of simple usage](http://img.youtube.com/vi/85QQwOduH6A/0.jpg)](http://www.youtube.com/watch?v=85QQwOduH6A)
-
-BsidesLV 2015 video
-
-[![Video of simple usage](http://img.youtube.com/vi/TtgJ3DaMtAo/0.jpg)](http://www.youtube.com/watch?v=TtgJ3DaMtAo)

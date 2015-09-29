@@ -50,7 +50,7 @@ python web.py default.cfg
 # Misc
 DerbyCon 2015 Video
 
-[![DerbyCon 2015 Video](https://www.youtube.com/watch?v=uyUyD1hwL9k/0.jpg)](https://www.youtube.com/watch?v=uyUyD1hwL9k)
+[![DerbyCon 2015 Video](https://img.youtube.com/v1/uyUyD1hwL9k/0.jpg)](https://www.youtube.com/watch?v=uyUyD1hwL9k)
 
 BsidesLV 2015 Video
 

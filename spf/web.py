@@ -16,8 +16,21 @@ from core.mydb import MyDB
 
 # define standard error page
 class errorPage(Resource):
+    def __init__(self, text="<html><body><center><h1>An error has occured.  Please try again later.</h1></center></body></html>"):
+        self.text = text
+
     def render_GET(self, request):
-        return "<html><body><center><h1>An error has occured.  Please try again later.</h1></center></body></html>"
+        return self.text
+
+# define standard error page
+class errorRedirectPage(Resource):
+    def __init__(self, url=""):
+        self.url = url
+
+    def render_GET(self, request):
+        request.redirect(self.url)
+        request.finish()
+        return NOT_DONE_YET
 
 # define the form for the phishing site
 class phishingForm(Resource):
@@ -89,7 +102,15 @@ class PhishingSite():
         self.resource = Resource()
         self.resource.putChild("index", phishingForm(self.config, self.vhost, self.path, self.logpath, self.logfile, self.db, redirect))
         self.resource.putChild("", phishingForm(self.config, self.vhost, self.path, self.logpath, self.logfile, self.db, redirect))
-        self.resource.putChild("error", errorPage())
+
+        if (self.config["error_url"]):
+            url = self.config["error_url"]
+            self.resource.putChild("error", errorRedirectPage(url))
+        elif (self.config["error_text"]):
+            text = self.config["error_text"]
+            self.resource.putChild("error", errorPage(text))
+        else:
+            self.resource.putChild("error", errorPage())
         self.loadChildren()
 
     # load any necessary resource subdirectories: js, css, img, etc...

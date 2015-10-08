@@ -677,13 +677,17 @@ class Framework(object):
         # if "always yes" is enabled then just use all templates
         if (not self.config["always_yes"]):
             items = self.display.selectlist("Please select (comma seperated) the item(s) you wish to use. (prese ENTER to use all): ", templates)
+            size_of_templates = len(templates)
             if items and (len(items) > 0):
                 templates_temp = []
                 self.db.clearWebTemplates()
                 for item in items:
-                    print templates[int(item)-1]
-                    templates_temp.append(templates[int(item)-1])
-                    self.db.addWebTemplate(ttype=templates[int(item)-1][0], src_url=templates[int(item)-1][2], tdir=templates[int(item)-1][1])
+                    if (int(item) > 0) and (int(item) <= size_of_templates):
+                        self.display.verbose("Enabled Template: " + str(templates[int(item)-1]))
+                        templates_temp.append(templates[int(item)-1])
+                        self.db.addWebTemplate(ttype=templates[int(item)-1][0], src_url=templates[int(item)-1][2], tdir=templates[int(item)-1][1])
+                    else:
+                        self.display.alert("Invalid select of [" + item + "] was ignored")
                 templates = templates_temp
 
         # print list of enabled templates

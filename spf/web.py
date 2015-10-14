@@ -70,7 +70,7 @@ class phishingForm(Resource):
             username = self.db.findUser(trackid)
             if not username:
                 username = "unknown"
-        self.display.log("%s,[ACCESS].%s-%s\n" % (time.strftime("%Y.%m.%d-%H.%M.%S"), username, request.getClientIP()), filename=self.logfile)
+        self.display.log("%s,[ACCESS],%s-%s\n" % (time.strftime("%Y.%m.%d-%H.%M.%S"), username, request.getClientIP()), filename=self.logfile)
         print("::%s:: %s,[ACCESS],%s-%s" % (self.vhost, time.strftime("%Y.%m.%d-%H.%M.%S"), username, request.getClientIP()))
         sys.stdout.flush()
         # display phishing site

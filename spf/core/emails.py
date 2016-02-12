@@ -68,7 +68,7 @@ def validate_email_address(email_to, email_from, debug=False):
     domain = email_to.split('@')[1]
     remote_server = get_mx_record(domain)
 
-    if (remote_server == None):
+    if (remote_server is None):
         print "No valid email server could be found for [%s]!" % (email_to)
         return False
 
@@ -112,7 +112,7 @@ def send_email_direct(email_to, email_from, display_name, subject, body, attach_
     # find the appropiate mail server
     domain = email_to.split('@')[1]
     remote_server = get_mx_record(domain)
-    if (remote_server == None):
+    if (remote_server is None):
         print "No valid email server could be found for [%s]!" % (email_to)
         return
 

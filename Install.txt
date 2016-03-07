@@ -2,6 +2,6 @@
 
 apt-get update
 apt-get upgrade -y
-apt-get install build-essential python-dev python-pip phantomjs -y
+apt-get install git build-essential python-dev python-pip phantomjs -y
 pip install dnspython
 pip install twisted

@@ -16,7 +16,7 @@ class MyDB():
             self.initDB()
 
     def getCursor(self):
-        if (self.conn == None):
+        if (self.conn is None):
             #print self.sqlite_file
             try:
                 self.conn = sqlite3.connect(self.sqlite_file)

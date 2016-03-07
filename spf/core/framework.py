@@ -369,7 +369,7 @@ class Framework(object):
         if (self.config['verbose'] > 1):
             self.display.enableDebug()
 
-        if (self.config["ip"] == "0.0.0.0") or (self.config["ip"] == None):
+        if (self.config["ip"] == "0.0.0.0") or (self.config["ip"] is None):
             self.config["ip"]=Utils.getIP()
 
         # set logging path

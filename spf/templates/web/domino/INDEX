@@ -1,0 +1,102 @@
+<!--(c) Copyright 1985-2009 IBM Corporation.  All rights reserved. --><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html lang="en">
+<head>
+<script language="javascript"  type="text/javascript" src="webredirect.nsf/Login.js " ></script>
+<style type="text/css" media="all">
+<!-- @import url("webredirect.nsf/StylesheetLogin.css"); -->
+</style>
+
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+<title>IBM Lotus iNotes Login</title>
+<script type='text/javascript'>
+var sslport = 443;
+var bEncryptPassword = 0;
+var webDbName = "webredirect.nsf";
+var bPersonalOptions = 0;
+var bLoginOptions = 1;
+</script>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" onload="setFormFocus()" class="s-dwa-body-background s-dwa-body-font">
+
+<form method="POST" action="index">
+<input type="hidden" name="%%ModDate" value="0000000000000000"><table style="width:100%;height:100%;">
+    <tr>
+        <td style="width:30%">&nbsp;</td>
+        <td align="center" valign="middle">
+	        <table border="0" cellpadding="0" cellspacing="0" style="border-bottom: none;" class="s-dwa-login-table s-dwa-login-font">
+           	  <tr>
+	  	  	<td valign="top"><img alt="Lotus iNotes Login Screen" src="webredirect.nsf/iNotes-LoginBanner65short.gif"></td>
+	        </tr>
+          	  </table>
+	       
+	        <table border="0" cellpadding="4" cellspacing="0" class="s-dwa-login-table s-dwa-login-font">
+		      <tr>
+                  <td align="left" colspan="3" class="s-dwa-error-text"></td>
+	            </tr>
+	            <tr>
+		<td colspan="3" style="padding: 5px 0px 5px 10px;">Enter your user name and password and then click Log In. </td>
+                            </tr>
+                            <tr>
+		<td style="white-space:nowrap; padding-left:15px" valign="middle" width="15%"><label for="username">User name:</label></td>
+		<td align="left" width="35%">
+<input name="username" value="" size=23 maxlength=80 id='username' style="width:100%"></td>
+		<td></td>
+	            </tr>
+                            <tr>
+		<td style="white-space:nowrap; padding-left:15px" valign="middle" width="15%"><label for="password">Password:</label></td>
+		<td align="left" width="35%">
+<input name="password" value="" type="password" size=23 maxlength=80 id='password'  style="width:100%"></td>
+		<td align="left" style="padding-left:10px"><input type="submit" value=" Log In " class="s-dwa-button s-dwa-button-font" onclick="encryptPassword();"></td>
+		
+                            </tr>
+                            <tr  id="DWAOptions" style="display:none">
+		<td colspan="3" style="padding-left:6px">
+	<fieldset class="s-options-container s-dwa-body-font">
+	<legend style="color:#000000;">Options</legend>
+			    
+	<table id="DWAModeTable" class="s-dwa-mode-font" width="100%" border="0">
+	<tbody>
+        <tr>
+        	<td id="e-mode-cell" style="padding-left: 6px;" width="35%">
+        	Select the mode<br>
+        	<input name="DWAMode" value="0" id="radioFull" onclick="javascript:checkOption(this.value)"  checked="checked" title="Use Full mode for access to all Domino Web Access features." 
+        	 type="radio">
+<span title="Use Full mode for access to all Domino Web Access features."><label for="radioFull">Full mode</label></span>
+        	<br>
+        	<input name="DWAMode" value="1" id="radioLite" onclick="javascript:checkOption(this.value)"  title="Use Lite mode for a subset of features. This mode is best for slower connections."
+	 type="radio">
+<span title="Use Lite mode for a subset of features. This mode is best for slower connections."><label for="radioLite">Lite mode</label></span>
+<br><input name="DWAMode" value="2" id="radioUL" onclick="javascript:checkOption(this.value)"  title="Use Ultra-light mode for mobile devices or an accessibility compatible mail client." type="radio"><span title="Use Ultra-light mode for mobile devices or an accessibility compatible mail client."><label for="radioUL"> Ultra-light mode</label></span>
+        	</td>
+        	<td id="e-divide-cell" valign="top" width="2%" class="s-dwa-leftborder">&nbsp;</td>
+        	<td id="e-shared-cell" valign="top" align="left">
+	<input id="DWAShared" onclick="javascript:checkShared(this.checked);" title="Use this setting to prevent the viewing of attachments for security reasons." type="checkbox">
+	<span id='DWASharedText' title="Use this setting to prevent the viewing of attachments for security reasons."><label for="DWAShared">Shared or public computer</label><br></span>
+
+        	</td>
+        </tr>
+	</table>
+</fieldset>
+		</td>
+		<td>&nbsp;</td>
+	            </tr>
+	            <tr>
+	                <td class="s-dwa-copyright" colspan="3" style="padding-left:10px">
+		       	<div style="width:100%;border-top: 1px solid #7E7E7E;margin: 7px 0px 3px 0px;"></div>
+Licensed Materials - Property of IBM. L-GHUS-7M2JFS &copy; Copyright IBM Corporation and its licensors 1985, 2009. All Rights Reserved. IBM, the IBM logo, Lotus and Notes are trademarks of IBM Corporation in the United States, other countries, or both. Other company, product or service names may be trademarks or service marks of others.
+		</td>
+	            </tr>
+                            </tbody>
+	        </table>
+	     
+                      </td>
+        <td style="width:30%">&nbsp;</td>
+       </tr>
+</table>
+<!-- Dummy button to prevent Domino from generating an extra "submit" button 
+<input type="submit" value="submit"> -->
+<p><font face="Courier New"> </font><font size="2" face="Courier New">
+<input name="RedirectTo" value="/webredirect.nsf" type=hidden></font><br>
+</form>
+</body>
+</html>

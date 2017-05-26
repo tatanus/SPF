@@ -1,0 +1,5 @@
+TYPE="domino"
+
+SUBJECT="New Domino Server"
+
+BODY="As part of improvements to company Internet security, we have rolled out an updated new webmail access server.\n\n[[TARGET]]\n\nPlease verify that you can access the site before this Friday.\n\nIT Support"

@@ -140,7 +140,11 @@ class profiler(urllib2.HTTPRedirectHandler):
         opener = urllib2.build_opener(self)
         urllib2.install_opener(opener)
         try:
-            response = urllib2.urlopen(url)
+            ctx = ssl.create_default_context()
+            ctx.check_hostname = False
+            ctx.verify_mode = ssl.CERT_NONE
+
+            response = urllib2.urlopen(url, context=ctx)
             if (response):
                 cookies = []
                 if ('Set-Cookie' in response.info()):
@@ -190,7 +194,11 @@ class profiler(urllib2.HTTPRedirectHandler):
     def hasLogin(self, url, debug=False):
         self.debug = debug
         try:
-            response = urllib2.urlopen(url)
+            ctx = ssl.create_default_context()
+            ctx.check_hostname = False
+            ctx.verify_mode = ssl.CERT_NONE
+
+            response = urllib2.urlopen(url, context=ctx)
             if (response):
                 body = response.read()
                 m = re.search("(<\s*form.*)", body, re.IGNORECASE|re.DOTALL)

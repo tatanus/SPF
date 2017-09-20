@@ -270,11 +270,14 @@ class PhishingWebServer():
                     first = False
 
             cmd = self.config["certbot_path"] + " certonly --register-unsafely-without-email --non-interactive --agree-tos --standalone --force-renewal " + domains
+
             env = os.environ
             print "Generating SSL CERT"
             proc = subprocess.Popen(cmd, executable='/bin/bash', env=env, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, shell=True)
             result = proc.communicate()[0]
             m = re.search(r'.* (\/etc\/letsencrypt\/live\/[^\/]+\/).*fullchain.pem.*', result)
+            print result
+
             cert_path = m.group(1)
 
             root = vhost.NameVirtualHost()

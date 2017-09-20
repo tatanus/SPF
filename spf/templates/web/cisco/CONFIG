@@ -1,3 +1,3 @@
-VHOST=cisco_vpn
+VHOST=cisco
 LOGFILE=cisco.log
 REDIRECTURL=error

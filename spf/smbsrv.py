@@ -9,14 +9,16 @@ from impacket import smbserver
 
 class Logger(object):
     def __init__(self):
-        self.terminal = sys.stdout
+        #self.terminal = sys.stdout
         self.log = open('smb_cap.log', 'a+')
 
     def write(self, message):
         if message.startswith("Config file parsed") or message.startswith("Callback added for UUID") or message.startswith("Connecting Share") or message.startswith("SMB2_TREE_CONNECT") or message.startswith("Disconnecting Share") or message.startswith("Handle: ") or message.startswith("Closing down connection") or message.startswith("Incoming connection") or message.startswith("AUTHENTICATE_MESSAGE") or message.startswith("User ") or message.startswith("Remaining connections"):
             return
 
-        self.terminal.write(message)
+        sys.stdout.write(message + '\n')
+        sys.stdout.flush()
+        #self.terminal.write(message)
         self.log.write(message)
         self.log.flush()
 

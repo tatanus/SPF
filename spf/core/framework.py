@@ -42,6 +42,8 @@ class Framework(object):
         self.bestMailServer = None
         self.webserver = None   # web server process
         self.webserverpid = None
+        self.smbserver = None   # smb server process
+        self.smbserverpid = None
         self.gather = None
         self.mp = None # mail pillager
 
@@ -95,17 +97,22 @@ class Framework(object):
     #----------------------------
     def cleanup(self):
         print
+        if (self.smbserver is not None):
+            # send SIGTERM to the smb process
+            self.display.output("Stopping the SMB server")
+            #self.display.output("stopping the smbserver")
+            #self.smbserver.send_signal(signal.SIGINT)
+            # as a double check, manually kill the process
+            self.killProcess(self.smbserverpid, "spfsmbsrv.pid")
         if (self.webserver is not None):
             if (self.config["daemon_web"]):
                 self.display.alert("Webserver is still running as requested.")
             else:
                 # send SIGTERM to the web process
-                self.display.output("stopping the webserver")
+                self.display.output("Stopping the web server")
                 self.webserver.send_signal(signal.SIGINT)
-                # delete the pid file
-                os.remove(self.pid_path + "spfwebsrv.pid") 
                 # as a double check, manually kill the process
-                self.killProcess(self.webserverpid)
+                self.killProcess(self.webserverpid, "spfwebsrv.pid")
         # call report generation
         self.generateReport()
         # exit
@@ -114,17 +121,18 @@ class Framework(object):
     #----------------------------
     # Kill specified process
     #----------------------------
-    def killProcess(self, pid):
+    def killProcess(self, pid, filename):
         if (os.path.exists("/proc/" + str(pid))):
             self.display.alert("Killing process [%s]" % (pid))
             os.kill(pid, signal.SIGKILL)
-            if (os.path.isfile(self.pid_path + "spfwebsrv.pid")):
-                os.remove(self.pid_path + "spfwebsrv.pid") 
+            if (os.path.isfile(self.pid_path + filename)):
+                os.remove(self.pid_path + filename) 
 
     #----------------------------
     # Generate The simple report
     #----------------------------
     def generateReport(self):
+        print
         self.display.output("Generating phishing report")
         self.display.log("ENDTIME=%s\n" % (time.strftime("%Y/%m/%d %H:%M:%S")), filename="INFO.txt")
 
@@ -692,7 +700,32 @@ class Framework(object):
 
         # print list of enabled templates
         self.display.print_list("TEMPLATE LIST", templates)
-        
+       
+
+    #----------------------------
+    # Start SMB Server
+    #----------------------------
+    def start_smbserver(self):
+        if self.config["enable_smb_server"] == "1":
+            print
+            self.display.output("Starting SMB Server")
+            if (self.config["always_yes"] or self.display.yn("Continue", default="y")):
+                path = os.path.dirname(os.path.realpath(__file__))
+
+                # Start process
+                cmd = [path + "/../smbsrv.py"]
+                self.smbserver = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE)
+            
+                # Write PID file
+                pidfilename = os.path.join(self.pid_path, "spfsmbsrv.pid")
+                pidfile = open(pidfilename, 'w')
+                pidfile.write(str(self.smbserver.pid))
+                pidfile.close()
+                self.smbserverpid = self.smbserver.pid
+                self.display.verbose("Started SMBServer with pid = [%s]" % self.smbserver.pid)
+
+        return
+
     #----------------------------
     # Load web sites
     #----------------------------
@@ -905,12 +938,26 @@ class Framework(object):
     #----------------------------
     def monitor_results(self):
         # are required flags set?
+        monitor = False
+        print
+        self.display.output("Starting Monitoring Services")
+        self.display.alert("(Press CTRL-C to stop collection and generate report!)")
+
         if self.config["enable_web"] == True:
-            print
+            monitor = True
             self.display.output("Monitoring phishing website activity!")
-            self.display.alert("(Press CTRL-C to stop collection and generate report!)")
-            if (self.webserver):
-                while True:
+
+        if self.config["enable_smb_server"] == "1":
+            monitor = True
+            self.display.output("Monitoring SMB server activity!")
+
+        if monitor:
+            while True:
+                #if self.smbserver:
+                #    line = self.smbserver.stdout.readline()
+                #    line = line.strip()
+                #    self.display.output(line)
+                if self.webserver:
                     line = self.webserver.stdout.readline()
                     line = line.strip()
                     if (self.config["pillage_email"]):
@@ -1013,6 +1060,9 @@ class Framework(object):
 
         # load websites 
         self.load_websites()
+
+        # start smbserver
+        self.start_smbserver()
 
         # do email stuff
         self.prep_email()

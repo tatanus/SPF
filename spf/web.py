@@ -9,7 +9,6 @@ import sys
 import time
 import os
 import re
-import string
 import subprocess
 from core.utils import Utils
 from core.display import Display
@@ -211,7 +210,7 @@ class PhishingWebServer():
         :param timestamp:
         :param request: A twisted.web.server.Request instance
         """
-        referrer = _escape(request.getHeader(b"referer") or b"-")
+        #referrer = _escape(request.getHeader(b"referer") or b"-")
         agent = _escape(request.getHeader(b"user-agent") or b"-")
         duration = round(time.time() - request.started, 4)
         line = (
@@ -275,7 +274,7 @@ class PhishingWebServer():
             env = os.environ
             print "Generating SSL CERT"
             proc = subprocess.Popen(cmd, executable='/bin/bash', env=env, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, shell=True)
-            result = proc.communicate()[0]
+            #result = proc.communicate()[0]
 
             root = vhost.NameVirtualHost()
             site_length += len("." + self.config["phishing_domain"])

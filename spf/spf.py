@@ -4,7 +4,6 @@ Standard Launcher for the spf (Speed Phishing Framework)
 """
 
 import sys, traceback
-from impacket import smbserver
 
 from core.framework import Framework
 

@@ -234,7 +234,7 @@ class Framework(object):
         parser.add_argument("-p",
                             metavar="<domain>",
                             dest="phishdomain",
-                            default="example.com",
+                            #default="",
                             action='store',
                             help="newly registered 'phish' domain name")
         parser.add_argument("-c",
@@ -267,11 +267,11 @@ class Framework(object):
 
         # convert parameters to values in the config dict
         self.config["domain_name"] = args.domain
-        if (self.config["domain_name"] is None):
-            self.config["domain_name"] = ""
+ #       if (self.config["domain_name"] is None):
+ #           self.config["domain_name"] = ""
         self.config["phishing_domain"] = args.phishdomain
-        if (self.config["phishing_domain"] is None):
-            self.config["phishing_domain"] = "example.com"
+ #       if (self.config["phishing_domain"] is None):
+ #           self.config["phishing_domain"] = ""
         self.config["company_name"] = args.company
         if (args.ip):
             self.config["ip"] = args.ip
@@ -364,7 +364,8 @@ class Framework(object):
                 print
                 temp1 = self.config
                 temp2 = Utils.load_config("default.cfg")
-                self.config = dict(temp2.items() + temp1.items())
+                self.config = dict(temp1.items() + temp2.items())
+                #self.config = dict(temp2.items() + temp1.items())
             else:
                 # someone must have removed it!
                 self.display.error("a CONFIG FILE was not specified...")

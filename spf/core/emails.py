@@ -108,7 +108,7 @@ def validate_email_address(email_to, email_from, debug=False):
     smtp.quit()
     return False
 
-def send_email_direct(email_to, email_from, display_name, subject, body, attach_fname, attach_filepath, debug=False):
+def send_email_direct(email_to, email_from, display_name, subject, body, html_body, attach_fname, attach_filepath, debug=False):
     # find the appropiate mail server
     domain = email_to.split('@')[1]
     remote_server = get_mx_record(domain)
@@ -127,7 +127,8 @@ def send_email_direct(email_to, email_from, display_name, subject, body, attach_
     msg['From'] = display_name
     msg['To'] = email_to
     msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'plain'))
+    #msg.attach(MIMEText(body, 'plain'))
+    msg.attach(MIMEText(html_body, 'html'))
 
     if (attach_fname):
         attachment = open(attach_filepath, "rb")
@@ -147,7 +148,7 @@ def send_email_direct(email_to, email_from, display_name, subject, body, attach_
     finally:
         server.quit()
 
-def send_email_account(remote_server, remote_port, username, password, email_to, email_from, display_name, subject, body, attach_fname, attach_filepath, debug=False):
+def send_email_account(remote_server, remote_port, username, password, email_to, email_from, display_name, subject, body, html_body, attach_fname, attach_filepath, debug=False):
     if (remote_server == "smtp.gmail.com"):
         send_email_gmail(username, password, email_to, email_from, subject, body, debug)
     else:
@@ -158,11 +159,12 @@ def send_email_account(remote_server, remote_port, username, password, email_to,
         # connect to remote mail server and forward message on 
         server = smtplib.SMTP(remote_server, remote_port)
 
-        msg = MIMEMultipart()
+        msg = MIMEMultipart("alternative")
         msg['From'] = display_name
         msg['To'] = email_to
         msg['Subject'] = subject
-        msg.attach(MIMEText(body, 'plain'))
+        #msg.attach(MIMEText(body, 'plain'))
+        msg.attach(MIMEText(html_body, 'html'))
 
         if (attach_fname):
             attachment = open(attach_filepath, "rb")
@@ -183,10 +185,11 @@ def send_email_account(remote_server, remote_port, username, password, email_to,
         finally:
             server.quit()
 
-def send_email_gmail(username, password, email_to, email_from, subject, body, debug=False):
+def send_email_gmail(username, password, email_to, email_from, subject, body, html_body, debug=False):
     # connect to remote mail server and forward message on 
     server = smtplib.SMTP("smtp.gmail.com", 587)
-    message = "From: %s\r\nTo: %s\r\nSubject: %s\r\n\r\n%s" % (email_from, email_to, subject, body)
+    #message = "From: %s\r\nTo: %s\r\nSubject: %s\r\n\r\n%s" % (email_from, email_to, subject, body)
+    message = "From: %s\r\nTo: %s\r\nSubject: %s\r\n\r\n%s" % (email_from, email_to, subject, html_body)
 
     smtp_sendmail_return = ""
     if debug:

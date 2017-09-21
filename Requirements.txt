@@ -1,6 +1,7 @@
 PYTHON:
 dnspython
 twisted
+pycrypto
 
 MISC:
 PhantomJS

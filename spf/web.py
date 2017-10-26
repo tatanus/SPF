@@ -259,51 +259,58 @@ class PhishingWebServer():
         # if we are doing virtual hosts
         if (self.config["enable_host_based_vhosts"] == "1"):
             print
+
+            # GENERATING SSL CERTS ARE CURRENTLY BROKEN
+            # TODO: Fix this
             # generate new certificates
-            domains = ""
-            cert_path = "/etc/letsencrypt/live/"
-            first = True
-            for key in self.phishingsites:
-                domains += "-d " + key + "." + self.config["phishing_domain"] + " "
-                if first:
-                    cert_path += key + "." + self.config["phishing_domain"] + "/"
-                    first = False
-
-            cmd = self.config["certbot_path"] + " certonly --register-unsafely-without-email --non-interactive --agree-tos --standalone --force-renewal " + domains
-
-            env = os.environ
-            print "Generating SSL CERT"
-            proc = subprocess.Popen(cmd, executable='/bin/bash', env=env, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, shell=True)
-            result = proc.communicate()[0]
-            m = re.search(r'.* (\/etc\/letsencrypt\/live\/[^\/]+\/).*fullchain.pem.*', result)
-            print result
-
-            cert_path = m.group(1)
+#            domains = ""
+#            cert_path = "/etc/letsencrypt/live/"
+#            first = True
+#            for key in self.phishingsites:
+#                domains += "-d " + key + "." + self.config["phishing_domain"] + " "
+#                if first:
+#                    cert_path += key + "." + self.config["phishing_domain"] + "/"
+#                    first = False
+#
+#            cmd = self.config["certbot_path"] + " certonly --register-unsafely-without-email --non-interactive --agree-tos --standalone --force-renewal " + domains
+#
+#            env = os.environ
+#            print "Generating SSL CERT"
+#            proc = subprocess.Popen(cmd, executable='/bin/bash', env=env, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, shell=True)
+#            result = proc.communicate()[0]
+#            m = re.search(r'.* (\/etc\/letsencrypt\/live\/[^\/]+\/).*fullchain.pem.*', result)
+#            print result
+#
+#            cert_path = m.group(1)
 
             root = vhost.NameVirtualHost()
             site_length += len("." + self.config["phishing_domain"])
             # add each port based vhost to the nam based vhost
             for key in self.phishingsites:
                 root.addHost(key + "." + self.config["phishing_domain"], proxy.ReverseProxyResource('localhost', self.websites[key]['port'], ''))
-                print "Created VHOST [%s] -> [https://%s:%s]" % (('{:<%i}' % (site_length)).format(key + "." + self.config["phishing_domain"]), self.config["ip"], str(self.websites[key]['port']))
+#                print "Created VHOST [%s] -> [https://%s:%s]" % (('{:<%i}' % (site_length)).format(key + "." + self.config["phishing_domain"]), self.config["ip"], str(self.websites[key]['port']))
+                print "Created VHOST [%s] -> [http://%s:%s]" % (('{:<%i}' % (site_length)).format(key + "." + self.config["phishing_domain"]), self.config["ip"], str(self.websites[key]['port']))
             # add a mapping for the base IP address to map to one of the sites
             if (self.phishingsites):
                 root.addHost(self.config["ip"], proxy.ReverseProxyResource('localhost', int(self.websites[self.phishingsites.keys()[0]]['port']), ''))
                 try:
                     site = Site(root, logPath=self.logpath + "logs/root.log.access")
 
-                    # ADD SSL CERT
-                    sslContext = ssl.DefaultOpenSSLContextFactory(
-                        cert_path + 'privkey.pem', 
-                        cert_path + 'fullchain.pem',
-                    )
-                    reactor.listenSSL(int(self.config["default_web_ssl_port"]), site, contextFactory=sslContext)
+#                    # ADD SSL CERT
+#                    sslContext = ssl.DefaultOpenSSLContextFactory(
+#                        cert_path + 'privkey.pem', 
+#                        cert_path + 'fullchain.pem',
+#                    )
+#                    reactor.listenSSL(int(self.config["default_web_ssl_port"]), site, contextFactory=sslContext)
+                    reactor.listenTCP(int(self.config["default_web_port"]), site)
                 except twisted.internet.error.CannotListenError, ex:
-                    print "ERROR: Could not start web service listener on port [" + int(self.config["default_web_ssl_port"]) + "]!"
+#                    print "ERROR: Could not start web service listener on port [" + int(self.config["default_web_ssl_port"]) + "]!"
+                    print "ERROR: Could not start web service listener on port [80]!"
                     print ex
                     print "ERROR: Host Based Virtual Hosting will not function!"
             else:
-                print "ERROR: Could not start web service listener on port [" + int(self.config["default_web_ssl_port"]) + "]!"
+#                print "ERROR: Could not start web service listener on port [" + int(self.config["default_web_ssl_port"]) + "]!"
+                print "ERROR: Could not start web service listener on port [80]!"
                 print "ERROR: Host Based Virtual Hosting will not function!"
 
         print

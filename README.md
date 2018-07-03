@@ -1,3 +1,11 @@
+[![Python 2.6-2.7](https://img.shields.io/badge/Python-2.6--2.7-yellow.svg)](http://www.python.org/download/)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/tatanus/SPF/master/LICENSE)
+
+[![DEFCON 23 Demolabs](https://img.shields.io/badge/DEFCON%2023-Demo%20Labs-red.svg)](https://www.defcon.org/html/defcon-23/dc-23-demo-labs-schedule.html#Compton)
+
+[![Black Hat USA Arsenal](https://github.com/toolswatch/badges/blob/master/arsenal/usa/2015.svg)](https://www.toolswatch.org/2015/06/black-hat-arsenal-usa-2015-speakers-lineup/)
+
+
 SPF (SpeedPhish Framework) is a python tool designed to allow for quick recon and deployment of simple social engineering phishing exercises.
 
 # Requirements:

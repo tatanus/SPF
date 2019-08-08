@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 import time
@@ -30,15 +30,16 @@ class ReportGen():
         a=open(filename,'rb')
         lines = a.readlines()
         for line in lines:
-            parts = line.split("=")
-            if (parts[0] == "STARTTIME"):
-                self.config["start_ts"] = parts[1]
-            if (parts[0] == "ENDTIME"):
-                self.config["end_ts"] = parts[1]
-            if (parts[0] == "TARGETDOMAIN"):
-                self.config["domain"] = parts[1]
-            if (parts[0] == "PHISHINGDOMAIN"):
-                self.config["phishing_domain"] = parts[1]
+            parts = line.split(b"=")
+            print(parts)
+            if (parts[0] == b"STARTTIME"):
+                self.config["start_ts"] = parts[1].decode()
+            if (parts[0] == b"ENDTIME"):
+                self.config["end_ts"] = parts[1].decode()
+            if (parts[0] == b"TARGETDOMAIN"):
+                self.config["domain"] = parts[1].decode()
+            if (parts[0] == b"PHISHINGDOMAIN"):
+                self.config["phishing_domain"] = parts[1].decode()
 
     def start(self):
         self.print_file("<html>")
@@ -229,7 +230,7 @@ class ReportGen():
 
 if __name__ == "__main__":
     def usage():
-        print "report.py <report directory>"
+        print("report.py <report directory>")
 
     if len(sys.argv) != 2:
         usage()
@@ -237,8 +238,10 @@ if __name__ == "__main__":
 
     if Utils.is_readable(sys.argv[1] + "logs/INFO.txt"):
         try:
-            print ReportGen(sys.argv[1]).start()
+            print(ReportGen(sys.argv[1]).start())
         except ReportGenException as e:
-            print e
+            print(e)
     else:
-        print "[" + sys.argv[1] + "] does not appear to be a valid report directory."
+        print("[" + sys.argv[1] + "] does not appear to be a valid report directory.")
+
+    exit(0)

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import sys
 
 import dns.resolver
@@ -82,7 +83,7 @@ class Dns():
             try:
                 z = dns.zone.from_xfr(dns.query.xfr(ns, domain))
                 if (z):
-                    names = z.nodes.keys()
+                    names = list(z.nodes.keys())
                     names.sort()
                     for n in names:
                         hosts.append(n.to_text() + "." + domain)
@@ -109,11 +110,11 @@ class Dns():
                     hosts.append(target.lower())
             return hosts
         else:
-            print "ERROR: " + script_dir + "namelist.txt could not be found!"
+            print("ERROR: " + script_dir + "namelist.txt could not be found!")
             return hosts
 
 
 
 if __name__ == "__main__":
-    print "hi"
+    print("hi")
 

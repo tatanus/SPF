@@ -31,5 +31,5 @@ class theHarvester(dataCollector):
 if __name__ == "__main__":
     th = theHarvester("example.com", "/TOOLS/theHarvester/theHarvester.py")
     th.run()
-    print th.emails()
-    print th.hosts()
+    print(th.emails())
+    print(th.hosts())

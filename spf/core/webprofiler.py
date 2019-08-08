@@ -1,8 +1,10 @@
+#!/usr/bin/env python3
 import sys
 import os
 import re
 import string
-import urllib2
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 import ssl
 import socket
 
@@ -21,7 +23,7 @@ class indicator():
             self.score += self.causesdict[cause]
             self.causes.append(cause)
         except KeyError:
-            print "ERROR: Unknown cause [%s]" % (cause)
+            print("ERROR: Unknown cause [%s]" % (cause))
 
     def getscore(self):
         return self.score
@@ -29,7 +31,7 @@ class indicator():
     def getcauses(self):
         return self.causes
 
-class profiler(urllib2.HTTPRedirectHandler):
+class profiler(urllib.request.HTTPRedirectHandler):
     def __init__(self):
         self.indicatordict = dict()
         self.indicatormatchlist = dict()
@@ -66,7 +68,7 @@ class profiler(urllib2.HTTPRedirectHandler):
                 t, f, m = line.strip().split('\t')
 
                 l = None
-                if (t in self.indicatormatchlist.keys()):
+                if (t in list(self.indicatormatchlist.keys())):
                     l = self.indicatormatchlist[t]
                 else:
                     l = []
@@ -80,14 +82,14 @@ class profiler(urllib2.HTTPRedirectHandler):
         self.checkindicators(url=req.get_full_url(), headers=headers)
         if (self.debug):
             self.indent_n += 1
-            print "%s[REDIRECT] = [../%s]" % (self.indent(), headers['Location'])
-        return urllib2.HTTPRedirectHandler.http_error_302(self, req, fp, code, msg, headers)
+            print("%s[REDIRECT] = [../%s]" % (self.indent(), headers['Location']))
+        return urllib.request.HTTPRedirectHandler.http_error_302(self, req, fp, code, msg, headers)
 
     http_error_301 = http_error_303 = http_error_307 = http_error_302
 
     def updateindicator(self, key, value):
         i = None
-        if (key in self.indicatordict.keys()):
+        if (key in list(self.indicatordict.keys())):
             i = self.indicatordict[key]
         else:
             i = indicator()
@@ -101,14 +103,14 @@ class profiler(urllib2.HTTPRedirectHandler):
         body = str(body).lower()
         cookies = str(cookies).lower()
         if (self.debug):
-            print "%sBEGIN URL  = [%s]" % (self.indent(), url)
-            print "----------------------------------"
-            print "URL = [%s]" % (url)
-            print "HEADERS = [%s]" % (headers)
-            print "COOKIES = [%s]" % (cookies)
-            print "----------------------------------"
+            print("%sBEGIN URL  = [%s]" % (self.indent(), url))
+            print("----------------------------------")
+            print("URL = [%s]" % (url))
+            print("HEADERS = [%s]" % (headers))
+            print("COOKIES = [%s]" % (cookies))
+            print("----------------------------------")
   
-        for k, v in self.indicatormatchlist.iteritems():
+        for k, v in self.indicatormatchlist.items():
             for l in v:
                 field = url
                 if (l[0] == "headers"):
@@ -123,28 +125,28 @@ class profiler(urllib2.HTTPRedirectHandler):
                 if (re.search(l[1].lower(), field)):
                     if (self.debug):
                         self.indent_n += 1
-                        print "%sFOUND    = [%s] in the [ %s ]" % (self.indent(), l[1].lower(), l[0])
+                        print("%sFOUND    = [%s] in the [ %s ]" % (self.indent(), l[1].lower(), l[0]))
                         self.indent_n -= 1
                     self.updateindicator(k.lower(), l[0])
         if (self.debug):
-            print "%sEND URL    = [%s]" % (self.indent(), url)
+            print("%sEND URL    = [%s]" % (self.indent(), url))
             self.indent_n -= 1
 
     def run(self, url, debug=False):
         self.debug = debug
 
         if (self.debug):
-            print self.indent()
-            print "%sSTART URL  = [%s]" % (self.indent(), url)
+            print(self.indent())
+            print("%sSTART URL  = [%s]" % (self.indent(), url))
 
-        opener = urllib2.build_opener(self)
-        urllib2.install_opener(opener)
+        opener = urllib.request.build_opener(self)
+        urllib.request.install_opener(opener)
         try:
             ctx = ssl.create_default_context()
             ctx.check_hostname = False
             ctx.verify_mode = ssl.CERT_NONE
 
-            response = urllib2.urlopen(url, context=ctx)
+            response = urllib.request.urlopen(url, context=ctx)
             if (response):
                 cookies = []
                 if ('Set-Cookie' in response.info()):
@@ -152,7 +154,7 @@ class profiler(urllib2.HTTPRedirectHandler):
                 self.checkindicators(url=response.geturl(), headers=response.info(), body=response.read(), cookies=cookies)
                 if (self.debug):
                     self.indent_n = 0
-                    print "%sSTOP URL   = [%s]" % (self.indent(), response.geturl())
+                    print("%sSTOP URL   = [%s]" % (self.indent(), response.geturl()))
 
 #        for suffix in self.suffixes:
 #            temp_url = url + suffix
@@ -160,36 +162,36 @@ class profiler(urllib2.HTTPRedirectHandler):
 #            response = urllib2.urlopen(temp_url)
 #            self.checkindicators(url=response.geturl(), headers=response.info(), body=response.read())
 #            print "STOP URL   = [%s]" % (response.geturl())
-        except urllib2.HTTPError as e:
+        except urllib.error.HTTPError as e:
             if (self.debug):
-                print "%sHTTPError: %s" %(self.indent(), str(e))
-        except urllib2.URLError as e:
+                print("%sHTTPError: %s" %(self.indent(), str(e)))
+        except urllib.error.URLError as e:
             if (self.debug):
-                print "%sURLERROR: %s" %(self.indent(), str(e))
+                print("%sURLERROR: %s" %(self.indent(), str(e)))
         except ssl.SSLError as e:
             if (self.debug):
-                print "%sSSLERROR: %s" %(self.indent(), str(e))
+                print("%sSSLERROR: %s" %(self.indent(), str(e)))
         except socket.timeout as e:
             if (self.debug):
-                print "%sSocket.Timeout: %s" %(self.indent(), str(e))
+                print("%sSocket.Timeout: %s" %(self.indent(), str(e)))
         except socket.error as e:
             if (self.debug):
-                print "%sSocket.Error: %s" %(self.indent(), str(e))
+                print("%sSocket.Error: %s" %(self.indent(), str(e)))
         except:
-            print "%sUnexpectedError: %s" %(self.indent(), sys.exc_info()[0])
+            print("%sUnexpectedError: %s" %(self.indent(), sys.exc_info()[0]))
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            print(exc_type, fname, exc_tb.tb_lineno)
+            print((exc_type, fname, exc_tb.tb_lineno))
             pass
 
         # display results
         if (self.indicatordict):
             if (debug):
-                print
-            for key, value in self.indicatordict.iteritems():
+                print()
+            for key, value in self.indicatordict.items():
                 if (self.debug):
-                    print "%sMATCHED    = [%s, %i, %s]" % (self.indent(), key, value.getscore(), value.getcauses())
-        return self.indicatordict.items()
+                    print("%sMATCHED    = [%s, %i, %s]" % (self.indent(), key, value.getscore(), value.getcauses()))
+        return list(self.indicatordict.items())
 
     def hasLogin(self, url, debug=False):
         self.debug = debug
@@ -198,7 +200,7 @@ class profiler(urllib2.HTTPRedirectHandler):
             ctx.check_hostname = False
             ctx.verify_mode = ssl.CERT_NONE
 
-            response = urllib2.urlopen(url, context=ctx)
+            response = urllib.request.urlopen(url, context=ctx)
             if (response):
                 body = response.read()
                 m = re.search("(<\s*form.*)", body, re.IGNORECASE|re.DOTALL)
@@ -206,26 +208,26 @@ class profiler(urllib2.HTTPRedirectHandler):
                     m2 = re.search("(pass|login|user)", m.group(1), re.IGNORECASE)
                     if (m2):
                         return True
-        except urllib2.HTTPError as e:
+        except urllib.error.HTTPError as e:
             if (self.debug):
-                print "%sHTTPError: %s" %(self.indent(), str(e))
-        except urllib2.URLError as e:
+                print("%sHTTPError: %s" %(self.indent(), str(e)))
+        except urllib.error.URLError as e:
             if (self.debug):
-                print "%sURLERROR: %s" %(self.indent(), str(e))
+                print("%sURLERROR: %s" %(self.indent(), str(e)))
         except ssl.SSLError as e:
             if (self.debug):
-                print "%sSSLERROR: %s" %(self.indent(), str(e))
+                print("%sSSLERROR: %s" %(self.indent(), str(e)))
         except socket.timeout as e:
             if (self.debug):
-                print "%sSocket.Timeout: %s" %(self.indent(), str(e))
+                print("%sSocket.Timeout: %s" %(self.indent(), str(e)))
         except socket.error as e:
             if (self.debug):
-                print "%sSocket.Error: %s" %(self.indent(), str(e))
+                print("%sSocket.Error: %s" %(self.indent(), str(e)))
         except:
-            print "%sUnexpectedError: %s" %(self.indent(), sys.exc_info()[0])
+            print("%sUnexpectedError: %s" %(self.indent(), sys.exc_info()[0]))
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            print(exc_type, fname, exc_tb.tb_lineno)
+            print((exc_type, fname, exc_tb.tb_lineno))
             pass
 
         return False

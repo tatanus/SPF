@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 import logging
@@ -35,9 +35,9 @@ class SmbCap():
         # Support SMBv2
         server.setSMB2Support(True)
         
-        # Set a random SMB challenge
-        challenge = ''.join(random.choice(string.digits) for i in range(16))
-        server.setSMBChallenge(challenge)
+        ## Set a random SMB challenge
+        #challenge = ''.join(random.choice(string.digits) for i in range(16))
+        #server.setSMBChallenge(challenge)
         
         # Log SMB traffic to console
         server.setLogFile('')
@@ -46,7 +46,7 @@ class SmbCap():
         server.start()
 
 def sigint_handler(signum, frame):
-        print 'Stopping... Someone pressed CTRL+C!'
+        print('Stopping... Someone pressed CTRL+C!')
         sys.exit(0)
 
 signal.signal(signal.SIGINT, sigint_handler)

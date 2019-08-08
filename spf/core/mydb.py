@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sqlite3
 import sys
 import base64
 from random import  sample
 from string import digits, ascii_letters
-from utils import Utils
+from .utils import Utils
 
 class MyDB():
     def __init__(self, sqlite_file):
@@ -21,16 +21,16 @@ class MyDB():
             try:
                 self.conn = sqlite3.connect(self.sqlite_file)
             except sqlite3.OperationalError as e:
-                print e
+                print(e)
             except:
-                print sys.exc_info()[0]
+                print(sys.exc_info()[0])
         return self.conn.cursor()
 
     def checkDB(self):
         try:
             cursor = self.getCursor()
         except:
-            print sys.exc_info()[0]
+            print(sys.exc_info()[0])
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='users'")
         if cursor.fetchone() is None:
             return False
@@ -124,7 +124,7 @@ class MyDB():
     def getUserTrackId(self, user):
         trackid = ""
         cursor = self.getCursor()
-        print user
+        print(user)
         cursor.execute('SELECT trackid FROM users WHERE user=?', (user,))
         for row in cursor.fetchall():
             trackid = row[0]

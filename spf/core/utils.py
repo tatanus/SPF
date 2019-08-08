@@ -1,6 +1,7 @@
+#!/usr/bin/env python3
 import re
 import string
-import ConfigParser
+import configparser
 import os
 import os.path
 import socket
@@ -11,23 +12,30 @@ import zlib
 import json
 import time
 import subprocess
-import urllib
-import urllib2
+import ipaddress
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 
 class Utils():
 
     @staticmethod
     def compressDict(d):
-        return base64.b64encode(zlib.compress(json.dumps(d),9))
+        a = json.dumps(d)
+        b = zlib.compress(a.encode(),9)
+        c = base64.b64encode(b)
+        return c
 
     @staticmethod
     def decompressDict(s):
-        return json.loads(zlib.decompress(base64.b64decode(s)))
+        a = base64.b64decode(s)
+        b = zlib.decompress(a)
+        c = json.loads(b)
+        return c
 
     @staticmethod
     def to_unicode_str(obj, encoding='utf-8'):
         # checks if obj is a string and converts if not
-        if not isinstance(obj, basestring):
+        if not isinstance(obj, str):
             obj = str(obj)
         obj = Utils.to_unicode(obj, encoding)
         return obj
@@ -35,9 +43,9 @@ class Utils():
     @staticmethod
     def to_unicode(obj, encoding='utf-8'):
         # checks if obj is a unicode string and converts if not
-        if isinstance(obj, basestring):
-            if not isinstance(obj, unicode):
-                obj = unicode(obj, encoding)
+        if isinstance(obj, str):
+            if not isinstance(obj, str):
+                obj = str(obj, encoding)
         return obj
 
     @staticmethod
@@ -108,7 +116,7 @@ class Utils():
     def load_config(filename):
         config = {}
         if Utils.is_readable(filename):
-            parser = ConfigParser.SafeConfigParser()
+            parser = configparser.SafeConfigParser()
             parser.read(filename)
             for section_name in parser.sections():
                 for name, value in parser.items(section_name):
@@ -118,7 +126,7 @@ class Utils():
     @staticmethod
     def get_interface_ip(ifname):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        return socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, struct.pack('256s', ifname[:15]))[20:24])
+        return socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, struct.pack('256s', ifname[:15].encode('utf-8')))[20:24])
 
     @staticmethod
     def getIP():
@@ -137,3 +145,20 @@ class Utils():
     def screenCaptureWebSite(url, outfile):
         cmd = 'phantomjs --ssl-protocol=any --ignore-ssl-errors=yes libs/screencap.js "%s" "%s"' % (url, outfile)
         subprocess.Popen([cmd], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+
+    @staticmethod
+    def fileToList(filename):
+        mylist = ()
+        if Utils.is_readable(filename):
+            with open(filename) as f:
+                mylist = f.read().splitlines()
+        return mylist
+    
+    @staticmethod
+    def listToIpAddresses(temp):
+        return {ipaddress.ip_address(IP) for IP in temp}
+
+    @staticmethod
+    def listToIpNetworks(temp):
+        return {ipaddress.ip_network(CIDR, False) for CIDR in temp}
+

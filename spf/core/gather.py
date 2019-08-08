@@ -1,6 +1,8 @@
-import re
-import urllib2
+#!/usr/bin/env python3
 
+import re
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 from core.parser import Parser
 from core.display import Display, ProgressBar
 
@@ -33,13 +35,13 @@ class Gather():
             temp_url = re.sub(r'\[\[OFFSET\]\]', str(current_offset), url)
             try:
                 headers = { 'User-Agent' : self.user_agent }
-                req = urllib2.Request(temp_url, None, headers)
-                data += urllib2.urlopen(req).read()
-            except urllib2.URLError as e:
+                req = urllib.request.Request(str(temp_url), None, headers)
+                data += str(urllib.request.urlopen(req).read())
+            except urllib.error.URLError as e:
                 self.display.error("Could not access [%s]" % (title))
                 return data
             except Exception as e:
-                print e
+                print(e)
             current_offset += offset
         self.p.done()
         return data

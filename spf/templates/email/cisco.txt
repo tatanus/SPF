@@ -1,4 +1,4 @@
-TYPE="CISCO_VPN"
+TYPE="CISCO"
 
 SUBJECT="Updated CISCO VPN Server"
 

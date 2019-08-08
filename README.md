@@ -1,10 +1,11 @@
-[![Python 2.6-2.7](https://img.shields.io/badge/Python-2.6--2.7-yellow.svg)](http://www.python.org/download/)
+[![Python 2.6-2.7](https://img.shields.io/badge/Python-3.x-yellow.svg)](http://www.python.org/download/)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/tatanus/SPF/master/LICENSE)
 
 [![DEFCON 23 Demolabs](https://img.shields.io/badge/DEFCON%2023-Demo%20Labs-red.svg)](https://www.defcon.org/html/defcon-23/dc-23-demo-labs-schedule.html#Compton)
 
 [![Black Hat USA Arsenal](https://github.com/toolswatch/badges/blob/master/arsenal/usa/2015.svg)](https://www.toolswatch.org/2015/06/black-hat-arsenal-usa-2015-speakers-lineup/)
 
+[![Black Hat USA Arsenal](https://github.com/toolswatch/badges/blob/master/arsenal/usa/2019.svg)](https://www.blackhat.com/us-19/arsenal/schedule/index.html)
 
 SPF (SpeedPhish Framework) is a python tool designed to allow for quick recon and deployment of simple social engineering phishing exercises.
 
@@ -15,11 +16,12 @@ SPF (SpeedPhish Framework) is a python tool designed to allow for quick recon an
 
 # Installation
 ```
-pip install dnspython
-pip install pycrypto
+apt-get update
+apt-get upgrade -y
+apt-get install git build-essential python-dev python-pip phantomjs -y
 
-apt-get install python-twisted-web
-apt-get install phantomjs
+apt install python3-twisted
+apt install python3-dnspython
 
 git clone --recursive https://github.com/tatanus/SPF.git
 ```
@@ -58,12 +60,12 @@ misc:
 Execution:
 ```
 cd spf
-python spf.py --test -d example.com
+python3 spf.py --test -d example.com
 ```
 or to just test the websites:
 ```
 cd spf
-python web.py default.cfg
+python3 web.py default.cfg
 ```
 
 # Misc

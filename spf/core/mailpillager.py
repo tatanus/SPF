@@ -630,11 +630,11 @@ class  MailPillager():
 # main test code
 #-----------------------------------------------------------------------------
 if __name__ == "__main__":
-    serverip = "167.99.126.139"
+    serverip = "x.x.x.x"
     #username = "sjane@example.phish"
-    username = "acompton@hillbilly.dev"
+    username = "user@domain.com"
     password = "password"
-    domain = "hillbilly.dev"
+    domain = "domain.com"
 
     mp = MailPillager()
 #    mp.pillage(username=username, password=password, server=serverip, port=143, domain=domain)
